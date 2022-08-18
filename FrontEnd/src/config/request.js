@@ -63,9 +63,9 @@ http.interceptors.response.use(
     }
     console.log("-----系统错误-----");
     console.log(error);
-    if (!!error) {
-      return Promise.reject(error);
-
+    if (error) {
+      // return Promise.reject(error);
+      return Promise.resolve({ Success: false, Msg: error.message })
     }
 
     // let errorMsg = ''

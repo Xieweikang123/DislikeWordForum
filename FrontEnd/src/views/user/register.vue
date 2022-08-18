@@ -20,18 +20,18 @@
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="UserPwd">
+      <el-form-item label="密码" prop="Password">
         <el-input
-          v-model="formData.UserPwd"
+          v-model="formData.Password"
           placeholder="请输入密码"
           clearable
           show-password
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-       <el-form-item label="确认密码" prop="UserPwd">
+      <el-form-item label="确认密码" prop="Password">
         <el-input
-          v-model="formData.UserPwdAgain"
+          v-model="formData.PasswordAgain"
           placeholder="请再次输入密码"
           clearable
           show-password
@@ -47,12 +47,13 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       formData: {
         Email: undefined,
-        UserPwd: undefined,
+        Password: undefined,
       },
       rules: {
         Email: [
@@ -62,7 +63,7 @@ export default {
             trigger: "blur",
           },
         ],
-        UserPwd: [
+        Password: [
           {
             required: true,
             message: "请输入密码",
@@ -78,14 +79,19 @@ export default {
     submitForm() {
       var that = this;
 
-      that.formData.account="zzzz"
+      that.formData.account = "zzzz";
       console.log("submit");
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
         // TODO 提交表单
         that.$http
-          .post("/api/user/register",that.formData)
-          .then((response) => (this.info = response));
+          .post("/api/user/register", that.formData)
+          .then((response) => {
+            console.log("response", response);
+            if(!response.Success){
+              that.$message.error(response.Msg)
+            }
+          });
       });
     },
     resetForm() {
