@@ -10,7 +10,7 @@ const routes = [
     name: 'home',
     meta: {
       // 页面标题title
-      title: '读书论坛'
+      title: '我不爱背单词UnForum'
     },
     component: () => import('@/views/home/index')
   },

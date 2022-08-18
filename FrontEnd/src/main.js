@@ -27,5 +27,8 @@ router.beforeEach((to, from, next) => {
 new Vue({
   // 挂载路由对象(相当于 router:router)
   router,
-  render: h => h(App)
+  render: h => h(App),
+  mounted(){
+    console.log('env',process.env)
+  }
 }).$mount('#app')
