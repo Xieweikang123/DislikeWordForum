@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 
 namespace BackendAPI.Web.Core
 {
@@ -15,6 +16,10 @@ namespace BackendAPI.Web.Core
             services.AddCorsAccessor();
 
             services.AddControllers()
+                //.AddJsonOptions(options =>
+                //{
+                //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                //})
                     .AddInjectWithUnifyResult();
         }
 

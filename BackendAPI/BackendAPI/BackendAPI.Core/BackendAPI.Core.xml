@@ -14,5 +14,23 @@
             SqlSugar 数据库实例
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.User.Id">
+             <summary>
+              
+             默认值: 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.User.Account">
+             <summary>
+              
+             默认值: 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.User.Password">
+             <summary>
+              
+             默认值: 
+            </summary>
+        </member>
     </members>
 </doc>

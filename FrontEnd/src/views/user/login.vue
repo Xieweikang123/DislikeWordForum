@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="登录/注册"
+    title="登录"
     :visible.sync="dialogFormVisible"
     :close-on-click-modal="false"
     width="30%"
@@ -30,7 +30,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label-width="0">
-        <el-button type="primary" @click="submitForm">注册/登录</el-button>
+        <el-button type="primary" @click="submitForm">登录</el-button>
         <!-- <el-button @click="resetForm">重置</el-button> -->
       </el-form-item>
     </el-form>

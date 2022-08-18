@@ -13,3 +13,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.CodeAnalysis;
 global using SqlSugar;
 global using System.ComponentModel.DataAnnotations;
+global using BackendAPI.Core.Entities;

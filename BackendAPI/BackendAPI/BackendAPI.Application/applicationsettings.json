@@ -21,6 +21,11 @@
       }
     ]
   },
+  "DynamicApiControllerSettings": {
+    "LowercaseRoute": false,
+    "KeepName": true,
+    "AsLowerCamelCase": false
+  },
   "CorsAccessorSettings": {
     "WithExposedHeaders": [
       "access-token",

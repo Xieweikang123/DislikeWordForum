@@ -4,13 +4,15 @@
       <el-row :gutter="20">
         <el-col :span="6" :offset="6">首页</el-col>
         <el-col :span="6" :offset="6">
-          <span @click="onLogin" class="hand">注册/登录</span>
+          <span @click="onLogin" class="hand" style="margin-right:10px">登录</span>
+          <span @click="onRegister" class="hand" >注册</span>
         </el-col>
       </el-row>
     </el-header>
     <el-main>Main</el-main>
 
     <Login ref="login"></Login>
+    <Register ref="register"></Register>
   </el-container>
 </template>
  
@@ -20,13 +22,20 @@
 
 import Menu from "@/components/menu/menu.vue";
 import Login from "@/views/user/login.vue";
+import Register from "@/views/user/register.vue";
 
 export default {
   components: {
     Menu,
     Login,
+    Register,
   },
   methods: {
+    //注册
+    onRegister() {
+      this.$refs.register.show();
+    },
+    //登录
     onLogin() {
       console.log("onLogin");
       this.$refs.login.show();

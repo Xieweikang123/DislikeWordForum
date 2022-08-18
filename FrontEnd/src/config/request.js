@@ -4,17 +4,17 @@ import axios from 'axios'
 const http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 300000, // request timeout
+  timeout: 30000, // request timeout
   //withCredentials: true,//这个“凭证”是在withCredentials开启时自动生成并保存在cookie中然后在http请求的时候带上？
-  withCredentials: false,
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
-  },
-  transformRequest: [
-    function (data) {
-      return convertRequestParam(data);
-    }
-  ]
+  // withCredentials: false,
+  // headers: {
+  //   "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+  // },
+  // transformRequest: [
+  //   function (data) {
+  //     return convertRequestParam(data);
+  //   }
+  // ]
 })
 
 // request interceptor
@@ -82,53 +82,54 @@ export default {
     Object.defineProperty(Vue.prototype, '$http', { value: http })
   }
 }
-function convertRequestParam(param) {
-  let result = "", newParam = null;
 
-  if (isObject(param)) {
-    newParam = {}
-    handleRequestParam(param, newParam);
-  }
-  for (let k in newParam) {
-    if (newParam.hasOwnProperty(k) === true) {
-      result +=
-        encodeURIComponent(k) +
-        "=" +
-        encodeURIComponent(newParam[k] || newParam[k] == 0 ? newParam[k] : "") +
-        "&";
-    }
-  }
-  return result;
-}
+// function convertRequestParam(param) {
+//   let result = "", newParam = null;
 
-function handleRequestParam(param, newParam) {
-  for (let key in param) {
-    if (Object.prototype.toString.call(param[key]) == "[object Object]") {
-      for (let k in param[key]) {
-        if (isObject(param[key][k])) {
+//   if (isObject(param)) {
+//     newParam = {}
+//     handleRequestParam(param, newParam);
+//   }
+//   for (let k in newParam) {
+//     if (newParam.hasOwnProperty(k) === true) {
+//       result +=
+//         encodeURIComponent(k) +
+//         "=" +
+//         encodeURIComponent(newParam[k] || newParam[k] == 0 ? newParam[k] : "") +
+//         "&";
+//     }
+//   }
+//   return result;
+// }
 
-        } else {
-          newParam[key + "." + k] = param[key][k]
-        }
-      }
-    } else if (Object.prototype.toString.call(param[key]) == "[object Array]") {
-      for (let k in param[key]) {
-        if (isObject(param[key][k])) {
-          for (let k2 in param[key][k]) {
-            newParam[key + "[" + k + "]." + k2] = param[key][k][k2]
-          }
-        } else {
-          newParam[key + "[" + k + "]"] = param[key][k]
-        }
-      }
-    } else {
-      newParam[key] = param[key]
-    }
-  }
-}
-function isObject(value) {
-  return typeof value == "object"
-}
+// function handleRequestParam(param, newParam) {
+//   for (let key in param) {
+//     if (Object.prototype.toString.call(param[key]) == "[object Object]") {
+//       for (let k in param[key]) {
+//         if (isObject(param[key][k])) {
+
+//         } else {
+//           newParam[key + "." + k] = param[key][k]
+//         }
+//       }
+//     } else if (Object.prototype.toString.call(param[key]) == "[object Array]") {
+//       for (let k in param[key]) {
+//         if (isObject(param[key][k])) {
+//           for (let k2 in param[key][k]) {
+//             newParam[key + "[" + k + "]." + k2] = param[key][k][k2]
+//           }
+//         } else {
+//           newParam[key + "[" + k + "]"] = param[key][k]
+//         }
+//       }
+//     } else {
+//       newParam[key] = param[key]
+//     }
+//   }
+// }
+// function isObject(value) {
+//   return typeof value == "object"
+// }
 // function apiAxios(method, url, params, response) {
 //   http({
 //       method: method,
