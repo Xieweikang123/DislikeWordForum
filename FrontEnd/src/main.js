@@ -4,13 +4,23 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
 import axios from 'axios'
+
+//请求配置
+import request from '@/config/request';
+Vue.use(request);
+
 // 注册全局组件
 Vue.use(ElementUI)
 // 将提醒关掉
 Vue.config.productionTip = false
 
+
+
+console.log('env',process.env)
+
+
 // 设置axios请求的基础路径
-axios.defaults.baseURL = 'http://localhost:8888/'
+axios.defaults.baseURL = process.env.VUE_APP_BASE_API
 // 设置axios别名
 Vue.prototype.$axios = axios
 // 设置axios携带的Token
@@ -29,6 +39,5 @@ new Vue({
   router,
   render: h => h(App),
   mounted(){
-    console.log('env',process.env)
   }
 }).$mount('#app')

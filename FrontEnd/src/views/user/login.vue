@@ -67,9 +67,14 @@ export default {
   },
   methods: {
     submitForm() {
+      var that = this;
+      console.log("submit");
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
         // TODO 提交表单
+        that.$http
+          .get("/api/walker/description")
+          .then((response) => (this.info = response));
       });
     },
     resetForm() {

@@ -3,10 +3,10 @@
     /// <summary>
     /// 系统服务接口
     /// </summary>
-    public class SystemAppService : IDynamicApiController
+    public class WalkerAppService : IDynamicApiController
     {
-        private readonly ISystemService _systemService;
-        public SystemAppService(ISystemService systemService)
+        private readonly IWalkerService _systemService;
+        public WalkerAppService(IWalkerService systemService)
         {
             _systemService = systemService;
         }
@@ -19,9 +19,6 @@
         {
             return _systemService.GetDescription();
         }
-        public string GetTest()
-        {
-            return _systemService.GetDescription();
-        }
+        
     }
 }

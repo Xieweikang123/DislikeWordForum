@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<Folder Include="System\Services\" />
+		<Folder Include="Walker\Dtos\" />
 	</ItemGroup>
 
 </Project>

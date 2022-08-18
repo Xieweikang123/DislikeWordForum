@@ -15,5 +15,16 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Application.WalkerAppService">
+            <summary>
+            系统服务接口
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Application.WalkerAppService.GetDescription">
+            <summary>
+            获取系统描述
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
