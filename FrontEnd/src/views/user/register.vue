@@ -12,9 +12,9 @@
       size="medium"
       label-width="80px"
     >
-      <el-form-item label="邮箱" prop="Email">
+      <el-form-item label="邮箱" prop="UserName">
         <el-input
-          v-model="formData.Email"
+          v-model="formData.UserName"
           placeholder="请输入邮箱"
           clearable
           :style="{ width: '100%' }"
@@ -40,6 +40,7 @@
       </el-form-item>
       <el-form-item label-width="0">
         <el-button type="primary" @click="submitForm">注册</el-button>
+        <el-button type="primary" @click="test">ces</el-button>
         <!-- <el-button @click="resetForm">重置</el-button> -->
       </el-form-item>
     </el-form>
@@ -47,16 +48,15 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
       formData: {
-        Email: undefined,
+        UserName: undefined,
         Password: undefined,
       },
       rules: {
-        Email: [
+        UserName: [
           {
             required: true,
             message: "请输入邮箱",
@@ -76,6 +76,16 @@ export default {
     };
   },
   methods: {
+    test(){
+      var that=this
+       that.$http
+          .post("/api/user/Test")
+          .then((response) => {
+            console.log("Test response", response);
+
+            // if(response.data.)
+          });
+    },
     submitForm() {
       var that = this;
 
@@ -88,9 +98,17 @@ export default {
           .post("/api/user/register", that.formData)
           .then((response) => {
             console.log("response", response);
-            if(!response.Success){
-              that.$message.error(response.Msg)
+            if (!response.succeeded) {
+              that.$message.error(response.errors);
+              return;
             }
+            if (response.succeeded) {
+              //成功
+              that.$message.success("注册成功");
+              window.localStorage.setItem("token", response.data.data);
+            }
+
+            // if(response.data.)
           });
       });
     },

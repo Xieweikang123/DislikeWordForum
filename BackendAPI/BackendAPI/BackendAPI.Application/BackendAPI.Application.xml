@@ -4,6 +4,21 @@
         <name>BackendAPI.Application</name>
     </assembly>
     <members>
+        <member name="T:BackendAPI.Application.RetObj">
+            <summary>
+            返回对象
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Application.RetObj.Msg">
+            <summary>
+            消息
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Application.RetObj.Data">
+            <summary>
+            数据
+            </summary>
+        </member>
         <member name="T:BackendAPI.Application.SystemAppService">
             <summary>
             系统服务接口
@@ -24,6 +39,7 @@
             <summary>
             用户服务接口
             </summary>
+            
         </member>
         <member name="M:BackendAPI.Application.UserAppService.Register(BackendAPI.Application.UserDTO)">
             <summary>

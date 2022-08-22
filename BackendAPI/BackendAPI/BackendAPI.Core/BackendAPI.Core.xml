@@ -14,11 +14,6 @@
             SqlSugar 数据库实例
             </summary>
         </member>
-        <member name="T:BackendAPI.Core.Entities.CoreUser">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="P:BackendAPI.Core.Entities.CoreUser.Id">
              <summary>
               

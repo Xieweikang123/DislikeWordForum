@@ -7,16 +7,22 @@ namespace BackendAPI.Application
     /// <summary>
     /// 用户服务接口
     /// </summary>
+    /// 
     public class UserAppService : IDynamicApiController
     {
 
 
+        public async Task<RetObj> Test()
+        {
+            return RetObj.Success(null,"测试");
+        }
 
 
         /// <summary>
         /// 注册
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         public async Task<RetObj> Register(UserDTO dto)
         {
             var ret = new RetObj();
@@ -26,20 +32,20 @@ namespace BackendAPI.Application
             //如果存在，提示用户已存在
             //否则
             //往用户表添加一条记录，  返回token
-            
+
             //两次密码是否一致
             if (!dto.Password.Equals(dto.PasswordAgain))
             {
-                return RetObj.Error("两次密码不一致");
+                throw new Exception("两次密码不一致");
             }
 
             var db = DbContext.Instance;
 
-            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserEmail);
+            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName);
 
             if (queryUser != null)
             {
-                return RetObj.Error("该账号已注册");
+                throw new Exception("该账号已注册");
             }
 
             //注册
@@ -48,29 +54,21 @@ namespace BackendAPI.Application
                 Id = IDGen.NextID().ToString(),
                 UserName = dto.UserName,
                 Password = dto.Password,
-                Createdate=DateTime.Now
+                Createdate = DateTime.Now
             };
 
 
 
-            //var db2 = DbContext.Instance;
-            ////用户是否存在
-            //var queryUser=DbContext.Instance.Queryable<User>().FirstAsync(x=>x.)
+            // 生成 token
+            queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
+            {
+                { "UserId", queryUser.Id },  // 存储Id
+                { "Account",queryUser.UserName }, // 存储用户名
+            });
 
-            //var res = DbContext.Instance.get
-
-
-            //// 生成 token
-            //var accessToken = JWTEncryption.Encrypt(new Dictionary<string, object>()
-            //{
-            //    { "UserId", dto. },  // 存储Id
-            //    { "Account",user.Account }, // 存储用户名
-            //});
-
-
-            return ret;
-
-            //return _systemService.GetDescription();
+            //插入数据库
+            var icount = await db.Insertable(queryUser).ExecuteCommandAsync();
+            return RetObj.Success(queryUser.Token,"注册成功");
         }
 
     }

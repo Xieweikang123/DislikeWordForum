@@ -20,16 +20,16 @@ const http = axios.create({
 // request interceptor
 http.interceptors.request.use(
   config => {
-    const token =""
+    const token = window.localStorage.getItem("token")
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token.accressToken}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config
   },
   error => {
     // do something with request error
     console.log("请求有问题请查看")
-    console.log("error",error) // for debug
+    console.log("error", error) // for debug
     if (!!error) {
       return Promise.reject(error)
     }
@@ -45,7 +45,7 @@ http.interceptors.response.use(
       res.data.code == -11
     ) {
       auth.removeToken()
-      window.location.href="/Login"
+      window.location.href = "/Login"
     } else if (res && res.headers && res.headers.authorization) {
       auth.removeToken()
     }
@@ -56,8 +56,12 @@ http.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          auth.removeToken()
-          window.location.href="/Login"
+          //登录过期
+          window.localStorage.removeItem("token")
+
+          return Promise.resolve({ succeeded: false, errors: "登录过期，请重新登录" })
+        // auth.removeToken()
+        // window.location.href = "/Login"
       }
       //return Promise.reject(error.response.data);
     }
@@ -65,7 +69,7 @@ http.interceptors.response.use(
     console.log(error);
     if (error) {
       // return Promise.reject(error);
-      return Promise.resolve({ Success: false, Msg: error.message })
+      return Promise.resolve({ succeeded: false, errors: error.message })
     }
 
     // let errorMsg = ''

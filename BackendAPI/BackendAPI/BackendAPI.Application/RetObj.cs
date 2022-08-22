@@ -11,10 +11,7 @@ namespace BackendAPI.Application
     /// </summary>
     public class RetObj
     {
-        /// <summary>
-        /// 返回码  200  
-        /// </summary>
-        public int Code { get; set; }
+    
 
         /// <summary>
         /// 消息
@@ -26,13 +23,21 @@ namespace BackendAPI.Application
         /// </summary>
         public object Data { get; set; }
 
-        public static RetObj Error(string msg)
+        public static RetObj Success(object data,string msg="")
         {
             return new RetObj()
             {
-                Code = 500,
-                Msg = msg
+                Msg = msg,
+                Data=data
             };
         }
+
+        //public static RetObj Error(string msg)
+        //{
+        //    return new RetObj()
+        //    {
+        //        Msg = msg
+        //    };
+        //}
     }
 }
