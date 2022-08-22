@@ -20,4 +20,8 @@
     <ProjectReference Include="..\..\..\..\..\Furion\framework\Furion.Pure\Furion.Pure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
+
 </Project>

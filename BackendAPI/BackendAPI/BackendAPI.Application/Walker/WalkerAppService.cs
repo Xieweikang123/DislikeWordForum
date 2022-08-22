@@ -1,5 +1,4 @@
 ﻿using BackendAPI.Core;
-using BackendAPI.Core.Entities;
 
 namespace BackendAPI.Application
 {
@@ -21,8 +20,8 @@ namespace BackendAPI.Application
         public object GetDescription()
         {
 
-            var res = DbContext.Instance.Queryable<User>().ToList();
-            return res;
+
+            return null;
 
             //return _systemService.GetDescription();
         }

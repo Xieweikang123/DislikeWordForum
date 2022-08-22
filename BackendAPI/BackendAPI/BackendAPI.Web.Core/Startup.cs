@@ -11,6 +11,7 @@ namespace BackendAPI.Web.Core
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            // 默认授权机制，需授权的即可（方法）需贴 `[Authorize]` 特性
             services.AddJwt<JwtHandler>();
 
             services.AddCorsAccessor();
@@ -36,6 +37,7 @@ namespace BackendAPI.Web.Core
 
             app.UseCorsAccessor();
 
+            //在添加授权服务之前，请先确保 Startup.cs 中 Configure 是否添加了以下两个中间件：
             app.UseAuthentication();
             app.UseAuthorization();
 

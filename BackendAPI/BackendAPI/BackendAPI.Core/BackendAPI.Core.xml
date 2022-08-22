@@ -14,23 +14,796 @@
             SqlSugar 数据库实例
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.User.Id">
-             <summary>
-              
-             默认值: 
+        <member name="T:BackendAPI.Core.Entities.CoreUser">
+            <summary>
+            
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.User.Account">
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Id">
              <summary>
               
-             默认值: 
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.User.Password">
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserName">
+             <summary>
+             用户名 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Password">
+             <summary>
+             密码 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserSex">
              <summary>
               
-             默认值: 
             </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserBirthday">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserEmail">
+             <summary>
+             邮箱 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserLocked">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.UserStatus">
+             <summary>
+             1:激活 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Createdate">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Createuser">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Modifydate">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Modifyuser">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.LastLoginTime">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Token">
+             <summary>
+             token 
+            </summary>
+        </member>
+        <member name="T:BackendAPI.Core.Entities.DBConfig">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.DBConfig.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.DBConfig.UserId">
+            <summary>
+            Desc:用户id
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.DBConfig.ConnectionStr">
+            <summary>
+            Desc:连接字符串
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.EnglishWord">
+            <summary>
+            ??
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Word">
+            <summary>
+            Desc:??
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Translate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.RecordTimes">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Createdate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Createuser">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Modifydate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Modifyuser">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.BelongUserId">
+            <summary>
+            Desc:所属用户
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.ModifyUserId">
+            <summary>
+            Desc:修改用户的id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.EnglishWord_copy1">
+            <summary>
+            ??
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Word">
+            <summary>
+            Desc:??
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Translate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.RecordTimes">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Createdate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Createuser">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Modifydate">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Modifyuser">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.BelongUserId">
+            <summary>
+            Desc:所属用户
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.ModifyUserId">
+            <summary>
+            Desc:修改用户的id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.Essay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.EssayId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.Title">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.Content">
+            <summary>
+            Desc:内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.IsTop">
+            <summary>
+            Desc:是否置顶
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.IsDel">
+            <summary>
+            Desc:是否删除
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.CreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.CreateUserId">
+            <summary>
+            Desc:创建人id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.ModifyTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Essay.ModifyUserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.EssayBrowse">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayBrowse.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayBrowse.EssayId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayBrowse.Count">
+            <summary>
+            Desc:浏览量
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayBrowse.IPList">
+            <summary>
+            Desc:ip字符串 ;号隔开
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayBrowse.CreateTime">
+            <summary>
+            Desc:创建时间
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.EssayCollection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayCollection.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayCollection.UserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayCollection.EssayIdList">
+            <summary>
+            Desc:分号分隔
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayCollection.CreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.EssayLeaving">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.EssayId">
+            <summary>
+            Desc:文章id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.ReplyLeavingId">
+            <summary>
+            Desc:回复的留言id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.ReplyUserId">
+            <summary>
+            Desc:回复给的用户id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.Content">
+            <summary>
+            Desc:留言内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.UserId">
+            <summary>
+            Desc:用户id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.Status">
+            <summary>
+            Desc:0:正常  1 删除
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.EssayLeaving.CreateTime">
+            <summary>
+            Desc:创建时间
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.FlashContent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.ip">
+            <summary>
+            Desc:用户ip
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.nickName">
+            <summary>
+            Desc:用户昵称
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.email">
+            <summary>
+            Desc:用户邮箱
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.sayContent">
+            <summary>
+            Desc:发送内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.createTime">
+            <summary>
+            Desc:创建时间
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.status">
+            <summary>
+            Desc:0正常  1删除 
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.likeCount">
+            <summary>
+            Desc:喜欢数
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.likeNames">
+            <summary>
+            Desc:点赞的人昵称，逗号分隔
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.Notepad">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.NoteId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.Uid">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.NoteTitle">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.NoteContent">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.NoteCreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.NoteUpdateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.Spare1">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.Spare2">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Notepad.Spare3">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.TempNote">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.TempNote.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.TempNote.Content">
+            <summary>
+            Desc:内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.TempNote.AddTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.UserNotice">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.UserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.Msg">
+            <summary>
+            Desc:消息内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.EssayId">
+            <summary>
+            Desc:留言文章id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.LeavingMsgId">
+            <summary>
+            Desc:留言id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.FromUserId">
+            <summary>
+            Desc:触发消息的用户id
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.IsRead">
+            <summary>
+            Desc:是否已读 0否 1是
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.Type">
+            <summary>
+            Desc:0:回复留言  1:点赞  2 回复楼主
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.UpdateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.UpdateUserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.CreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserNotice.CreateUserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.VerifyInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.VerifyCode">
+            <summary>
+            Desc:guid 用来激活邮箱
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.ToEmail">
+            <summary>
+            Desc:发送至邮箱
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.Type">
+            <summary>
+            Desc:验证类型:VerifyEmail 激活邮箱; ForgetPsw:找回密码
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.UserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.UpdateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.VerifyInfo.CreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="T:BackendAPI.Core.Entities.WARNING">
+            <summary>
+            ??
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.WARNING.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.WARNING.warning">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.WARNING.website">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.WARNING.token">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
         </member>
     </members>
 </doc>
