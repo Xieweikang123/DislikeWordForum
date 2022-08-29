@@ -41,6 +41,13 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.UserAppService.Login(BackendAPI.Application.UserDTO)">
+            <summary>
+            登录成功
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.UserAppService.Register(BackendAPI.Application.UserDTO)">
             <summary>
             注册

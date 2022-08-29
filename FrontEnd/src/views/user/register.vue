@@ -12,10 +12,10 @@
       size="medium"
       label-width="80px"
     >
-      <el-form-item label="邮箱" prop="UserName">
+      <el-form-item label="账号" prop="UserName">
         <el-input
           v-model="formData.UserName"
-          placeholder="请输入邮箱"
+          placeholder="请输入账号"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
@@ -40,8 +40,7 @@
       </el-form-item>
       <el-form-item label-width="0">
         <el-button type="primary" @click="submitForm">注册</el-button>
-        <el-button type="primary" @click="test">ces</el-button>
-        <!-- <el-button @click="resetForm">重置</el-button> -->
+        <!-- <el-button type="primary" @click="test">ces</el-button> -->
       </el-form-item>
     </el-form>
   </el-dialog>

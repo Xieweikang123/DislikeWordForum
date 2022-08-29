@@ -10,6 +10,7 @@ namespace BackendAPI.Core.Entities
         /// <summary>
         ///  
         ///</summary>
+        [SugarColumn(IsPrimaryKey = true)]
         public string Id { get; set; }
         /// <summary>
         /// 用户名 

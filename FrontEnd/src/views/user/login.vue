@@ -12,17 +12,17 @@
       size="medium"
       label-width="80px"
     >
-      <el-form-item label="邮箱" prop="Email">
+      <el-form-item label="邮箱" prop="UserName">
         <el-input
-          v-model="formData.Email"
+          v-model="formData.UserName"
           placeholder="请输入邮箱"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="UserPwd">
+      <el-form-item label="密码" prop="Password">
         <el-input
-          v-model="formData.UserPwd"
+          v-model="formData.Password"
           placeholder="请输入密码"
           clearable
           show-password
@@ -42,18 +42,18 @@ export default {
   data() {
     return {
       formData: {
-        Email: undefined,
-        UserPwd: undefined,
+        UserName: undefined,
+        Password: undefined,
       },
       rules: {
-        Email: [
+        UserName: [
           {
             required: true,
             message: "请输入邮箱",
             trigger: "blur",
           },
         ],
-        UserPwd: [
+        Password: [
           {
             required: true,
             message: "请输入密码",
@@ -73,8 +73,17 @@ export default {
         if (!valid) return;
         // TODO 提交表单
         that.$http
-          .get("/api/walker/description")
-          .then((response) => (this.info = response));
+          .post("/api/user/Login", that.formData)
+          // .get("/api/walker/description")
+          .then((res) => {
+            console.log("login ", res);
+            if (!res.succeeded) {
+              that.$message.error(res.errors);
+              return;
+            }
+            that.$message.success("登录成功");
+            window.localStorage.setItem("token", res.data.data);
+          });
       });
     },
     resetForm() {

@@ -14,9 +14,38 @@ namespace BackendAPI.Application
 
         public async Task<RetObj> Test()
         {
-            return RetObj.Success(null,"测试");
+            return RetObj.Success(null, "测试");
         }
 
+
+
+        /// <summary>
+        /// 登录成功
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public async Task<RetObj> Login(UserDTO dto)
+        {
+
+            var db = DbContext.Instance;
+            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName && x.Password == dto.Password);
+            if (queryUser == null)
+            {
+                throw new Exception("用户不存在或者密码错误");
+
+            }
+            // 生成 token
+            queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
+            {
+                { "UserId", queryUser.Id },  // 存储Id
+                { "Account",queryUser.UserName }, // 存储用户名
+            });
+
+            await db.Updateable(queryUser).ExecuteCommandAsync();
+
+            return RetObj.Success(queryUser.Token, "登录成功");
+        }
 
         /// <summary>
         /// 注册
@@ -68,7 +97,7 @@ namespace BackendAPI.Application
 
             //插入数据库
             var icount = await db.Insertable(queryUser).ExecuteCommandAsync();
-            return RetObj.Success(queryUser.Token,"注册成功");
+            return RetObj.Success(queryUser.Token, "注册成功");
         }
 
     }
