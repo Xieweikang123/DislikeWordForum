@@ -2,8 +2,17 @@
   <el-header>
     <el-row :gutter="20">
       <el-col :span="16" class="disFlex">
-        <div @click="jumpTo('/')">首页</div>
-        <div @click="jumpTo('/word')">单词</div>
+        <!-- <div @click="jumpTo('/')">首页</div>
+        <div @click="jumpTo('/word')">单词</div> -->
+        <div
+          v-for="item in menuList"
+          @click="jumpTo(item.url)"
+          :key="item.name"
+        >
+          <span :class="item.url == activeUrl ? 'menuActive' : ''">
+            {{ item.name }}</span
+          >
+        </div>
       </el-col>
 
       <el-col :span="8" v-if="!isLogin">
@@ -46,20 +55,49 @@ export default {
   },
   data() {
     return {
+      activeUrl: "/",
+      menuList: [
+        {
+          name: "首页",
+          url: "/",
+        },
+        {
+          name: "单词",
+          url: "/word",
+        },
+      ],
       isLogin: false,
     };
   },
+  computed: {
+    // activeUrl() {
+    //   console.log("computed this.$route.currentRoute", this.$router.currentRoute.fullPath);
+
+    //   return  window.location.pathname
+    // },
+  },
   mounted() {
-    console.log("mmm", this.$Common.Global);
+    console.log("mmm", this.$router);
 
     // 获取登录状态
     this.updateLoginStatus();
 
-    console.log("  this.isLogin", this.isLogin);
+    console.log(
+      " this.$route.currentRoute",
+      this.$router.currentRoute.fullPath
+    );
+
+
+    console.log(" this.$route.currentRoute", this.$router.currentRoute);
+    console.log("url", window.location);
+
+    this.activeUrl = window.location.pathname
+
   },
   methods: {
     //跳转
     jumpTo(url) {
+      this.activeUrl = url;
       this.$router.push(url);
     },
 
@@ -91,8 +129,9 @@ export default {
 </script>
   
   <style>
-
-    
+.menuActive {
+  color: #409eff;
+}
 .disFlex {
   display: flex;
   justify-content: center;
