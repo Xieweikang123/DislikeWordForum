@@ -20,6 +20,15 @@ const routes = [
     name: 'HelloWorld',
     component: HelloWorld
   },
+  {
+    path: '/word',
+    name: 'word',
+    meta: {
+      // 页面标题title
+      title: '单词-UnForum'
+    },
+    component:  () => import('@/views/word/index')
+  },
   // 只有用户访问到, 才会被加载渲染(惰性加载)
   {
     path: '/error',

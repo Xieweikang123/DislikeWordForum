@@ -1,9 +1,20 @@
 <template>
   <div id="app">
+    <Header></Header>
     <!-- 组件占位符 -->
-    <router-view/>
+    <router-view />
   </div>
 </template>
+
+<script>
+import Header from "@/components/layout/header.vue";
+
+export default {
+  components: {
+    Header,
+  },
+};
+</script>
 
 <style lang="less">
 body {
