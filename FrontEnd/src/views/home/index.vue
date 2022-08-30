@@ -10,16 +10,15 @@
           <span @click="onRegister" class="hand">注册 </span>
         </el-col>
         <el-col :span="6" :offset="6" v-else>
-          <el-dropdown @click="onLogout">
+          <el-dropdown>
             <span class="el-dropdown-link">
               已登录<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>黄金糕</el-dropdown-item>
-              <!-- <el-dropdown-item>狮子头</el-dropdown-item>
-              <el-dropdown-item>螺蛳粉</el-dropdown-item> -->
-              <!-- <el-dropdown-item disabled>双皮奶</el-dropdown-item> -->
-              <el-dropdown-item divided>退出</el-dropdown-item>
+              <el-dropdown-item>个人信息</el-dropdown-item>
+              <el-dropdown-item divided @click.native="onLogout"
+                >退出</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -27,7 +26,7 @@
     </el-header>
     <el-main>Main</el-main>
 
-    <Login ref="login"></Login>
+    <Login ref="login" @CallBack="updateLoginStatus"></Login>
     <Register ref="register"></Register>
   </el-container>
 </template>
@@ -44,22 +43,44 @@ export default {
     Login,
     Register,
   },
+  data() {
+    return {
+      isLogin: false,
+    };
+  },
   computed: {
-    isLogin() {
-      var token = window.localStorage.getItem("token");
-      console.log("islogin", window.localStorage.getItem("token"));
-      if (token) {
-        return true;
-      }
-      return false;
-    },
+    // isLogin() {
+    //   return this.$Common.Global.isLogin
+    //   // var token = window.localStorage.getItem("token");
+    //   // console.log("islogin", window.localStorage.getItem("token"));
+    //   // if (token) {
+    //   //   return true;
+    //   // }
+    //   // return false;
+    // },
+  },
+  mounted() {
+    console.log("mmm", this.$Common.Global);
+
+    // 获取登录状态
+    this.updateLoginStatus();
+
+    console.log("  this.isLogin", this.isLogin);
   },
   methods: {
+    // 更新登录状态
+    updateLoginStatus() {
+      this.isLogin = this.$Common.user.isLogin();
+    },
     //退出登录
     onLogout() {
       console.log("logout");
+      this.$message.success("退出成功");
       //登录过期
       window.localStorage.removeItem("token");
+
+      // 获取登录状态
+      this.updateLoginStatus();
     },
     //注册
     onRegister() {

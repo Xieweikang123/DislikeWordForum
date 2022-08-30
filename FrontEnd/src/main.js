@@ -4,6 +4,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
 import axios from 'axios'
+import Global from '@/utils/global'
 
 //请求配置
 import request from '@/config/request';
@@ -15,8 +16,11 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 
+Vue.prototype.$Common = Global
 
-console.log('env',process.env)
+
+
+console.log('env', process.env)
 
 
 // 设置axios请求的基础路径
@@ -38,6 +42,6 @@ new Vue({
   // 挂载路由对象(相当于 router:router)
   router,
   render: h => h(App),
-  mounted(){
+  mounted() {
   }
 }).$mount('#app')

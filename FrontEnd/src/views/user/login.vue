@@ -38,6 +38,7 @@
 </template>
 
 <script>
+   
 export default {
   data() {
     return {
@@ -83,11 +84,18 @@ export default {
             }
             that.$message.success("登录成功");
             window.localStorage.setItem("token", res.data.data);
+            
+            that.hide()
+            that.$emit('CallBack')
           });
       });
     },
     resetForm() {
       this.$refs["elForm"].resetFields();
+    },
+    //隐藏当前窗口
+    hide() {
+      this.dialogFormVisible = false;
     },
     show() {
       this.dialogFormVisible = true;
