@@ -27,7 +27,9 @@
             已登录<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item @click.native="jumpTo('/selfInfo')"
+              >个人信息</el-dropdown-item
+            >
             <el-dropdown-item divided @click.native="onLogout"
               >退出</el-dropdown-item
             >
@@ -72,31 +74,19 @@ export default {
   computed: {
     // activeUrl() {
     //   console.log("computed this.$route.currentRoute", this.$router.currentRoute.fullPath);
-
     //   return  window.location.pathname
     // },
   },
   mounted() {
-    console.log("mmm", this.$router);
-
     // 获取登录状态
     this.updateLoginStatus();
 
-    console.log(
-      " this.$route.currentRoute",
-      this.$router.currentRoute.fullPath
-    );
-
-
-    console.log(" this.$route.currentRoute", this.$router.currentRoute);
-    console.log("url", window.location);
-
-    this.activeUrl = window.location.pathname
-
+    this.activeUrl = window.location.pathname;
   },
   methods: {
     //跳转
     jumpTo(url) {
+      console.log("jump url", url);
       this.activeUrl = url;
       this.$router.push(url);
     },
@@ -107,7 +97,6 @@ export default {
     },
     //退出登录
     onLogout() {
-      console.log("logout");
       this.$message.success("退出成功");
       //登录过期
       window.localStorage.removeItem("token");
@@ -121,7 +110,6 @@ export default {
     },
     //登录
     onLogin() {
-      console.log("onLogin");
       this.$refs.login.show();
     },
   },
@@ -171,12 +159,12 @@ export default {
   line-height: 200px;
 }
 
-.el-main {
+/* .el-main {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
   line-height: 160px;
-}
+} */
 
 body > .el-container {
   margin-bottom: 40px;
@@ -205,12 +193,12 @@ body > .el-container {
   line-height: 200px;
 }
 
-.el-main {
+/* .el-main {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
   line-height: 160px;
-}
+} */
 
 body > .el-container {
   margin-bottom: 40px;

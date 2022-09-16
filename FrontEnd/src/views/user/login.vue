@@ -38,7 +38,6 @@
 </template>
 
 <script>
-   
 export default {
   data() {
     return {
@@ -84,9 +83,9 @@ export default {
             }
             that.$message.success("登录成功");
             window.localStorage.setItem("token", res.data.data);
-            
-            that.hide()
-            that.$emit('CallBack')
+
+            that.hide();
+            that.$emit("CallBack");
           });
       });
     },
@@ -103,3 +102,9 @@ export default {
   },
 };
 </script>
+
+<style  >
+.el-dialog__body {
+  padding-top: 0;
+}
+</style>

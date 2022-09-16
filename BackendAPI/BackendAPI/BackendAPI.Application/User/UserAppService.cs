@@ -1,4 +1,5 @@
-﻿using BackendAPI.Core;
+﻿using BackendAPI.Application.User;
+using BackendAPI.Core;
 using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 
@@ -18,6 +19,36 @@ namespace BackendAPI.Application
         }
 
 
+        /// <summary>
+        /// 获取个人信息
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<RetObj> GetUserInfo()
+        {
+             
+            var userId = CurrentUserInfo.UserId;
+            
+
+
+            var db = DbContext.Instance;
+            //var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName && x.Password == dto.Password);
+            //if (queryUser == null)
+            //{
+            //    throw new Exception("用户不存在或者密码错误");
+
+            //}
+            //// 生成 token
+            //queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
+            //{
+            //    { "UserId", queryUser.Id },  // 存储Id
+            //    { "Account",queryUser.UserName }, // 存储用户名
+            //});
+
+            //await db.Updateable(queryUser).ExecuteCommandAsync();
+
+            return RetObj.Success("登录成功");
+        }
 
         /// <summary>
         /// 登录成功

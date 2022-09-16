@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <Header></Header>
-    <!-- 组件占位符 -->
-    <router-view />
+    <el-container>
+      <el-header> <Header></Header></el-header>
+      <el-main>
+        <!-- 组件占位符 -->
+        <router-view
+      /></el-main>
+    </el-container>
   </div>
 </template>
 
@@ -31,7 +35,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // 内容居中
-  text-align: center;
+  // text-align: center;
   // 顶部不留白
   margin-top: 0;
 }

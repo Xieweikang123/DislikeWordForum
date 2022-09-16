@@ -29,6 +29,15 @@ const routes = [
     },
     component:  () => import('@/views/word/index')
   },
+  {
+    path: '/selfInfo',
+    name: 'selfInfo',
+    meta: {
+      // 页面标题title
+      title: '个人信息-UnForum'
+    },
+    component:  () => import('@/views/user/selfInfo.vue')
+  },
   // 只有用户访问到, 才会被加载渲染(惰性加载)
   {
     path: '/error',

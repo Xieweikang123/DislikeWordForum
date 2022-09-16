@@ -30,6 +30,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:BackendAPI.Application.User.CurrentUserInfo.UserId">
+            <summary>
+            用户id
+            </summary>
+        </member>
         <member name="P:BackendAPI.Application.UserDTO.PasswordAgain">
              <summary>
              再次输入密码
@@ -40,6 +45,13 @@
             用户服务接口
             </summary>
             
+        </member>
+        <member name="M:BackendAPI.Application.UserAppService.GetUserInfo">
+            <summary>
+            获取个人信息
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
         </member>
         <member name="M:BackendAPI.Application.UserAppService.Login(BackendAPI.Application.UserDTO)">
             <summary>
@@ -64,6 +76,12 @@
             获取系统描述
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:BackendAPI.Application.WordAppService">
+            <summary>
+            单词服务接口
+            </summary>
+            
         </member>
     </members>
 </doc>
