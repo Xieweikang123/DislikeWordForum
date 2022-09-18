@@ -30,6 +30,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Application.User.CurrentUserInfo">
+            <summary>
+            当前用户信息读取
+            </summary>
+        </member>
         <member name="P:BackendAPI.Application.User.CurrentUserInfo.UserId">
             <summary>
             用户id
@@ -52,6 +57,12 @@
             </summary>
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:BackendAPI.Application.UserAppService.SaveUserInfo(BackendAPI.Application.UserDTO)">
+            <summary>
+            保存用户信息
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:BackendAPI.Application.UserAppService.Login(BackendAPI.Application.UserDTO)">
             <summary>

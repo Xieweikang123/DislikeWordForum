@@ -64,5 +64,14 @@ namespace BackendAPI.Core.Entities
         /// token 
         ///</summary>
         public string Token { get; set; }
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { get; set; }
+
     }
 }

@@ -84,6 +84,16 @@
              token 
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.Avatar">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.DBConfig">
             <summary>
             

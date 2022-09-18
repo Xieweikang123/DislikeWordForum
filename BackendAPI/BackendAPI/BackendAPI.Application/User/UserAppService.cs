@@ -24,30 +24,34 @@ namespace BackendAPI.Application
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RetObj> GetUserInfo()
+        public async Task<Object> GetUserInfo()
         {
-             
-            var userId = CurrentUserInfo.UserId;
-            
 
+            var userId = CurrentUserInfo.UserId;
 
             var db = DbContext.Instance;
-            //var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName && x.Password == dto.Password);
-            //if (queryUser == null)
-            //{
-            //    throw new Exception("用户不存在或者密码错误");
+            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
 
-            //}
-            //// 生成 token
-            //queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
-            //{
-            //    { "UserId", queryUser.Id },  // 存储Id
-            //    { "Account",queryUser.UserName }, // 存储用户名
-            //});
+            return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar };
+        }
 
-            //await db.Updateable(queryUser).ExecuteCommandAsync();
+        /// <summary>
+        /// 保存用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Object> SaveUserInfo(UserDTO dto)
+        {
+            var userId = CurrentUserInfo.UserId;
+            var db = DbContext.Instance;
+            var queryUser = await db.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
+            //保存当前用户信息
+            queryUser.NickName = dto.NickName;
+            queryUser.UserSex = dto.UserSex;
+            queryUser.Avatar = dto.Avatar;
+            await db.Updateable(queryUser).ExecuteCommandAsync();
 
-            return RetObj.Success("登录成功");
+            return "保存成功";
         }
 
         /// <summary>
