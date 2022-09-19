@@ -16,7 +16,7 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 
-Vue.prototype.$Common = Global
+Vue.prototype.$Global = Global
 
 
 

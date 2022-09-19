@@ -85,11 +85,19 @@ export default {
         that.form = {
           ...data,
         };
+        //获取个人信息的时候
+        that.storageUserInfo(that.form);
       });
+    },
+    //储存个人信息
+    storageUserInfo(data) {
+      //获取个人信息的时候
+      window.localStorage.setItem("userInfo", data);
+      this.$Global.user.UserInfo = data;
     },
     // 保存信息
     onSubmit() {
-      console.log("submit!");
+      console.log("submit!",this.$parent);
       var that = this;
       that.$http
         .post("/api/user/SaveUserInfo", that.form)
@@ -98,6 +106,8 @@ export default {
           console.log("SaveUserInfo ", res);
           if (res.succeeded) {
             that.$message.success("保存成功");
+            //保存个人信息的时候
+            that.storageUserInfo(that.form);
           }
         });
     },

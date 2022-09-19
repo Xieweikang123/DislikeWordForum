@@ -2,8 +2,6 @@
   <el-header>
     <el-row :gutter="20">
       <el-col :span="16" class="disFlex">
-        <!-- <div @click="jumpTo('/')">首页</div>
-        <div @click="jumpTo('/word')">单词</div> -->
         <div
           v-for="item in menuList"
           @click="jumpTo(item.url)"
@@ -71,6 +69,11 @@ export default {
       isLogin: false,
     };
   },
+  // watch: {
+  //   "$Global.user.UserInfo"() {
+  //     console.log("watch userinfo");
+  //   },
+  // },
   computed: {
     // activeUrl() {
     //   console.log("computed this.$route.currentRoute", this.$router.currentRoute.fullPath);
@@ -78,6 +81,7 @@ export default {
     // },
   },
   mounted() {
+    console.log("header mounted");
     // 获取登录状态
     this.updateLoginStatus();
 
@@ -93,7 +97,7 @@ export default {
 
     // 更新登录状态
     updateLoginStatus() {
-      this.isLogin = this.$Common.user.isLogin();
+      this.isLogin = this.$Global.user.isLogin();
     },
     //退出登录
     onLogout() {
@@ -105,7 +109,7 @@ export default {
       this.updateLoginStatus();
 
       //跳转首页
-      window.location.href="/"
+      window.location.href = "/";
     },
     //注册
     onRegister() {

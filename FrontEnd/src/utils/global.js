@@ -5,7 +5,7 @@ var Global = {
 
 }
 var user={
-
+    UserInfo:{},
     isLogin(){
       var token = window.localStorage.getItem("token");
       console.log("islogin", window.localStorage.getItem("token"));
