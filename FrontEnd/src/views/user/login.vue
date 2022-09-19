@@ -12,10 +12,10 @@
       size="medium"
       label-width="80px"
     >
-      <el-form-item label="邮箱" prop="UserName">
+      <el-form-item label="账号" prop="UserName">
         <el-input
           v-model="formData.UserName"
-          placeholder="请输入邮箱"
+          placeholder="请输入账号"
           clearable
           :style="{ width: '100%' }"
         ></el-input>
@@ -49,7 +49,7 @@ export default {
         UserName: [
           {
             required: true,
-            message: "请输入邮箱",
+            message: "请输入账号",
             trigger: "blur",
           },
         ],
@@ -82,10 +82,11 @@ export default {
               return;
             }
             that.$message.success("登录成功");
-            window.localStorage.setItem("token", res.data.data);
+            window.localStorage.setItem("token", res.data.token);
 
+            that.$eventBus.$emit("userInfoChange", res.data);
             that.hide();
-            that.$emit("CallBack");
+            // that.$emit("CallBack");
           });
       });
     },

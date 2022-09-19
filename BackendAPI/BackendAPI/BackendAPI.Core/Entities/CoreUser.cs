@@ -47,15 +47,7 @@ namespace BackendAPI.Core.Entities
         /// <summary>
         ///  
         ///</summary>
-        public string Createuser { get; set; }
-        /// <summary>
-        ///  
-        ///</summary>
         public DateTime? Modifydate { get; set; }
-        /// <summary>
-        ///  
-        ///</summary>
-        public string Modifyuser { get; set; }
         /// <summary>
         ///  
         ///</summary>
@@ -73,5 +65,9 @@ namespace BackendAPI.Core.Entities
         /// </summary>
         public string NickName { get; set; }
 
+        /// <summary>
+        /// 个性签名
+        /// </summary>
+        public string PersonalSignature { get; set; }
     }
 }

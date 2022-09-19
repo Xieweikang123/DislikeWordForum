@@ -32,7 +32,7 @@ namespace BackendAPI.Application
             var db = DbContext.Instance;
             var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
 
-            return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar };
+            return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
         }
 
         /// <summary>
@@ -49,6 +49,8 @@ namespace BackendAPI.Application
             queryUser.NickName = dto.NickName;
             queryUser.UserSex = dto.UserSex;
             queryUser.Avatar = dto.Avatar;
+            queryUser.PersonalSignature = dto.PersonalSignature;
+            queryUser.Modifydate = DateTime.Now;
             await db.Updateable(queryUser).ExecuteCommandAsync();
 
             return "保存成功";
@@ -60,7 +62,7 @@ namespace BackendAPI.Application
         /// <param name="dto"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<RetObj> Login(UserDTO dto)
+        public async Task<Object> Login(UserDTO dto)
         {
 
             var db = DbContext.Instance;
@@ -76,10 +78,14 @@ namespace BackendAPI.Application
                 { "UserId", queryUser.Id },  // 存储Id
                 { "Account",queryUser.UserName }, // 存储用户名
             });
+            queryUser.LastLoginTime = DateTime.Now;
 
             await db.Updateable(queryUser).ExecuteCommandAsync();
 
-            return RetObj.Success(queryUser.Token, "登录成功");
+
+            return new { queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
+
+            //return RetObj.Success(queryUser.Token, "登录成功");
         }
 
         /// <summary>
@@ -87,7 +93,7 @@ namespace BackendAPI.Application
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<RetObj> Register(UserDTO dto)
+        public async Task<object> Register(UserDTO dto)
         {
             var ret = new RetObj();
             //var guid = IDGen.NextID();
@@ -132,7 +138,9 @@ namespace BackendAPI.Application
 
             //插入数据库
             var icount = await db.Insertable(queryUser).ExecuteCommandAsync();
-            return RetObj.Success(queryUser.Token, "注册成功");
+
+            return new { queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
+            //return RetObj.Success(queryUser.Token, "注册成功");
         }
 
     }

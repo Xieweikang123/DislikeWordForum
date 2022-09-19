@@ -13,18 +13,23 @@
         </div>
       </el-col>
 
-      <el-col :span="8" v-if="!isLogin">
-        <span @click="onLogin" class="hand" style="margin-right: 10px"
-          >登录</span
-        >
-        <span @click="onRegister" class="hand">注册 </span>
-      </el-col>
-      <el-col :span="8" v-else>
+      <el-col v-if="userInfo" :span="8">
         <el-dropdown>
-          <span class="el-dropdown-link">
-            {{ userInfo.nickName }} 已登录<i
-              class="el-icon-arrow-down el-icon--right"
-            ></i>
+          <span class="el-dropdown-link disFlexSingle">
+            <div class="divFlexAlignCenter marginright15">
+              <el-avatar
+                v-if="AvatorUrl.length > 0"
+                shape="square"
+                :src="AvatorUrl"
+              ></el-avatar>
+              <el-avatar v-else shape="square">{{
+                userInfo.userName
+              }}</el-avatar>
+            </div>
+            <div>
+              {{ userInfo.nickName
+              }}<i class="el-icon-arrow-down el-icon--right"></i>
+            </div>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="jumpTo('/selfInfo')"
@@ -36,9 +41,15 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
+      <el-col v-else :span="8">
+        <span @click="onLogin" class="hand" style="margin-right: 10px"
+          >登录</span
+        >
+        <span @click="onRegister" class="hand">注册 </span>
+      </el-col>
     </el-row>
 
-    <Login ref="login" @CallBack="updateLoginStatus"></Login>
+    <Login ref="login"></Login>
     <Register ref="register"></Register>
   </el-header>
 </template>
@@ -73,11 +84,22 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    AvatorUrl() {
+      if (
+        !this.userInfo ||
+        !this.userInfo.avatar ||
+        this.userInfo.avatar.length == 0
+      ) {
+        return "";
+      }
+      return process.env.VUE_APP_BASE_API + this.userInfo.avatar;
+    },
+  },
   mounted() {
     var that = this;
     // 获取登录状态
-    this.updateLoginStatus();
+    // this.updateLoginStatus();
     this.activeUrl = window.location.pathname;
 
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
@@ -92,6 +114,8 @@ export default {
       this.$eventBus.$off("userInfoChange");
       this.$eventBus.$on("userInfoChange", function (data) {
         console.log("监听到变化 userInfoChange", data);
+
+        window.localStorage.setItem("userInfo", JSON.stringify(data));
         that.userInfo = {
           ...data,
         };
@@ -104,18 +128,19 @@ export default {
       this.$router.push(url);
     },
 
-    // 更新登录状态
-    updateLoginStatus() {
-      this.isLogin = this.$Global.user.isLogin();
-    },
+    // // 更新登录状态
+    // updateLoginStatus() {
+    //   this.isLogin = this.$Global.user.isLogin();
+    // },
     //退出登录
     onLogout() {
       this.$message.success("退出成功");
       //登录过期
       window.localStorage.removeItem("token");
-
-      // 获取登录状态
-      this.updateLoginStatus();
+      //清空缓存
+      window.localStorage.removeItem("userInfo");
+      // // 获取登录状态
+      // this.updateLoginStatus();
 
       //跳转首页
       window.location.href = "/";
@@ -135,6 +160,16 @@ export default {
   <style>
 .menuActive {
   color: #409eff;
+}
+.disFlexSingle,
+.divFlexAlignCenter {
+  display: flex;
+}
+.divFlexAlignCenter {
+  align-items: center;
+}
+.marginright15 {
+  margin-right: 10px;
 }
 .disFlex {
   display: flex;

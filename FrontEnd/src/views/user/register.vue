@@ -75,15 +75,13 @@ export default {
     };
   },
   methods: {
-    test(){
-      var that=this
-       that.$http
-          .post("/api/user/Test")
-          .then((response) => {
-            console.log("Test response", response);
+    test() {
+      var that = this;
+      that.$http.post("/api/user/Test").then((response) => {
+        console.log("Test response", response);
 
-            // if(response.data.)
-          });
+        // if(response.data.)
+      });
     },
     submitForm() {
       var that = this;
@@ -104,7 +102,11 @@ export default {
             if (response.succeeded) {
               //成功
               that.$message.success("注册成功");
-              window.localStorage.setItem("token", response.data.data);
+              window.localStorage.setItem("token", response.data.token);
+
+              this.$eventBus.$emit("userInfoChange", response.data);
+              //跳转首页
+              window.location.href = "/";
             }
 
             // if(response.data.)

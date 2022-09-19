@@ -59,17 +59,7 @@
               
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.CoreUser.Createuser">
-             <summary>
-              
-            </summary>
-        </member>
         <member name="P:BackendAPI.Core.Entities.CoreUser.Modifydate">
-             <summary>
-              
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.CoreUser.Modifyuser">
              <summary>
               
             </summary>
@@ -92,6 +82,11 @@
         <member name="P:BackendAPI.Core.Entities.CoreUser.NickName">
             <summary>
             昵称
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.PersonalSignature">
+            <summary>
+            个性签名
             </summary>
         </member>
         <member name="T:BackendAPI.Core.Entities.DBConfig">

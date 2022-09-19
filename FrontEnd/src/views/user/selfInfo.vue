@@ -11,8 +11,8 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img :src="AvatorUrl" class="avatar" />
-            <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+            <img v-if="form.avatar" :src="AvatorUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="账号:">
@@ -20,6 +20,13 @@
         </el-form-item>
         <el-form-item label="昵称:">
           <el-input v-model="form.nickName"></el-input>
+        </el-form-item>
+        <el-form-item label="签名:">
+          <el-input
+            type="textarea"
+            :rows="2"
+            v-model="form.personalSignature"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -42,6 +49,9 @@ export default {
   },
   computed: {
     AvatorUrl() {
+      if (!this.form || !this.form.avatar || this.form.avatar.length == 0) {
+        return "";
+      }
       return process.env.VUE_APP_BASE_API + this.form.avatar;
     },
     ActionUrl() {
@@ -62,16 +72,16 @@ export default {
       this.form.avatar = res.data.url;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      // const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
+      // if (!isJPG) {
+      //   this.$message.error("上传头像图片只能是 JPG 格式!");
+      // }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
     //获取个人信息
     getMyInfo() {
@@ -93,7 +103,6 @@ export default {
     storageUserInfo(data) {
       //获取个人信息的时候
       window.localStorage.setItem("userInfo", JSON.stringify(data));
-     
     },
     // 保存信息
     onSubmit() {
