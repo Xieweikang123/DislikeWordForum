@@ -14,6 +14,14 @@ namespace BackendAPI.Core
         public int totalNumber { get; set; }
 
 
+        /// <summary>
+        /// 搜索关键字
+        /// </summary>
+        public string searchKeyWord { get; set; }
+        /// <summary>
+        /// 搜索内容
+        /// </summary>
+        public string searchContent { get; set; }
 
         /// <summary>
         /// 排序列

@@ -38,11 +38,15 @@ namespace BackendAPI.Application
                 "ascending" => "asc",
                 _ => "desc"
             };
+            var whereExp = Expressionable.Create<EnglishWord>();
 
-            
+            //当前用户
+            whereExp.And(x => x.BelongUserId == userId);
+            //如果有搜索关键词
+            whereExp.AndIF(!string.IsNullOrEmpty(dto.searchContent), x => x.Word.Contains(dto.searchContent));
 
             RefAsync<int> allCount = 0;
-            var pageList = await db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).OrderBy($"{orderProp}  {orderType}").ToPageListAsync(dto.pageNumber, dto.pageSize, allCount);
+            var pageList = await db.Queryable<EnglishWord>().Where(whereExp.ToExpression()).OrderBy($"{orderProp}  {orderType}").ToPageListAsync(dto.pageNumber, dto.pageSize, allCount);
 
             return new { pageList, allCount };
         }

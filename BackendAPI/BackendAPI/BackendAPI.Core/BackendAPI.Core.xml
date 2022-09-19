@@ -798,6 +798,16 @@
             Nullable:True
             </summary>           
         </member>
+        <member name="P:BackendAPI.Core.PageInfo.searchKeyWord">
+            <summary>
+            搜索关键字
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.PageInfo.searchContent">
+            <summary>
+            搜索内容
+            </summary>
+        </member>
         <member name="P:BackendAPI.Core.PageInfo.prop">
             <summary>
             排序列

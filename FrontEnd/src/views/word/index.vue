@@ -2,6 +2,14 @@
   <el-container>
     <el-aside width="200px">Aside</el-aside>
     <el-main>
+      <el-input
+        placeholder="搜索单词"
+        @input="searchChange"
+        v-model="paging.searchContent"
+        class="input-with-select"
+      >
+        <el-button slot="append" icon="el-icon-search"></el-button>
+      </el-input>
       <el-table
         @sort-change="sortChange"
         :data="tableData"
@@ -58,11 +66,15 @@
 export default {
   data() {
     return {
+      // searchContent:'',
       paging: {
         pageNumber: 1,
         pageSize: 10,
         totalPage: 0,
         prop: "",
+        searchKeyWord: "",
+        searchContent: "",
+
         order: "",
       },
       tableData: [],
@@ -79,6 +91,11 @@ export default {
     this.GetMyWordList();
   },
   methods: {
+    //搜索改变
+    searchChange(value) {
+      console.log("searchChange", value);
+      this.GetMyWordList()
+    },
     //排序
     sortChange(column, prop, order) {
       console.log("sortChange", column, prop, order);
