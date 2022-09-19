@@ -8,16 +8,15 @@
 
 	<ItemGroup>
 		<Compile Remove="Controllers\**" />
-		<Compile Remove="wwwroot\**" />
 		<Content Remove="Controllers\**" />
-		<Content Remove="wwwroot\**" />
 		<EmbeddedResource Remove="Controllers\**" />
-		<EmbeddedResource Remove="wwwroot\**" />
 		<None Remove="Controllers\**" />
-		<None Remove="wwwroot\**" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\BackendAPI.Web.Core\BackendAPI.Web.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="wwwroot\Files\" />
 	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>

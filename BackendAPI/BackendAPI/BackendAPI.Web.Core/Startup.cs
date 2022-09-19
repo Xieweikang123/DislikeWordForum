@@ -37,6 +37,9 @@ namespace BackendAPI.Web.Core
 
             app.UseRouting();
 
+            // 默认静态资源调用，wwwroot
+            app.UseStaticFiles();
+
             app.UseCorsAccessor();
 
             //在添加授权服务之前，请先确保 Startup.cs 中 Configure 是否添加了以下两个中间件：

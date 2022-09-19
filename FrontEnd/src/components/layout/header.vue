@@ -103,6 +103,9 @@ export default {
 
       // 获取登录状态
       this.updateLoginStatus();
+
+      //跳转首页
+      window.location.href="/"
     },
     //注册
     onRegister() {

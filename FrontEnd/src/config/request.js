@@ -1,20 +1,11 @@
 import axios from 'axios'
+import { MessageBox, Message } from 'element-ui'
 
 // create an axios instance
 const http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 30000, // request timeout
-  //withCredentials: true,//这个“凭证”是在withCredentials开启时自动生成并保存在cookie中然后在http请求的时候带上？
-  // withCredentials: false,
-  // headers: {
-  //   "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
-  // },
-  // transformRequest: [
-  //   function (data) {
-  //     return convertRequestParam(data);
-  //   }
-  // ]
 })
 
 // request interceptor
@@ -58,6 +49,12 @@ http.interceptors.response.use(
         case 401:
           //登录过期
           window.localStorage.removeItem("token")
+
+          Message({
+            message:"登录过期，请重新登录",
+            type: 'error',
+            duration: 5 * 1000
+          })
 
           return Promise.resolve({ succeeded: false, errors: "登录过期，请重新登录" })
         // auth.removeToken()

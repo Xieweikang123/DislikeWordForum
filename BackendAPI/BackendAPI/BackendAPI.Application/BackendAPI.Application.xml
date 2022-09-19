@@ -4,6 +4,11 @@
         <name>BackendAPI.Application</name>
     </assembly>
     <members>
+        <member name="T:BackendAPI.Application.File.FileService">
+            <summary>
+            文件上传服务
+            </summary>
+        </member>
         <member name="T:BackendAPI.Application.RetObj">
             <summary>
             返回对象

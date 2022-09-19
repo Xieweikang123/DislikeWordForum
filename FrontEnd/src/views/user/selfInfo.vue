@@ -5,13 +5,14 @@
         <el-form-item label="头像:">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :headers="upHeader"
+            :action="ActionUrl"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="form.avatar" :src="form.avatar" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <img :src="AvatorUrl" class="avatar" />
+            <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
           </el-upload>
         </el-form-item>
         <el-form-item label="账号:">
@@ -35,26 +36,30 @@
 export default {
   data() {
     return {
-      form: {
-        // name: "",
-        // region: "",
-        // date1: "",
-        // date2: "",
-        // delivery: false,
-        // type: [],
-        // resource: "",
-        // desc: "",
-      },
+      upHeader: {},
+      form: {},
     };
   },
-  computed: {},
+  computed: {
+    AvatorUrl() {
+      return process.env.VUE_APP_BASE_API + this.form.avatar;
+    },
+    ActionUrl() {
+      return process.env.VUE_APP_BASE_API + "api/File/UploadImg";
+    },
+  },
   mounted() {
+    var token = localStorage.getItem("token");
+    this.upHeader = {
+      Authorization: `Bearer ${token}`,
+    };
     this.getMyInfo();
   },
 
   methods: {
     handleAvatarSuccess(res, file) {
-      this.form.avatar = URL.createObjectURL(file.raw);
+      console.log("handleAvatarSuccess", res, file);
+      this.form.avatar = res.data.url;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -91,7 +96,9 @@ export default {
         // .get("/api/walker/description")
         .then((res) => {
           console.log("SaveUserInfo ", res);
-          that.$message.success("保存成功");
+          if (res.succeeded) {
+            that.$message.success("保存成功");
+          }
         });
     },
   },
