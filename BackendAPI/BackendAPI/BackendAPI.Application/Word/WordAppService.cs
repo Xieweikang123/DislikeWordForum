@@ -23,7 +23,7 @@ namespace BackendAPI.Application
             var db = DbContext.Instance;
 
             RefAsync<int> allCount = 0;
-            var pageList = await db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).ToPageListAsync(dto.pageNumber, dto.pageSize, allCount);
+            var pageList = await db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).OrderByDescending(x=>x.RecordTimes).ToPageListAsync(dto.pageNumber, dto.pageSize, allCount);
 
             return new { pageList, allCount };
         }

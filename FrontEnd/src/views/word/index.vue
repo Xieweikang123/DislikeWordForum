@@ -2,21 +2,43 @@
   <el-container>
     <el-aside width="200px">Aside</el-aside>
     <el-main>
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%" stripe>
         <el-table-column prop="word" label="单词" width="180">
         </el-table-column>
-        <el-table-column prop="translate" :show-overflow-tooltip="true" label="翻译">
+        <el-table-column
+          prop="translate"
+          :show-overflow-tooltip="true"
+          label="翻译"
+        >
         </el-table-column>
-        <el-table-column prop="createdate" label="创建日期" width="180">
+        <el-table-column prop="recordTimes" label="记录次数" width="80">
         </el-table-column>
-        <el-table-column prop="modifydate" label="更新日期" width="180">
+
+        <el-table-column
+          prop="createdate"
+          :formatter="timeFormatter"
+          label="创建日期"
+          width="180"
+        >
         </el-table-column>
-        <!-- <el-table-column prop="name" label="姓名" width="180">
+        <el-table-column
+          prop="modifydate"
+          :formatter="timeFormatter"
+          label="更新日期"
+          width="180"
+        >
         </el-table-column>
-        <el-table-column prop="address" label="地址">
-        </el-table-column>  -->
-        </el-table
-    ></el-main>
+      </el-table>
+      <div class="paginationStyle">
+        <el-pagination
+          background
+          @current-change="changePageNumber"
+          layout="prev, pager, next"
+          :total="paging.totalPage"
+        >
+        </el-pagination>
+      </div>
+    </el-main>
   </el-container>
 </template>
 
@@ -24,43 +46,49 @@
 export default {
   data() {
     return {
-      paging:{
-        pageNumber:1,
-        pageSize:20,
+      paging: {
+        pageNumber: 1,
+        pageSize: 10,
+        totalPage: 0,
       },
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      tableData: [],
     };
   },
-  mounted() {
-    var that = this;
-    that.$http
-      .post("/api/Word/GetMyWordList", that.paging)
-      .then((res) => {
-        console.log("GetMyWordList ", res);
-        that.tableData=res.data.pageList
-      });
+  watch: {
+    "paging.pageNumber": {
+      handler(nVal) {
+        this.GetMyWordList();
+      },
+    },
   },
-  methods: {},
+  mounted() {
+    this.GetMyWordList();
+  },
+  methods: {
+    timeFormatter(row, column, cellValue) {
+      return cellValue.replace("T", " ");
+    },
+    // 获取分页数据
+    GetMyWordList() {
+      var that = this;
+      that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
+        console.log("GetMyWordList ", res);
+        that.tableData = res.data.pageList;
+        that.paging.totalPage = res.data.allCount.value;
+      });
+    },
+    //页码改变时
+    changePageNumber(curPage) {
+      var that = this;
+      console.log("changePageNumber", curPage);
+      that.paging.pageNumber = curPage;
+    },
+  },
 };
 </script>
+<style scoped>
+.paginationStyle {
+  text-align: right;
+  margin-top: 17px;
+}
+</style>
