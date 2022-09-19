@@ -2,8 +2,13 @@
   <el-container>
     <el-aside width="200px">Aside</el-aside>
     <el-main>
-      <el-table :data="tableData" style="width: 100%" stripe>
-        <el-table-column prop="word" label="单词" width="180">
+      <el-table
+        @sort-change="sortChange"
+        :data="tableData"
+        style="width: 100%"
+        stripe
+      >
+        <el-table-column prop="word" sortable="custom" label="单词" width="180">
         </el-table-column>
         <el-table-column
           prop="translate"
@@ -11,12 +16,18 @@
           label="翻译"
         >
         </el-table-column>
-        <el-table-column prop="recordTimes" label="记录次数" width="80">
+        <el-table-column
+          prop="recordTimes"
+          sortable="custom"
+          label="记录次数"
+          width="100"
+        >
         </el-table-column>
 
         <el-table-column
           prop="createdate"
           :formatter="timeFormatter"
+          sortable="custom"
           label="创建日期"
           width="180"
         >
@@ -24,6 +35,7 @@
         <el-table-column
           prop="modifydate"
           :formatter="timeFormatter"
+          sortable="custom"
           label="更新日期"
           width="180"
         >
@@ -50,6 +62,8 @@ export default {
         pageNumber: 1,
         pageSize: 10,
         totalPage: 0,
+        prop: "",
+        order: "",
       },
       tableData: [],
     };
@@ -65,7 +79,19 @@ export default {
     this.GetMyWordList();
   },
   methods: {
+    //排序
+    sortChange(column, prop, order) {
+      console.log("sortChange", column, prop, order);
+      this.paging.prop = column.prop;
+      this.paging.order = column.order;
+      console.log("  this.paging", this.paging);
+
+      this.GetMyWordList();
+    },
     timeFormatter(row, column, cellValue) {
+      if (!cellValue) {
+        return "";
+      }
       return cellValue.replace("T", " ");
     },
     // 获取分页数据

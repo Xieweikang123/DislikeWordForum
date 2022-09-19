@@ -1,5 +1,6 @@
 ﻿using Furion;
 using SqlSugar;
+using System;
 using System.Collections.Generic;
 
 namespace BackendAPI.Core
@@ -20,6 +21,11 @@ namespace BackendAPI.Core
             , db =>
             {
                 // 这里配置全局事件，比如拦截执行 SQL
+                db.Aop.OnLogExecuting = (sql, pars) =>
+                {
+                    Console.WriteLine(sql);//输出sql
+                };
+
             });
     }
 }

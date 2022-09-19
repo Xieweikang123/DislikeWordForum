@@ -14,5 +14,16 @@ namespace BackendAPI.Core
         public int totalNumber { get; set; }
 
 
+
+        /// <summary>
+        /// 排序列
+        /// </summary>
+        public string prop { get; set; }
+        /// <summary>
+        /// 排序规则
+        /// </summary>
+        public string order { get; set; }
+
+
     }
 }

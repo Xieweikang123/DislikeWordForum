@@ -798,5 +798,15 @@
             Nullable:True
             </summary>           
         </member>
+        <member name="P:BackendAPI.Core.PageInfo.prop">
+            <summary>
+            排序列
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.PageInfo.order">
+            <summary>
+            排序规则
+            </summary>
+        </member>
     </members>
 </doc>
