@@ -18,6 +18,9 @@ Vue.config.productionTip = false
 
 Vue.prototype.$Global = Global
 
+Vue.prototype.$eventBus = new Vue()
+
+
 
 
 console.log('env', process.env)

@@ -22,7 +22,9 @@
       <el-col :span="8" v-else>
         <el-dropdown>
           <span class="el-dropdown-link">
-            已登录<i class="el-icon-arrow-down el-icon--right"></i>
+            {{ userInfo.nickName }} 已登录<i
+              class="el-icon-arrow-down el-icon--right"
+            ></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="jumpTo('/selfInfo')"
@@ -55,6 +57,7 @@ export default {
   },
   data() {
     return {
+      userInfo: {},
       activeUrl: "/",
       menuList: [
         {
@@ -69,25 +72,31 @@ export default {
       isLogin: false,
     };
   },
-  // watch: {
-  //   "$Global.user.UserInfo"() {
-  //     console.log("watch userinfo");
-  //   },
-  // },
-  computed: {
-    // activeUrl() {
-    //   console.log("computed this.$route.currentRoute", this.$router.currentRoute.fullPath);
-    //   return  window.location.pathname
-    // },
-  },
+
+  computed: {},
   mounted() {
-    console.log("header mounted");
+    var that = this;
     // 获取登录状态
     this.updateLoginStatus();
-
     this.activeUrl = window.location.pathname;
+
+    this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+    console.log("header  this.userInfo", this.userInfo);
+
+    this.listenUserInfo();
   },
   methods: {
+    //监听用户信息变化
+    listenUserInfo() {
+      var that = this;
+      this.$eventBus.$off("userInfoChange");
+      this.$eventBus.$on("userInfoChange", function (data) {
+        console.log("监听到变化 userInfoChange", data);
+        that.userInfo = {
+          ...data,
+        };
+      });
+    },
     //跳转
     jumpTo(url) {
       console.log("jump url", url);
