@@ -1,4 +1,5 @@
-﻿using BackendAPI.Core;
+﻿using BackendAPI.Application.User;
+using BackendAPI.Core;
 using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 
@@ -15,19 +16,16 @@ namespace BackendAPI.Application
 
         }
 
-        public async Task<RetObj> Test()
+        [HttpPost]
+        public async Task<object> GetMyWordList(PageInfo dto)
         {
-            return RetObj.Success(null, "测试");
-        }
-
-        public async Task<RetObj> GetMyWordList(UserDTO dto)
-        {
+            var userId = CurrentUserInfo.UserId;
             var db = DbContext.Instance;
 
+            RefAsync<int> allCount = 0;
+            var pageList = await db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).ToPageListAsync(dto.pageNumber, dto.pageSize, allCount);
 
-
-
-            return RetObj.Success(null, "测试");
+            return new { pageList, allCount };
         }
 
 

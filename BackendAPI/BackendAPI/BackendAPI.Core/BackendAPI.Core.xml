@@ -183,13 +183,6 @@
             Nullable:True
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord.ModifyUserId">
-            <summary>
-            Desc:修改用户的id
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
         <member name="T:BackendAPI.Core.Entities.EnglishWord_copy1">
             <summary>
             ??
