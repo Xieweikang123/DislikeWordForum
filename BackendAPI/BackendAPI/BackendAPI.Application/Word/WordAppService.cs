@@ -25,6 +25,43 @@ namespace BackendAPI.Application
             _memoryCache = memoryCache;
         }
 
+        /// <summary>
+        /// 保存单词
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+
+        [HttpPost]
+        public async Task<object> OnSaveWord(EnglishWord dto)
+        {
+            var userId = CurrentUserInfo.UserId;
+            var db = DbContext.Instance;
+            //删除
+            //await db.Deleteable<EnglishWord>(x => x.id == dto.id && x.BelongUserId == userId).ExecuteCommandAsync();
+            var wordList = GetCacheEnglishWords();
+            var findWord = wordList.FirstOrDefault(x => x.id == dto.id);
+            //单词是否存在
+            if (findWord == null)
+            {
+                //不存在
+                dto.id = IDGen.NextID().ToString();
+                await db.Insertable(dto).ExecuteCommandAsync();
+            }
+            else
+            {
+                //单词修改
+                findWord.Word = dto.Word;
+                findWord.Modifydate = DateTime.Now;
+                findWord.Translate = dto.Translate;
+                findWord.RecordTimes = dto.RecordTimes;
+                await db.Updateable(dto).ExecuteCommandAsync();
+            }
+
+            //刷新单词
+            GetCacheEnglishWords(true);
+
+            return "ok";
+        }
 
         /// <summary>
         /// 删除单词

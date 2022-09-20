@@ -104,6 +104,13 @@
             单词缓存关键字
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.WordAppService.OnSaveWord(BackendAPI.Core.Entities.EnglishWord)">
+            <summary>
+            保存单词
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.WordAppService.OnDelWord(BackendAPI.Core.Entities.EnglishWord)">
             <summary>
             删除单词

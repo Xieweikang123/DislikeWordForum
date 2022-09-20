@@ -111,7 +111,6 @@ export default {
     },
     //列双击
     rowDbClick(row, column, event) {
-      console.log("rowDbClick", row, column, event);
       this.$refs.editForm.show(row);
     },
     //搜索改变
