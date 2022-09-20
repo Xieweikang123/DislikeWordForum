@@ -139,7 +139,7 @@
             Desc:
             Default:
             Nullable:True
-            </summary>           
+            </summary>        
         </member>
         <member name="P:BackendAPI.Core.Entities.EnglishWord.RecordTimes">
             <summary>
@@ -163,13 +163,6 @@
             </summary>           
         </member>
         <member name="P:BackendAPI.Core.Entities.EnglishWord.Modifydate">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord.Modifyuser">
             <summary>
             Desc:
             Default:

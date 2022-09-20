@@ -35,8 +35,9 @@ namespace BackendAPI.Core.Entities
         /// Desc:
         /// Default:
         /// Nullable:True
-        /// </summary>           
-        public string Translate { get; set; }
+        /// </summary>        
+        #nullable enable
+        public string? Translate { get; set; }
 
         /// <summary>
         /// Desc:
@@ -65,13 +66,6 @@ namespace BackendAPI.Core.Entities
         /// Nullable:True
         /// </summary>           
         public DateTime? Modifydate { get; set; }
-
-        /// <summary>
-        /// Desc:
-        /// Default:
-        /// Nullable:True
-        /// </summary>           
-        public string Modifyuser { get; set; }
 
         /// <summary>
         /// Desc:所属用户

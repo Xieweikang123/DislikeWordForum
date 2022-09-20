@@ -11,6 +11,7 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-table
+        @row-dblclick="rowDbClick"
         @sort-change="sortChange"
         :data="tableData"
         style="width: 100%"
@@ -59,11 +60,17 @@
         </el-pagination>
       </div>
     </el-main>
+
+    <EditForm ref="editForm"></EditForm>
   </el-container>
 </template>
 
   <script>
+import EditForm from "../word/editForm.vue";
 export default {
+  components: {
+    EditForm,
+  },
   data() {
     return {
       // searchContent:'',
@@ -91,10 +98,15 @@ export default {
     this.GetMyWordList();
   },
   methods: {
+    //列双击
+    rowDbClick(row, column, event) {
+      console.log("rowDbClick", row, column, event);
+      this.$refs.editForm.show(row)
+    },
     //搜索改变
     searchChange(value) {
       console.log("searchChange", value);
-      this.GetMyWordList()
+      this.GetMyWordList();
     },
     //排序
     sortChange(column, prop, order) {
@@ -117,7 +129,7 @@ export default {
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
         console.log("GetMyWordList ", res);
         that.tableData = res.data.pageList;
-        that.paging.totalPage = res.data.allCount.value;
+        that.paging.totalPage = res.data.allCount;
       });
     },
     //页码改变时
