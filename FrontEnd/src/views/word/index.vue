@@ -5,6 +5,7 @@
       <el-input
         placeholder="搜索单词"
         @input="searchChange"
+        @keyup.enter.native="wordKeyEnter"
         v-model="paging.searchContent"
         class="input-with-select"
       >
@@ -98,22 +99,23 @@ export default {
     this.GetMyWordList();
   },
   methods: {
+    //搜索单词按下回车
+    wordKeyEnter() {
+      console.log("wordKeyEnter");
+    },
     //列双击
     rowDbClick(row, column, event) {
       console.log("rowDbClick", row, column, event);
-      this.$refs.editForm.show(row)
+      this.$refs.editForm.show(row);
     },
     //搜索改变
     searchChange(value) {
-      console.log("searchChange", value);
       this.GetMyWordList();
     },
     //排序
     sortChange(column, prop, order) {
-      console.log("sortChange", column, prop, order);
       this.paging.prop = column.prop;
       this.paging.order = column.order;
-      console.log("  this.paging", this.paging);
 
       this.GetMyWordList();
     },
@@ -127,7 +129,6 @@ export default {
     GetMyWordList() {
       var that = this;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
-        console.log("GetMyWordList ", res);
         that.tableData = res.data.pageList;
         that.paging.totalPage = res.data.allCount;
       });
@@ -135,7 +136,6 @@ export default {
     //页码改变时
     changePageNumber(curPage) {
       var that = this;
-      console.log("changePageNumber", curPage);
       that.paging.pageNumber = curPage;
     },
   },
