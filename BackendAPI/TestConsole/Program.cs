@@ -26,7 +26,7 @@ using TestConsole;
 
 var wordList = new List<EnglishWord>();
 
-var ss= wordList.OrderBy("", true);
+//var ss= wordList.OrderBy("", true);
 //wordList.Where(x=>x.)
 
 

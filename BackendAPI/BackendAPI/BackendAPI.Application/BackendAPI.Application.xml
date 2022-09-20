@@ -104,17 +104,25 @@
             单词缓存关键字
             </summary>
         </member>
-        <member name="M:BackendAPI.Application.WordAppService.RecordWord(BackendAPI.Core.PageInfo)">
+        <member name="M:BackendAPI.Application.WordAppService.OnDelWord(BackendAPI.Core.Entities.EnglishWord)">
+            <summary>
+            删除单词
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.WordAppService.RecordWord(BackendAPI.Core.Entities.EnglishWord)">
             <summary>
             记录单词
             </summary>
             <param name="dto"></param>
             <returns></returns>
         </member>
-        <member name="M:BackendAPI.Application.WordAppService.GetCacheEnglishWords">
+        <member name="M:BackendAPI.Application.WordAppService.GetCacheEnglishWords(System.Boolean)">
             <summary>
             查询缓存单词
             </summary>
+            <param name="isGetNew">重新获取</param>
             <returns></returns>
         </member>
     </members>

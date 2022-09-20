@@ -155,13 +155,6 @@
             Nullable:True
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord.Createuser">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
         <member name="P:BackendAPI.Core.Entities.EnglishWord.Modifydate">
             <summary>
             Desc:
@@ -172,81 +165,6 @@
         <member name="P:BackendAPI.Core.Entities.EnglishWord.BelongUserId">
             <summary>
             Desc:所属用户
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="T:BackendAPI.Core.Entities.EnglishWord_copy1">
-            <summary>
-            ??
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.id">
-            <summary>
-            Desc:
-            Default:
-            Nullable:False
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Word">
-            <summary>
-            Desc:??
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Translate">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.RecordTimes">
-            <summary>
-            Desc:
-            Default:
-            Nullable:False
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Createdate">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Createuser">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Modifydate">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.Modifyuser">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.BelongUserId">
-            <summary>
-            Desc:所属用户
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.EnglishWord_copy1.ModifyUserId">
-            <summary>
-            Desc:修改用户的id
             Default:
             Nullable:True
             </summary>           

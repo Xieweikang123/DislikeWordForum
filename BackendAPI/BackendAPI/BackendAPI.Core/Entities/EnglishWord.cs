@@ -53,12 +53,6 @@ namespace BackendAPI.Core.Entities
         /// </summary>           
         public DateTime? Createdate { get; set; }
 
-        /// <summary>
-        /// Desc:
-        /// Default:
-        /// Nullable:True
-        /// </summary>           
-        public string Createuser { get; set; }
 
         /// <summary>
         /// Desc:

@@ -186,9 +186,9 @@ export default {
   cursor: pointer;
   color: #409eff;
 }
-.el-popper {
+/* .el-popper {
   top: 45px !important;
-}
+} */
 .hand {
   cursor: pointer;
 }

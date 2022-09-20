@@ -62,7 +62,7 @@
       </div>
     </el-main>
 
-    <EditForm ref="editForm"></EditForm>
+    <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm>
   </el-container>
 </template>
 
@@ -102,6 +102,12 @@ export default {
     //搜索单词按下回车
     wordKeyEnter() {
       console.log("wordKeyEnter");
+      var that = this;
+      that.$http
+        .post("/api/Word/RecordWord", { Word: that.paging.searchContent })
+        .then((res) => {
+          that.GetMyWordList()
+        });
     },
     //列双击
     rowDbClick(row, column, event) {
@@ -127,6 +133,7 @@ export default {
     },
     // 获取分页数据
     GetMyWordList() {
+      console.log('parent RefreshData')
       var that = this;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
         that.tableData = res.data.pageList;
