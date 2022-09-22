@@ -23,6 +23,7 @@
           <el-input-number
             v-model="editRow.recordTimes"
             :min="0"
+            :step="1"
             label="次数"
           ></el-input-number>
         </el-form-item>

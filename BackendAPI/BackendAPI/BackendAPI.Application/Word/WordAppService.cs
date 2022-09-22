@@ -2,6 +2,7 @@
 using BackendAPI.Core;
 using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
+using Furion.LinqBuilder;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using System.Linq.Expressions;
@@ -24,6 +25,69 @@ namespace BackendAPI.Application
         {
             _memoryCache = memoryCache;
         }
+
+
+        [HttpPost]
+        public async Task<object> GetMyWordList(PageInfoWord dto)
+        {
+            var allEnglishWordList = GetCacheEnglishWords();
+            //var orderProp = "RecordTimes";
+
+            //指定了排序列
+            if (!string.IsNullOrEmpty(dto.prop))
+            {
+                var isDesc = true;
+                switch (dto.order)
+                {
+                    case "descending":
+                        isDesc = true;
+                        break;
+                    case "ascending":
+                        isDesc = false;
+                        break;
+                }
+                allEnglishWordList = allEnglishWordList.AsQueryable().OrderBy(dto.prop, isDesc).ToList();
+            }
+            else
+            {
+                allEnglishWordList = allEnglishWordList.OrderByDescending(x => x.RecordTimes).ToList();
+            }
+            //如果有搜索关键词
+            //Func<EnglishWord, bool> whereExp = x => true;
+
+            Expression<Func<EnglishWord, bool>> where = c => true;
+
+            if (!string.IsNullOrEmpty(dto.searchContent))
+            {
+                //whereExp = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
+
+                where = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
+            }
+
+            //搜索范围
+            switch (dto.searchScop)
+            {
+                case SearchScope.全部:
+                default:
+
+                    break;
+
+                case SearchScope.今日:
+                    var today = DateTime.Now.Date;
+                    where = where.And(x => x.Createdate >= today || x.Modifydate >= today);
+                    break;
+            }
+            //筛选
+            var filterEnumeralble = allEnglishWordList.Where(where.Compile());
+            var allCount = filterEnumeralble.Count();
+            var pageList = filterEnumeralble.Skip((dto.pageNumber - 1) * dto.pageSize).Take(dto.pageSize);
+            //var pageList = allEnglishWordList.Where(whereExp).Skip((dto.pageNumber - 1) * dto.pageSize).Take(dto.pageSize);
+
+            return new { pageList, allCount };
+        }
+
+
+
 
         /// <summary>
         /// 保存单词
@@ -54,7 +118,7 @@ namespace BackendAPI.Application
                 findWord.Modifydate = DateTime.Now;
                 findWord.Translate = dto.Translate;
                 findWord.RecordTimes = dto.RecordTimes;
-                await db.Updateable(dto).ExecuteCommandAsync();
+                await db.Updateable(findWord).ExecuteCommandAsync();
             }
 
             //刷新单词
@@ -144,54 +208,12 @@ namespace BackendAPI.Application
             var wordlist = _memoryCache.GetOrCreate(curUserWordCache, entry =>
             {
                 Console.WriteLine("查缓存");
-                entry.SlidingExpiration = TimeSpan.FromSeconds(5);
+                entry.SlidingExpiration = TimeSpan.FromSeconds(1);
                 var list = db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).ToList();
                 return list;
             });
 
             return wordlist;
-        }
-
-
-        [HttpPost]
-        public async Task<object> GetMyWordList(PageInfo dto)
-        {
-            var allEnglishWordList = GetCacheEnglishWords();
-            //var orderProp = "RecordTimes";
-
-            //指定了排序列
-            if (!string.IsNullOrEmpty(dto.prop))
-            {
-                //BindingFlags flag = BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance;
-                //var propertyInfo = typeof(EnglishWord).GetProperty(dto.prop, flag);
-                //orderProp = dto.prop;
-                var isDesc = true;
-                switch (dto.order)
-                {
-                    case "descending":
-                        isDesc = true;
-                        break;
-                    case "ascending":
-                        isDesc = false;
-                        break;
-                }
-                allEnglishWordList = allEnglishWordList.AsQueryable().OrderBy(dto.prop, isDesc).ToList();
-            }
-            else
-            {
-                allEnglishWordList = allEnglishWordList.OrderByDescending(x => x.RecordTimes).ToList();
-            }
-            //如果有搜索关键词
-            //whereExp.AndIF(!string.IsNullOrEmpty(dto.searchContent), x => x.Word.Contains(dto.searchContent));
-            Func<EnglishWord, bool> whereExp = x => true;
-            if (!string.IsNullOrEmpty(dto.searchContent))
-            {
-                whereExp = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
-            }
-            var allCount = allEnglishWordList.Count();
-            var pageList = allEnglishWordList.Where(whereExp).Skip((dto.pageNumber - 1) * dto.pageSize).Take(dto.pageSize);
-
-            return new { pageList, allCount };
         }
 
 

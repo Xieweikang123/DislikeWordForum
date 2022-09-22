@@ -1,6 +1,14 @@
 <template>
   <el-container>
-    <el-aside width="200px">Aside</el-aside>
+    <el-aside width="200px">
+      <div class="btnContainer">
+        <el-button @click="changeScore(0)" type="primary" :plain="paging.searchScop!=0">全部</el-button>
+        <el-button @click="changeScore(1)" type="primary" :plain="paging.searchScop!=1">今日单词</el-button>
+        <!-- <el-button type="primary">昨天</el-button>
+        <el-button type="primary">最近3天</el-button>
+        <el-button type="primary">最近7天</el-button> -->
+      </div>
+    </el-aside>
     <el-main>
       <el-input
         placeholder="搜索单词"
@@ -82,7 +90,7 @@ export default {
         prop: "",
         searchKeyWord: "",
         searchContent: "",
-
+        searchScop: 0,
         order: "",
       },
       tableData: [],
@@ -94,11 +102,20 @@ export default {
         this.GetMyWordList();
       },
     },
+    "paging.searchScop": {
+      handler(nVal) {
+        this.GetMyWordList();
+      },
+    },
   },
   mounted() {
     this.GetMyWordList();
   },
   methods: {
+    //改变筛选范围
+    changeScore(val) {
+      this.paging.searchScop = val;
+    },
     //搜索单词按下回车
     wordKeyEnter() {
       console.log("wordKeyEnter");
@@ -106,7 +123,7 @@ export default {
       that.$http
         .post("/api/Word/RecordWord", { Word: that.paging.searchContent })
         .then((res) => {
-          that.GetMyWordList()
+          that.GetMyWordList();
         });
     },
     //列双击
@@ -132,7 +149,7 @@ export default {
     },
     // 获取分页数据
     GetMyWordList() {
-      console.log('parent RefreshData')
+      console.log("parent RefreshData");
       var that = this;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
         that.tableData = res.data.pageList;
@@ -148,6 +165,9 @@ export default {
 };
 </script>
 <style scoped>
+.btnContainer button {
+  margin: 7px 9px;
+}
 .paginationStyle {
   text-align: right;
   margin-top: 17px;

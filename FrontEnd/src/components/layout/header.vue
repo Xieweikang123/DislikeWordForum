@@ -202,21 +202,7 @@ export default {
   text-align: center;
   line-height: 60px;
 }
-
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
-}
-
-/* .el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-} */
-
+ 
 body > .el-container {
   margin-bottom: 40px;
 }
@@ -237,19 +223,6 @@ body > .el-container {
   line-height: 60px;
 }
 
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
-}
-
-/* .el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-} */
 
 body > .el-container {
   margin-bottom: 40px;

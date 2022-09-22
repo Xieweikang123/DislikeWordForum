@@ -5,11 +5,10 @@
 
 
 using System.Linq;
-
-
-using BackendAPI.Core.Entities;
+ 
 using System.Reflection;
 using TestConsole;
+using Microsoft.AspNetCore.Builder;
 
 //var engli = new EnglishWord();
 
@@ -24,7 +23,9 @@ using TestConsole;
 //var ss2 = engli.GetType().GetProperty("Word", BindingFlags.IgnoreCase);
 
 
-var wordList = new List<EnglishWord>();
+var builder = WebApplication.CreateBuilder(args);
+
+//var wordList = new List<EnglishWord>();
 
 //var ss= wordList.OrderBy("", true);
 //wordList.Where(x=>x.)
