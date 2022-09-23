@@ -2,17 +2,14 @@
   <div>
     <div style="margin-bottom: 13px">
       <el-button
-        @click="changeScore(0)"
+        v-for="(item, index) in sbtnConfig"
+        :key="index"
+        @click="changeScore(item.scopeIndex)"
         type="primary"
-        :plain="paging.searchScop != 0"
-        >全部</el-button
+        :plain="paging.searchScop != item.scopeIndex"
+        >{{ item.text }}</el-button
       >
-      <el-button
-        @click="changeScore(1)"
-        type="primary"
-        :plain="paging.searchScop != 1"
-        >今日单词</el-button
-      >
+      <!-- {{ paging.totalCount }}个单词 -->
     </div>
     <el-input
       placeholder="搜索单词"
@@ -75,11 +72,13 @@
       <el-pagination
         background
         @current-change="changePageNumber"
-        layout="prev, pager, next"
-        :total="paging.totalPage"
+        layout="total,prev, pager, next"
+        :total="paging.totalCount"
       >
       </el-pagination>
     </div>
+
+    <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm>
   </div>
 </template>
 
@@ -91,11 +90,30 @@ export default {
   },
   data() {
     return {
+      sbtnConfig: [
+        // '全部', '今日单词', '昨日单词', '最近7天'
+        {
+          text: "全部",
+          scopeIndex: 0,
+        },
+        {
+          text: "今日单词",
+          scopeIndex: 1,
+        },
+        {
+          text: "昨日单词",
+          scopeIndex: 2,
+        },
+        {
+          text: "最近7天",
+          scopeIndex: 4,
+        },
+      ],
       // searchContent:'',
       paging: {
         pageNumber: 1,
         pageSize: 10,
-        totalPage: 0,
+        totalCount: 0,
         prop: "",
         searchKeyWord: "",
         searchContent: "",
@@ -141,7 +159,7 @@ export default {
     },
     //列双击
     rowDbClick(row, column, event) {
-      this.$refs.editForm.show(row);
+      // this.$refs.editForm.show(row);
     },
     //搜索改变
     searchChange(value) {
@@ -166,7 +184,7 @@ export default {
       var that = this;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
         that.tableData = res.data.pageList;
-        that.paging.totalPage = res.data.allCount;
+        that.paging.totalCount = res.data.allCount;
       });
     },
     //页码改变时

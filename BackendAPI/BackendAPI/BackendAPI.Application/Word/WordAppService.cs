@@ -64,6 +64,8 @@ namespace BackendAPI.Application
                 where = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
             }
 
+            var today = DateTime.Now.Date;
+
             //搜索范围
             switch (dto.searchScop)
             {
@@ -71,10 +73,17 @@ namespace BackendAPI.Application
                 default:
 
                     break;
-
                 case SearchScope.今日:
-                    var today = DateTime.Now.Date;
+
                     where = where.And(x => x.Createdate >= today || x.Modifydate >= today);
+                    break;
+                case SearchScope.昨天:
+                    var yeasterDayStart = today.AddDays(-1);
+                    where = where.And(x => x.Createdate >= yeasterDayStart || x.Modifydate >= yeasterDayStart);
+                    break;
+                case SearchScope.最近7天:
+                    var recent7DayStart = today.AddDays(-7);
+                    where = where.And(x => x.Createdate >= recent7DayStart || x.Modifydate >= recent7DayStart);
                     break;
             }
             //筛选

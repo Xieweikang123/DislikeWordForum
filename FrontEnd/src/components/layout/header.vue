@@ -195,6 +195,9 @@ export default {
 .hand:hover {
   color: blue;
 }
+.el-header{
+  box-shadow: 3px 3px 17px 6px #f9f9f999;
+}
 .el-header,
 .el-footer {
   /* background-color: #b3c0d1; */

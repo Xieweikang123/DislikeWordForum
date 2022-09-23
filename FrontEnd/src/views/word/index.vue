@@ -14,17 +14,15 @@
     <el-main>
       <WordForm></WordForm>
     </el-main>
-
-    <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm>
+<!-- 
+    <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm> -->
   </el-container>
 </template>
 
   <script>
-import EditForm from "../word/editForm.vue";
 import WordForm from "../word/wordForm.vue";
 export default {
   components: {
-    EditForm,
     WordForm
   },
   data() {
