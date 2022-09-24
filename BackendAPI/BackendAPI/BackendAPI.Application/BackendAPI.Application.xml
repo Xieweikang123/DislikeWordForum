@@ -9,6 +9,25 @@
             文件上传服务
             </summary>
         </member>
+        <member name="T:BackendAPI.Application.PageInfoRanking">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BackendAPI.Application.RankingService">
+            <summary>
+            排行接口
+            </summary>
+            
+        </member>
+        <member name="M:BackendAPI.Application.RankingService.GetTodayRanking(BackendAPI.Application.PageInfoRanking)">
+            <summary>
+            今日背单词排行  
+            头像 人 昵称---单词数
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="T:BackendAPI.Application.RetObj">
             <summary>
             返回对象
@@ -131,6 +150,16 @@
             </summary>
             <param name="isGetNew">重新获取</param>
             <returns></returns>
+        </member>
+        <member name="T:BackendAPI.Core.PageInfoWord">
+            <summary>
+            单词分页
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.PageInfoWord.searchScop">
+            <summary>
+            搜索范围
+            </summary>
         </member>
     </members>
 </doc>

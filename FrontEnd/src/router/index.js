@@ -30,6 +30,14 @@ const routes = [
     component:  () => import('@/views/word/index')
   },
   {
+    path: '/ranking',
+    meta: {
+      // 页面标题title
+      title: '排行-UnForum'
+    },
+    component:  () => import('@/views/ranking/index')
+  },
+  {
     path: '/selfInfo',
     name: 'selfInfo',
     meta: {

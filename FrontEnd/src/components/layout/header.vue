@@ -56,13 +56,11 @@
    
    
    <script>
-import Menu from "@/components/menu/menu.vue";
 import Login from "@/views/user/login.vue";
 import Register from "@/views/user/register.vue";
 
 export default {
   components: {
-    Menu,
     Login,
     Register,
   },
@@ -78,6 +76,10 @@ export default {
         {
           name: "单词",
           url: "/word",
+        },
+        {
+          name: "排行",
+          url: "/ranking",
         },
       ],
       isLogin: false,

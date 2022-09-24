@@ -91,7 +91,6 @@ export default {
   data() {
     return {
       sbtnConfig: [
-        // '全部', '今日单词', '昨日单词', '最近7天'
         {
           text: "全部",
           scopeIndex: 0,

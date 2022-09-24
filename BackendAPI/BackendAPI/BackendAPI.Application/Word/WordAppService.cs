@@ -217,7 +217,7 @@ namespace BackendAPI.Application
             var wordlist = _memoryCache.GetOrCreate(curUserWordCache, entry =>
             {
                 Console.WriteLine("查缓存");
-                entry.SlidingExpiration = TimeSpan.FromSeconds(1);
+                entry.SlidingExpiration = TimeSpan.FromSeconds(60);
                 var list = db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).ToList();
                 return list;
             });

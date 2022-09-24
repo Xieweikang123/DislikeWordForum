@@ -86,7 +86,8 @@ export default {
 
             that.$eventBus.$emit("userInfoChange", res.data);
             that.hide();
-            // that.$emit("CallBack");
+            //跳转首页
+            window.location.href = "/";
           });
       });
     },

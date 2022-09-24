@@ -4,6 +4,9 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+		<UserSecretsId>43768c27-36ae-4cc9-b389-16371b08719f</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>

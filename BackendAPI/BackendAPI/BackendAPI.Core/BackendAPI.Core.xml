@@ -739,15 +739,5 @@
             排序规则
             </summary>
         </member>
-        <member name="T:BackendAPI.Core.PageInfoWord">
-            <summary>
-            单词分页
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.PageInfoWord.searchScop">
-            <summary>
-            搜索范围
-            </summary>
-        </member>
     </members>
 </doc>

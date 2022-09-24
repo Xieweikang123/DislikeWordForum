@@ -21,6 +21,10 @@ export default {
 </script>
 
 <style lang="less">
+.disAlignCenter {
+  display: flex;
+  align-items: center;
+}
 body {
   // 设置最小宽度, 以免出现布局混乱
   // min-width: 1800px;
