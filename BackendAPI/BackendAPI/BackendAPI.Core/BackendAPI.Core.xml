@@ -383,27 +383,6 @@
             Nullable:False
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.FlashContent.ip">
-            <summary>
-            Desc:用户ip
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.FlashContent.nickName">
-            <summary>
-            Desc:用户昵称
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.FlashContent.email">
-            <summary>
-            Desc:用户邮箱
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
         <member name="P:BackendAPI.Core.Entities.FlashContent.sayContent">
             <summary>
             Desc:发送内容
@@ -438,6 +417,11 @@
             Default:
             Nullable:True
             </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.FlashContent.userId">
+            <summary>
+            用户id
+            </summary>
         </member>
         <member name="T:BackendAPI.Core.Entities.Notepad">
             <summary>

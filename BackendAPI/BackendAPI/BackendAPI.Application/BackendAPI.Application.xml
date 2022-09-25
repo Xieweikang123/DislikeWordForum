@@ -9,6 +9,42 @@
             文件上传服务
             </summary>
         </member>
+        <member name="T:BackendAPI.Application.FlashContentService">
+            <summary>
+            闪念服务接口
+            </summary>
+            
+        </member>
+        <member name="M:BackendAPI.Application.FlashContentService.GetContentList(BackendAPI.Core.PageInfo)">
+            <summary>
+            获取闪念分页列表
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.FlashContentService.DelAContent(BackendAPI.Core.Entities.FlashContent)">
+            <summary>
+            删除一条闪念
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:BackendAPI.Application.FlashContentService.SendAContent(BackendAPI.Core.Entities.FlashContent)">
+            <summary>
+            发送一个闪念
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.FlashContentService.GetTodayRanking(BackendAPI.Core.PageInfo)">
+            <summary>
+            今日背单词排行  
+            头像 人 昵称---单词数
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="T:BackendAPI.Application.PageInfoRanking">
             <summary>
             

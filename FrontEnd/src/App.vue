@@ -21,6 +21,10 @@ export default {
 </script>
 
 <style lang="less">
+  .margin60Auto{
+    width: 60%;
+    margin: 0 auto;
+  }
 .disAlignCenter {
   display: flex;
   align-items: center;

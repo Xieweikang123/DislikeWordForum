@@ -89,9 +89,6 @@ export default {
   /* width: 41%; */
   margin: 13px auto;
   justify-content: space-between;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 .container {
   text-align: center;
