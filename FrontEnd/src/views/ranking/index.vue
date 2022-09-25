@@ -1,37 +1,44 @@
 <template>
   <div class="container">
-    <!-- <div>
-      <el-button type="primary">今日排行</el-button>
-    </div> -->
+    <el-row class="rankingBar">
+      <el-col :span="12"> 用户名 </el-col>
+      <el-col :span="12"> 背单词数量 </el-col>
+    </el-row>
+    <el-skeleton
+      :loading="isLoading"
+      class="rowmargin"
+      style="width: 50%"
+      animated
+    >
+      <template slot="template">
+        <el-skeleton-item
+          v-for="item in [0, 1, 2, 3]"
+          :key="item"
+          variant="text"
+          style="margin-top: 20px"
+        />
+      </template>
+    </el-skeleton>
 
-    <div class="rowmargin disAlignCenter rankingBar">
-      <div class="disAlignCenter">
-        <!-- <span class="notxt">{{ index + 1 }}、</span> -->
-        <!-- <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar> -->
-        用户名
-      </div>
-      背单词数量
-    </div>
-    <div
+    <el-row
       class="rowmargin disAlignCenter"
       v-for="(item, index) in todayData"
       :key="item.belongUserId"
     >
+      <el-col class="disAlignCenter" :span="8" :offset="4">
+        <span class="notxt">{{ index + 1 }}、</span>
+        <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar
+        >{{ item.nickName }}
+      </el-col>
+      <el-col :span="12"> {{ item.sum }} </el-col>
+      <!-- 
       <div class="disAlignCenter">
         <span class="notxt">{{ index + 1 }}、</span>
         <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar>
         {{ item.nickName }}
       </div>
-      {{ item.sum }}
-    </div>
-
-    <!-- <el-row class="rowmargin"  :align="center" v-for="item in todayData" :key="item.belongUserId">
-      <el-col :span="10">
-        <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar>
-        {{ item.nickName }}</el-col
-      >
-      <el-col :span="8">{{ item.sum }}</el-col>
-    </el-row> -->
+      {{ item.sum }} -->
+    </el-row>
   </div>
 </template>
 
@@ -39,28 +46,22 @@
 export default {
   data() {
     return {
+      isLoading: true,
       todayData: [],
     };
   },
   computed: {
-    // AvatorUrl() {
-    //   if (!this.form || !this.form.avatar || this.form.avatar.length == 0) {
-    //     return "";
-    //   }
-    //   return process.env.VUE_APP_BASE_API + this.form.avatar;
-    // },
   },
   mounted() {
     var that = this;
+
     that.$http.post("/api/Ranking/GetTodayRanking", {}).then((res) => {
       console.log("GetTodayRanking", res);
       that.todayData = res.data;
-      // //关闭面板
-      // if (res.succeeded) {
-      //   that.$message.success("删除成功");
-      //   that.isShowDrawer = false;
-      //   that.$emit("RefreshData");
-      // }
+      that.isLoading = false;
+      if (that.todayData.length == 0) {
+        that.$message.info("今日暂无人背单词");
+      }
     });
   },
   methods: {
@@ -73,17 +74,19 @@ export default {
 </script>
 <style scoped>
 .rankingBar {
-    box-shadow: 2px 8px 11px 3px #f1fcff;
-    padding: 6px 77px;
+  box-shadow: 2px 8px 11px 3px #f1fcff;
+  padding: 13px 0;
+  color: #82b1d3;
+  font-weight: 600;
 }
 .notxt {
-  font-size: 22px;
+  font-size: 16px;
   color: #145e7e;
   text-shadow: 3px 1px 4px white;
 }
 .rowmargin {
   margin-top: 10px;
-  width: 41%;
+  /* width: 41%; */
   margin: 13px auto;
   justify-content: space-between;
   /* display: flex;

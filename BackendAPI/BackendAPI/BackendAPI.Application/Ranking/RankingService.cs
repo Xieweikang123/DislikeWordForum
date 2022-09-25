@@ -37,6 +37,7 @@ namespace BackendAPI.Application
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<object> GetTodayRanking(PageInfoRanking dto)
         {
 

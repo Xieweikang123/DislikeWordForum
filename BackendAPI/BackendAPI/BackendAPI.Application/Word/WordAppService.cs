@@ -79,7 +79,7 @@ namespace BackendAPI.Application
                     break;
                 case SearchScope.昨天:
                     var yeasterDayStart = today.AddDays(-1);
-                    where = where.And(x => x.Createdate >= yeasterDayStart || x.Modifydate >= yeasterDayStart);
+                    where = where.And(x => x.Createdate >= yeasterDayStart&&x.Createdate<today || x.Modifydate >= yeasterDayStart&&x.Modifydate<today);
                     break;
                 case SearchScope.最近7天:
                     var recent7DayStart = today.AddDays(-7);
