@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="margin60Auto">
     <div style="margin-bottom: 13px">
       <el-button
         v-for="(item, index) in sbtnConfig"

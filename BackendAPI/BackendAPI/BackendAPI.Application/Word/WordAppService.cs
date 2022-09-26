@@ -27,6 +27,23 @@ namespace BackendAPI.Application
         }
 
 
+
+        /// <summary>
+        /// 获取大于指定记录数的单词
+        /// </summary>
+        /// <param name="recordTimes"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<object> GetGreaterThanRecordWords(int recordTimes)
+        {
+
+            var userId = CurrentUserInfo.UserId;
+            var db = DbContext.Instance;
+            var wordlist = GetCacheEnglishWords();
+            var list = wordlist.Where(x => x.BelongUserId == userId && x.RecordTimes >= recordTimes).ToList();
+            return list;
+        }
+
         [HttpPost]
         public async Task<object> GetMyWordList(PageInfoWord dto)
         {
@@ -79,7 +96,7 @@ namespace BackendAPI.Application
                     break;
                 case SearchScope.昨天:
                     var yeasterDayStart = today.AddDays(-1);
-                    where = where.And(x => x.Createdate >= yeasterDayStart&&x.Createdate<today || x.Modifydate >= yeasterDayStart&&x.Modifydate<today);
+                    where = where.And(x => x.Createdate >= yeasterDayStart && x.Createdate < today || x.Modifydate >= yeasterDayStart && x.Modifydate < today);
                     break;
                 case SearchScope.最近7天:
                     var recent7DayStart = today.AddDays(-7);
