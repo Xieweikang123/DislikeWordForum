@@ -4,41 +4,37 @@
       <el-col :span="12"> 用户名 </el-col>
       <el-col :span="12"> 背单词数量 </el-col>
     </el-row>
-    <el-skeleton
-      :loading="isLoading"
-      class="rowmargin"
-      style="width: 50%"
-      animated
-    >
-      <template slot="template">
-        <el-skeleton-item
-          v-for="item in [0, 1, 2, 3]"
-          :key="item"
-          variant="text"
-          style="margin-top: 20px"
-        />
-      </template>
-    </el-skeleton>
 
-    <el-row
-      class="rowmargin disAlignCenter"
-      v-for="(item, index) in todayData"
-      :key="item.belongUserId"
-    >
-      <el-col class="disAlignCenter" :span="8" :offset="4">
-        <span class="notxt">{{ index + 1 }}、</span>
-        <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar
-        >{{ item.nickName }}
-      </el-col>
-      <el-col :span="12"> {{ item.sum }} </el-col>
-      <!-- 
-      <div class="disAlignCenter">
-        <span class="notxt">{{ index + 1 }}、</span>
-        <el-avatar :src="getAvatorUrl(item.avatar)"></el-avatar>
-        {{ item.nickName }}
-      </div>
-      {{ item.sum }} -->
-    </el-row>
+    <div class="rowmargin">
+      <el-skeleton :loading="isLoading" animated>
+        <template slot="template">
+          <el-skeleton-item
+            v-for="item in [0, 1, 2, 3]"
+            :key="item"
+            variant="text"
+            style="margin-top: 20px"
+          />
+        </template>
+      </el-skeleton>
+
+      <el-row
+        class="disAlignCenter"
+        style="    margin-top: 12px;"
+        v-for="(item, index) in todayData"
+        :key="item.belongUserId"
+      >
+        <el-col class="disAlignCenter" :span="8" :offset="4">
+          <div style="position: relative; margin-right: 16px">
+            <el-avatar :src="getAvatorUrl(item.avatar)"> </el-avatar>
+            <span class="notxt">{{ index + 1 }}</span>
+          </div>
+          {{ item.nickName }}
+        </el-col>
+        <el-col :span="12"> {{ item.sum }} </el-col>
+      </el-row>
+
+      <span v-if="todayData.length == 0">今日暂无人背单词</span>
+    </div>
   </div>
 </template>
 
@@ -50,8 +46,7 @@ export default {
       todayData: [],
     };
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
     var that = this;
 
@@ -60,7 +55,7 @@ export default {
       that.todayData = res.data;
       that.isLoading = false;
       if (that.todayData.length == 0) {
-        that.$message.info("今日暂无人背单词");
+        // that.$message.info("今日暂无人背单词");
       }
     });
   },
@@ -80,9 +75,16 @@ export default {
   font-weight: 600;
 }
 .notxt {
-  font-size: 16px;
-  color: #145e7e;
-  text-shadow: 3px 1px 4px white;
+  font-size: 12px;
+  position: absolute;
+  bottom: 0;
+  background: #fff3b3;
+  font-weight: 900;
+  width: 19px;
+  border-radius: 12px;
+  line-height: 19px;
+  right: -11px;
+  color: #914b4b;
 }
 .rowmargin {
   margin-top: 10px;

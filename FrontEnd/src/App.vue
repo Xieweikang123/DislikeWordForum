@@ -21,10 +21,10 @@ export default {
 </script>
 
 <style lang="less">
-  .margin60Auto{
-    width: 60%;
-    margin: 0 auto;
-  }
+.margin60Auto {
+  width: 60%;
+  margin: 0 auto;
+}
 .disAlignCenter {
   display: flex;
   align-items: center;
@@ -38,7 +38,10 @@ body {
 }
 #app {
   // 设置字体
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  // font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+
   // 让字体更平滑, 抗锯齿
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

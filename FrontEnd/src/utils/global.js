@@ -1,7 +1,6 @@
 
 var Common = {
-
-  isLogin: false,
+ 
   formatTTime(time) {
     return time.replace("T", " ");
   }

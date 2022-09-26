@@ -51,7 +51,7 @@ http.interceptors.response.use(
           window.localStorage.removeItem("token")
 
           Message({
-            message:"登录过期，请重新登录",
+            message:"请重新登录",
             type: 'error',
             duration: 5 * 1000
           })

@@ -83,9 +83,14 @@ namespace BackendAPI.Application
             await db.Updateable(queryUser).ExecuteCommandAsync();
 
 
-            return new { queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
+            return RetUserInfo(queryUser);
 
             //return RetObj.Success(queryUser.Token, "登录成功");
+        }
+
+        private object RetUserInfo(CoreUser queryUser)
+        {
+            return new { queryUser.Id, queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
         }
 
         /// <summary>
@@ -139,7 +144,10 @@ namespace BackendAPI.Application
             //插入数据库
             var icount = await db.Insertable(queryUser).ExecuteCommandAsync();
 
-            return new { queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
+
+            return RetUserInfo(queryUser);
+
+            //return new { queryUser.Id, queryUser.UserName, queryUser.Token, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
             //return RetObj.Success(queryUser.Token, "注册成功");
         }
 

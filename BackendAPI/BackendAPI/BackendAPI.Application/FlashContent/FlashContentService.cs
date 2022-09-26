@@ -60,8 +60,9 @@ namespace BackendAPI.Application
             {
                 throw new Exception("没有权限删除");
             }
+
             findItem.status = 1;
-            await db.Updateable(dto).ExecuteCommandAsync();
+            await db.Updateable(findItem).ExecuteCommandAsync();
             return "删除成功";
         }
 
