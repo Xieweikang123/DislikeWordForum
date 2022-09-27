@@ -58,6 +58,9 @@ export default {
   mounted() {
     var that = this;
     this.recordTimes = window.localStorage.getItem("recordTime");
+    if (!this.recordTimes) {
+      this.recordTimes = 2;
+    }
     this.getList();
     //全局键盘事件
     document.onkeydown = function (e) {
@@ -103,7 +106,15 @@ export default {
       // Math.round(Math.random()*10)
       //均衡获取 0~ length-1的下标
       var rndIndex = Math.floor(Math.random() * this.allData.length);
-      this.currentItem = this.allData[rndIndex];
+      var rndItem = this.allData[rndIndex];
+      //如果重复
+      if (this.currentItem == rndItem) {
+        rndIndex++;
+        rndIndex = rndIndex >= this.allData.length ? 0 : rndIndex;
+        this.currentItem = this.allData[rndIndex];
+      } else {
+        this.currentItem = rndItem;
+      }
     },
     //单词记录数更改
     handleChange(value) {

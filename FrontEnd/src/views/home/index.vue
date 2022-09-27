@@ -37,7 +37,7 @@
           <div>
             <span style="float: right; font-size: 13px">
               <el-popconfirm
-                v-if="userInfo.id == item.userId"
+                v-if="userInfo&& userInfo.id == item.userId"
                 title="确定删除吗?"
                 @confirm="confirmDel(item)"
               >

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using System.Linq.Expressions;
 
 public class Student
 {
@@ -15,15 +16,18 @@ public class Program
     {
 
 
-        int readonlyArgument = 44;
-        InArgExample(readonlyArgument);
-        Console.WriteLine(readonlyArgument);     // value is still 44
+        var appModel = new ApplicationModel();
 
-        void InArgExample(in int number)
+        appModel.ApiExplorer = new ApiExplorerModel(new ApiExplorerModel()
         {
-            // Uncomment the following line to see error CS8331
-            //number = 19;
-        }
+            IsVisible = true,
+            GroupName = "nnn"
+        });
+
+        //appModel.
+
+
+
     }
 
 }

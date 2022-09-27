@@ -153,6 +153,7 @@ export default {
       that.$http
         .post("/api/Word/RecordWord", { Word: that.paging.searchContent })
         .then((res) => {
+          that.$message.success("记录成功")
           that.GetMyWordList();
         });
     },

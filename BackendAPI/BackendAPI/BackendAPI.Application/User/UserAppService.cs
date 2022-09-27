@@ -32,7 +32,8 @@ namespace BackendAPI.Application
             var db = DbContext.Instance;
             var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
 
-            return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
+            return RetUserInfo(queryUser);
+            //return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
         }
 
         /// <summary>
