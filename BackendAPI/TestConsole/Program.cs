@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.Linq.Expressions;
 
-public class Student
-{
-    public int StudentID { get; set; }
-    public string StudentName { get; set; }
-    public int Age { get; set; }
-}
-
+using System.Speech;
+using System.Speech.Synthesis;
 
 public class Program
 {
@@ -16,18 +11,27 @@ public class Program
     {
 
 
-        var appModel = new ApplicationModel();
+        string message = "  potentially  propagation";
 
-        appModel.ApiExplorer = new ApiExplorerModel(new ApiExplorerModel()
+
+        for (var i = 0; i < 10; i++)
         {
-            IsVisible = true,
-            GroupName = "nnn"
-        });
 
-        //appModel.
+            ReadAloud(message);
+        }
 
 
+        Console.WriteLine("ok");
+        Console.ReadKey();
 
+
+    }
+    private static void ReadAloud(string message)
+    {
+        SpeechSynthesizer speechSynthesizer = new SpeechSynthesizer();
+        speechSynthesizer.Volume = 100;
+        speechSynthesizer.Rate = 3;
+        speechSynthesizer.Speak(message);
     }
 
 }

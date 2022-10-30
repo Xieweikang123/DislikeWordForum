@@ -1,7 +1,5 @@
 <template>
   <div class="margin60Auto memContainer">
-    趋势图
-
     <div id="main" style="width: 500px; height: 300px"></div>
   </div>
 </template>

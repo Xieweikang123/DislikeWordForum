@@ -13,16 +13,16 @@ namespace BackendAPI.Web.Core
         {
             // 默认授权机制，需授权的即可（方法）需贴 `[Authorize]` 特性
             //services.AddJwt<JwtHandler>();
-            services.AddJwt<JwtHandler>(enableGlobalAuthorize:true);
+            services.AddJwt<JwtHandler>(enableGlobalAuthorize: true);
 
 
             services.AddCorsAccessor();
 
             services.AddControllers()
-                //.AddJsonOptions(options =>
-                //{
-                //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                //})
+                    //.AddJsonOptions(options =>
+                    //{
+                    //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    //})
                     .AddInjectWithUnifyResult();
         }
 
