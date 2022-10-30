@@ -27,6 +27,33 @@ namespace BackendAPI.Application
         }
 
 
+        /// <summary>
+        /// 获取最近7天单词数
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public object GetRecentWordChartData()
+        {
+            //var userId = CurrentUserInfo.UserId;
+            //var db = DbContext.Instance;
+            var wordlist = GetCacheEnglishWords();
+
+            //最近七天
+            var nowTime = DateTime.Now;
+            var recDays = new List<string>();
+            var wordCounts = new List<int>();
+            for (var i = 7; i > 0; i--)
+            {
+                var curDay = nowTime.AddDays(-i);
+                recDays.Add(curDay.ToString("MM-dd"));
+                //当天单词数
+                var wcount = wordlist.Count(x => x.Modifydate != null && SqlFunc.DateIsSame(curDay, x.Modifydate));
+                wordCounts.Add(wcount);
+            }
+            return new { recDays, wordCounts };
+        }
+
+
 
         /// <summary>
         /// 获取大于指定记录数的单词
@@ -76,6 +103,7 @@ namespace BackendAPI.Application
 
             if (!string.IsNullOrEmpty(dto.searchContent))
             {
+                dto.searchContent = dto.searchContent.Trim();
                 //whereExp = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
 
                 where = x => x.Word.Contains(dto.searchContent) || (x.Translate ?? string.Empty).Contains(dto.searchContent);
@@ -186,6 +214,7 @@ namespace BackendAPI.Application
             //获取缓存单词
             var cacheEnglishWordList = GetCacheEnglishWords();
 
+            dto.Word = dto.Word.Trim();
             //查键入单词
             var findWord = cacheEnglishWordList.FirstOrDefault(x => x.Word == dto.Word);
             //如果存在

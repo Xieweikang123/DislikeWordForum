@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px" style="    position: absolute;">
+    <el-aside width="200px" style="position: absolute">
       <div class="btnContainer">
         <el-button
           v-for="item in menuBtnList"
@@ -10,21 +10,12 @@
           :plain="formType != item.type"
           >{{ item.txt }}</el-button
         >
-        <!-- <el-button
-          @click="formType = 'wordList'"
-          type="primary"
-          :plain="formType != 'wordList'"
-          >单词列表</el-button
-        >
-        <el-button @click="formType = 'MemorizingWord'" type="primary" plain
-          >背单词模式</el-button
-        >
-        <el-button type="warning" plain>数据分析</el-button> -->
       </div>
     </el-aside>
     <el-main>
       <WordForm v-if="formType == 'wordList'"></WordForm>
       <MemorizingWords v-if="formType == 'MemorizingWord'"></MemorizingWords>
+      <TrendChart v-if="formType == 'TrendChart'"></TrendChart>
     </el-main>
     <!-- 
     <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm> -->
@@ -34,10 +25,12 @@
   <script>
 import WordForm from "../word/wordForm.vue";
 import MemorizingWords from "../word/MemorizingWords.vue";
+import TrendChart from "../word/TrendChart.vue";
 export default {
   components: {
     WordForm,
     MemorizingWords,
+    TrendChart,
   },
   data() {
     return {
@@ -49,6 +42,10 @@ export default {
         {
           txt: "背单词模式",
           type: "MemorizingWord",
+        },
+        {
+          txt: "趋势图",
+          type: "TrendChart",
         },
       ],
       formType: "wordList",

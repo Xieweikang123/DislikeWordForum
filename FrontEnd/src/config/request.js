@@ -51,11 +51,14 @@ http.interceptors.response.use(
           window.localStorage.removeItem("token")
 
           Message({
-            message:"请重新登录",
+            message: "请重新登录",
             type: 'error',
-            duration: 5 * 1000
+            duration: 3 * 1000
           })
-
+          window.localStorage.setItem("userInfo", null);
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 2000);
           return Promise.resolve({ succeeded: false, errors: "登录过期，请重新登录" })
         // auth.removeToken()
         // window.location.href = "/Login"
