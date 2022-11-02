@@ -32,7 +32,7 @@ namespace BackendAPI.Application
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public object GetRecentWordChartData()
+        public object GetRecentWordChartData(int howManyDays)
         {
             //var userId = CurrentUserInfo.UserId;
             //var db = DbContext.Instance;
@@ -42,7 +42,7 @@ namespace BackendAPI.Application
             var nowTime = DateTime.Now;
             var recDays = new List<string>();
             var wordCounts = new List<int>();
-            for (var i = 7; i >= 0; i--)
+            for (var i = howManyDays; i >= 0; i--)
             {
                 var curDay = nowTime.AddDays(-i);
                 recDays.Add(curDay.ToString("MM-dd"));
