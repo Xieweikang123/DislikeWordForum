@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Furion\framework\Furion.Pure\Furion.Pure.csproj" />
+    <Folder Include="Entities\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <ProjectReference Include="..\Furion.Pure\Furion.Pure.csproj" />
   </ItemGroup>
 
 </Project>

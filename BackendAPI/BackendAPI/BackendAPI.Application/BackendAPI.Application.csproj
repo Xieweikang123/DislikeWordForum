@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BackendAPI.Core\BackendAPI.Core.csproj" />
+		<ProjectReference Include="..\Furion.Pure\Furion.Pure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

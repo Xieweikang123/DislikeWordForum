@@ -1,8 +1,8 @@
 <template>
   <div class="margin60Auto memContainer">
     <div id="rec7Days" style="width: 500px; height: 300px"></div>
-    <div id="rec30Days" style="width: 1000px; height: 300px"></div>
-    <div id="rec180Days" style="width: 1000px; height: 300px"></div>
+    <div id="rec30Days" style="width: 800px; height: 300px"></div>
+    <div id="rec180Days" style="width: 900px; height: 300px"></div>
     <div id="rec360Days" style="width: 1000px; height: 300px"></div>
   </div>
 </template>
