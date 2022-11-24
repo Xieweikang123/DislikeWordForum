@@ -81,6 +81,10 @@ export default {
           name: "排行",
           url: "/ranking",
         },
+        {
+          name: "笔记",
+          url: "/note",
+        },
       ],
       isLogin: false,
     };

@@ -56,6 +56,7 @@ export default {
   components: {},
   data() {
     return {
+      intervalId: "",
       configEntity: {
         isOpenVoice: false,
       },
@@ -89,8 +90,10 @@ export default {
         }
         //关闭翻译
         this.isShowTranslate = false;
+        //取消之前的定时
+        clearInterval(this.intervalId);
         //两秒之后，点击
-        setTimeout(() => {
+        this.intervalId = setTimeout(() => {
           that.wordClick();
         }, 2500);
         // this.$refs.audio.play();

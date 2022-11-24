@@ -27,7 +27,7 @@ const routes = [
       // 页面标题title
       title: '单词-UnForum'
     },
-    component:  () => import('@/views/word/index')
+    component: () => import('@/views/word/index')
   },
   {
     path: '/ranking',
@@ -35,7 +35,15 @@ const routes = [
       // 页面标题title
       title: '排行-UnForum'
     },
-    component:  () => import('@/views/ranking/index')
+    component: () => import('@/views/ranking/index')
+  },
+  {
+    path: '/note',
+    meta: {
+      // 页面标题title
+      title: '笔记'
+    },
+    component: () => import('@/views/note/index')
   },
   {
     path: '/selfInfo',
@@ -44,7 +52,7 @@ const routes = [
       // 页面标题title
       title: '个人信息-UnForum'
     },
-    component:  () => import('@/views/user/selfInfo.vue')
+    component: () => import('@/views/user/selfInfo.vue')
   },
   // 只有用户访问到, 才会被加载渲染(惰性加载)
   {

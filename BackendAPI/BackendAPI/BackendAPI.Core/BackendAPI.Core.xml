@@ -371,6 +371,58 @@
             Nullable:True
             </summary>           
         </member>
+        <member name="T:BackendAPI.Core.Entities.Note">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.sayContent">
+            <summary>
+            Desc:发送内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.createTime">
+            <summary>
+            Desc:创建时间
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.status">
+            <summary>
+            Desc:0正常  1删除 
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.likeCount">
+            <summary>
+            Desc:喜欢数
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.likeNames">
+            <summary>
+            Desc:点赞的人昵称，逗号分隔
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.userId">
+            <summary>
+            用户id
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.FlashContent">
             <summary>
             
