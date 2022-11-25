@@ -66,6 +66,13 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
+            <summary>
+            编辑保存笔记标签
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.Note)">
             <summary>
             发送一个闪念

@@ -39,6 +39,10 @@ public static class IDGen
         return App.GetService<IDistributedIDGenerator>(serviceProvider ?? App.RootServices).Create(idGeneratorOptions);
     }
 
+    public static string GetStrId()
+    {
+        return NextID().ToString();
+    }
     /// <summary>
     /// 生成连续 GUID
     /// </summary>

@@ -29,16 +29,17 @@ namespace BackendAPI.Application
 
             RefAsync<int> totalNumber = 0;
 
-            var list = await db.Queryable<Note, CoreUser>((f, c) => f.userId == c.Id).Where(f => f.status == 0 && f.userId == CurrentUserInfo.UserId).OrderByDescending(f => f.id).Select((f, c) => new
-            {
-                f.id,
-                f.userId,
-                f.sayContent,
-                f.createTime,
-                c.NickName,
-                c.Avatar
-            }).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
+            //var list = await db.Queryable<Note, CoreUser>((f, c) => f.userId == c.Id).Where(f => f.status == 0 && f.userId == CurrentUserInfo.UserId).OrderByDescending(f => f.id).Select((f, c) => new
+            //{
+            //    f.id,
+            //    f.userId,
+            //    f.sayContent,
+            //    f.createTime,
+            //    c.NickName,
+            //    c.Avatar
+            //}).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
 
+            var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.id).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
             return new { list, totalNumber };
         }
 
@@ -66,6 +67,53 @@ namespace BackendAPI.Application
             return "删除成功";
         }
 
+        /// <summary>
+        /// 编辑保存笔记标签
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> SaveNoteWithTag(Note dto)
+        {
+
+            var db = DbContext.Instance;
+
+            try
+            {
+                db.BeginTran();
+                var nowTime = DateTime.Now;
+                var userId = CurrentUserInfo.UserId;
+                //更新笔记内容
+                var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
+                findNote.updateTime = nowTime;
+                findNote.sayContent = dto.sayContent;
+
+                //标签
+                //先删后加 删除成功数量
+                var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
+                //新增
+                var addTags = dto.noteTags;
+                addTags.ForEach(x =>
+                {
+                    x.id = IDGen.GetStrId();
+                    x.createTime = nowTime;
+                    x.status = 0;
+                    x.userId = userId;
+                    x.noteId = dto.id;
+                });
+
+                await db.Insertable(addTags).ExecuteCommandAsync();
+                db.CommitTran();
+            }
+            catch (Exception ex)
+            {
+                db.RollbackTran();
+
+                throw new Exception("更新失败:" + ex.Message);
+            }
+
+            return "ok";
+        }
 
         /// <summary>
         /// 发送一个闪念

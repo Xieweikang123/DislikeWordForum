@@ -371,58 +371,6 @@
             Nullable:True
             </summary>           
         </member>
-        <member name="T:BackendAPI.Core.Entities.Note">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.id">
-            <summary>
-            Desc:
-            Default:
-            Nullable:False
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.sayContent">
-            <summary>
-            Desc:发送内容
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.createTime">
-            <summary>
-            Desc:创建时间
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.status">
-            <summary>
-            Desc:0正常  1删除 
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.likeCount">
-            <summary>
-            Desc:喜欢数
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.likeNames">
-            <summary>
-            Desc:点赞的人昵称，逗号分隔
-            Default:
-            Nullable:True
-            </summary>           
-        </member>
-        <member name="P:BackendAPI.Core.Entities.Note.userId">
-            <summary>
-            用户id
-            </summary>
-        </member>
         <member name="T:BackendAPI.Core.Entities.FlashContent">
             <summary>
             
@@ -475,73 +423,88 @@
             用户id
             </summary>
         </member>
-        <member name="T:BackendAPI.Core.Entities.Notepad">
+        <member name="T:BackendAPI.Core.Entities.Note">
             <summary>
             
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.NoteId">
+        <member name="P:BackendAPI.Core.Entities.Note.id">
             <summary>
             Desc:
             Default:
             Nullable:False
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.Uid">
+        <member name="P:BackendAPI.Core.Entities.Note.sayContent">
             <summary>
-            Desc:
+            Desc:发送内容
             Default:
             Nullable:True
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.NoteTitle">
+        <member name="P:BackendAPI.Core.Entities.Note.createTime">
             <summary>
-            Desc:
+            Desc:创建时间
             Default:
             Nullable:True
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.NoteContent">
+        <member name="P:BackendAPI.Core.Entities.Note.updateTime">
             <summary>
-            Desc:
+            更新时间
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Note.status">
+            <summary>
+            Desc:0正常  1删除 
             Default:
             Nullable:True
             </summary>           
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.NoteCreateTime">
+        <member name="P:BackendAPI.Core.Entities.Note.userId">
             <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
+            用户id
+            </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.NoteUpdateTime">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
+        <member name="T:BackendAPI.Core.Entities.NoteTag">
+             <summary>
+             笔记标签表
+            </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.Spare1">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
+        <member name="P:BackendAPI.Core.Entities.NoteTag.id">
+             <summary>
+              
+            </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.Spare2">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
+        <member name="P:BackendAPI.Core.Entities.NoteTag.createTime">
+             <summary>
+             创建时间 
+            </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.Notepad.Spare3">
-            <summary>
-            Desc:
-            Default:
-            Nullable:True
-            </summary>           
+        <member name="P:BackendAPI.Core.Entities.NoteTag.status">
+             <summary>
+             0正常  1删除  
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTag.userId">
+             <summary>
+             用户id 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTag.tagName">
+             <summary>
+             标签内容 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTag.noteId">
+             <summary>
+             笔记id
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTag.updateTime">
+             <summary>
+             更新时间 
+            </summary>
         </member>
         <member name="T:BackendAPI.Core.Entities.TempNote">
             <summary>

@@ -17,7 +17,7 @@ namespace BackendAPI.Core.Entities
         /// <summary>
         /// 创建时间 
         ///</summary>
-        public string createTime { get; set; }
+        public DateTime? createTime { get; set; }
         /// <summary>
         /// 0正常  1删除  
         ///</summary>
@@ -31,9 +31,9 @@ namespace BackendAPI.Core.Entities
         ///</summary>
         public string tagName { get; set; }
         /// <summary>
-        /// 笔记id，英文 &#39;,&#39; 分隔 
+        /// 笔记id
         ///</summary>
-        public string noteIds { get; set; }
+        public string noteId { get; set; }
         /// <summary>
         /// 更新时间 
         ///</summary>
