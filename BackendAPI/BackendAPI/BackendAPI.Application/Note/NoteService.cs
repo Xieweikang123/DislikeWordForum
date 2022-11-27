@@ -16,6 +16,23 @@ namespace BackendAPI.Application
     public class NoteService : IDynamicApiController
     {
 
+
+        /// <summary>
+        /// 获取所有标签
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> GetMyNoteTagList()
+        {
+            var db = DbContext.Instance;
+            //var tagList = await db.Queryable<NoteTag>().Distinct().Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateDistinctCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
+
+            var tagList = await db.Queryable<NoteTag>().GroupBy(x => new { x.tagName, x.userId }).Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
+
+            return tagList;
+        }
+
+
         /// <summary>
         /// 获取闪念分页列表
         /// </summary>
@@ -26,25 +43,29 @@ namespace BackendAPI.Application
         public async Task<object> GetContentList(PageInfo dto)
         {
             var db = DbContext.Instance;
-
             RefAsync<int> totalNumber = 0;
+            var exp = Expressionable.Create<Note>(); //创建表达式
+            exp.And(x => x.status == 0 && x.userId == CurrentUserInfo.UserId);
+            dto.searchKeyValues.ForEach(item =>
+            {
+                switch (item.key)
+                {
+                    case "tagName":
+                        if (!string.IsNullOrWhiteSpace(item.value))
+                        {
+                            exp.And(x => x.noteTags.Any(c => c.tagName == item.value));
+                        }
+                        break;
+                }
+            });
 
-            //var list = await db.Queryable<Note, CoreUser>((f, c) => f.userId == c.Id).Where(f => f.status == 0 && f.userId == CurrentUserInfo.UserId).OrderByDescending(f => f.id).Select((f, c) => new
-            //{
-            //    f.id,
-            //    f.userId,
-            //    f.sayContent,
-            //    f.createTime,
-            //    c.NickName,
-            //    c.Avatar
-            //}).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
 
-            var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.id).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
+            var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(exp.ToExpression()).OrderByDescending(x => x.id).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
             return new { list, totalNumber };
         }
 
         /// <summary>
-        /// 删除一条闪念
+        /// 删除一条笔记
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -55,15 +76,28 @@ namespace BackendAPI.Application
             var db = DbContext.Instance;
             var userId = CurrentUserInfo.UserId;
 
-            //改闪念是否为当前人的
-            var findItem = db.Queryable<Note>().First(x => x.id == dto.id);
-            if (findItem.userId != userId)
+            try
             {
-                throw new Exception("没有权限删除");
-            }
+                db.BeginTran();
 
-            findItem.status = 1;
-            await db.Updateable(findItem).ExecuteCommandAsync();
+                //改闪念是否为当前人的
+                var findItem = db.Queryable<Note>().First(x => x.id == dto.id);
+                if (findItem.userId != userId)
+                {
+                    throw new Exception("没有权限删除");
+                }
+
+                findItem.status = 1;
+                await db.Updateable(findItem).ExecuteCommandAsync();
+                //删除标签
+                await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
+
+                db.CommitTran();
+            }
+            catch (Exception ex)
+            {
+                db.RollbackTran();
+            }
             return "删除成功";
         }
 
@@ -87,6 +121,8 @@ namespace BackendAPI.Application
                 var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
                 findNote.updateTime = nowTime;
                 findNote.sayContent = dto.sayContent;
+                //更新
+                await db.Updateable(findNote).ExecuteCommandAsync();
 
                 //标签
                 //先删后加 删除成功数量
@@ -121,7 +157,7 @@ namespace BackendAPI.Application
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> SendAContent(Note dto)
+        public async Task<object> SendAContent(NoteDTO dto)
         {
             var db = DbContext.Instance;
             var userId = CurrentUserInfo.UserId;
@@ -130,12 +166,41 @@ namespace BackendAPI.Application
             {
                 throw new Exception("请输入发表内容");
             }
+            try
+            {
+                db.BeginTran();
+                var nowTime = DateTime.Now;
+                var newNote = new Note()
+                {
+                    id = IDGen.NextID().ToString(),
+                    userId = userId,
+                    createTime = nowTime,
+                    sayContent = dto.sayContent,
 
-            dto.id = IDGen.NextID().ToString();
-            dto.userId = userId;
-            dto.createTime = DateTime.Now;
+                };
 
-            await db.Insertable(dto).ExecuteCommandAsync();
+                await db.Insertable(newNote).ExecuteCommandAsync();
+                //如果有标签要插入
+                if (!string.IsNullOrEmpty(dto.tagName))
+                {
+                    var newTag = new NoteTag()
+                    {
+                        id = IDGen.GetStrId(),
+                        createTime = nowTime,
+                        status = 0,
+                        userId = userId,
+                        tagName = dto.tagName,
+                        noteId = newNote.id
+                    };
+                    await db.Insertable(newTag).ExecuteCommandAsync();
+                }
+
+                db.CommitTran();
+            }
+            catch (Exception ex)
+            {
+                db.RollbackTran();
+            }
             return "ok";
         }
 

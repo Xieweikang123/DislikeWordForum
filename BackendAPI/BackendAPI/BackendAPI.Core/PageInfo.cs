@@ -22,6 +22,10 @@ namespace BackendAPI.Core
         /// 搜索内容
         /// </summary>
         public string searchContent { get; set; }
+        /// <summary>
+        /// 搜索条件集合
+        /// </summary>
+        public List<SearchKeyValue> searchKeyValues { get; set; }
 
         /// <summary>
         /// 排序列
@@ -33,5 +37,13 @@ namespace BackendAPI.Core
         public string order { get; set; }
 
 
+    }
+    /// <summary>
+    /// 搜索条件
+    /// </summary>
+    public class SearchKeyValue
+    {
+        public string key { get; set; }
+        public string value { get; set; }
     }
 }

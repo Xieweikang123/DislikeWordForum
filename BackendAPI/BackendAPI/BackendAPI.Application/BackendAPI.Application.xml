@@ -51,6 +51,12 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.NoteService.GetMyNoteTagList">
+            <summary>
+            获取所有标签
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
             获取闪念分页列表
@@ -60,7 +66,7 @@
         </member>
         <member name="M:BackendAPI.Application.NoteService.DelAContent(BackendAPI.Core.Entities.Note)">
             <summary>
-            删除一条闪念
+            删除一条笔记
             </summary>
             <param name="dto"></param>
             <returns></returns>
@@ -73,7 +79,7 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
-        <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.Note)">
+        <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.NoteDTO)">
             <summary>
             发送一个闪念
             </summary>

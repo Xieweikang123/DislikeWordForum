@@ -56,8 +56,14 @@ namespace BackendAPI.Core.Entities
         [Navigate(NavigateType.OneToMany, nameof(NoteTag.noteId))]
 
         public List<NoteTag> noteTags { get; set; }
-
-
-
     }
+
+    public class NoteDTO:Note
+    {
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public string tagName { get; set; }
+    }
+
 }

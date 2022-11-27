@@ -466,6 +466,11 @@
             用户id
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.NoteDTO.tagName">
+            <summary>
+            标签
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.NoteTag">
              <summary>
              笔记标签表
@@ -728,6 +733,11 @@
             搜索内容
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.PageInfo.searchKeyValues">
+            <summary>
+            搜索条件集合
+            </summary>
+        </member>
         <member name="P:BackendAPI.Core.PageInfo.prop">
             <summary>
             排序列
@@ -736,6 +746,11 @@
         <member name="P:BackendAPI.Core.PageInfo.order">
             <summary>
             排序规则
+            </summary>
+        </member>
+        <member name="T:BackendAPI.Core.SearchKeyValue">
+            <summary>
+            搜索条件
             </summary>
         </member>
     </members>
