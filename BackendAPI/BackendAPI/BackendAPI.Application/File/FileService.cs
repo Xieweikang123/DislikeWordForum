@@ -14,6 +14,22 @@ namespace BackendAPI.Application.File
     public class FileService : IDynamicApiController
     {
 
+        /// <summary>
+        /// 获取文件名
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <param name="relativePath">相对路径</param>
+        /// <returns></returns>
+        public static string GetCurrentFilePathName(string suffix,out string relativePath)
+        {
+            var fileDir = App.WebHostEnvironment.WebRootPath + "/Files";
+            //string suffix = Path.GetExtension(file.FileName);
+
+            string fileName = $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}{suffix}";
+            relativePath = "Files/" + fileName;
+
+            return fileDir + "/" + fileName;
+        }
 
 
         [HttpPost]

@@ -16,15 +16,26 @@
       <!-- <el-alert title="不可关闭的 alert" type="success" :closable="false">
       </el-alert> -->
       <div v-if="currentTagName.length > 0" style="margin-bottom: 15px">
-        当前标签:{{ currentTagName }}
+        当前标签: <span style="color: #7b5505"> {{ currentTagName }}</span>
       </div>
-      <el-input
+      <!-- <el-input
         type="textarea"
+        id="contentInput"
         :rows="3"
         placeholder="请输入内容"
+        @paste.native="handlePaste($event)"
         v-model="sendContent"
       >
-      </el-input>
+      </el-input> -->
+      <div
+        id="contentInput"
+        class="contentInput"
+        contenteditable
+        placeholder="请输入内容"
+      ></div>
+      <!-- <div id="preview">
+        <span>将图片按Ctrl+V 粘贴至此处</span>
+      </div> -->
       <div style="text-align: right">
         <el-button @click="sendFun" style="margin-top: 10px" type="primary"
           >发表</el-button
@@ -55,9 +66,9 @@
           <!-- {{ $Global.user.getAvatorUrl(item.avatar) }} -->
 
           <div style="padding: 14px 40px">
-            <span class="contentLine">
-              {{ item.sayContent }}
-            </span>
+            <div class="contentLine" v-html="item.sayContent">
+              <!-- {{ item.sayContent }} -->
+            </div>
 
             <div>
               <span style="float: right; font-size: 13px">
@@ -150,6 +161,74 @@ export default {
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
   },
   methods: {
+    //发送内容
+    sendFun() {
+      var that = this;
+      console.log("send", contentInput.innerHTML);
+      that.sendContent = contentInput.innerHTML;
+
+      if (!that.$Global.user.isLogin()) {
+        that.$message.info("请先登录");
+        return;
+      }
+      if (that.sendContent.length == 0) {
+        that.$message.error("请输入发表内容");
+        return;
+      }
+      that.$http
+        .post("/api/Note/SendAContent", {
+          sayContent: that.sendContent,
+          tagName: that.currentTagName,
+        })
+        .then((res) => {
+          //关闭面板
+          if (res.succeeded) {
+            that.$message.success("发表成功");
+            that.sendContent = "";
+            contentInput.innerHTML = "";
+            that.getNoteList();
+          } else {
+            that.$message.error(res.errors);
+          }
+        });
+    },
+    // // 监听粘贴操作
+    // handlePaste(event) {
+    //   console.log("handle paste", event);
+    //   const items = (event.clipboardData || window.clipboardData).items;
+    //   let file = null;
+    //   if (!items || items.length === 0) {
+    //     this.$message.error("当前浏览器不支持本地");
+    //     return;
+    //   }
+    //   // 搜索剪切板items
+    //   for (let i = 0; i < items.length; i++) {
+    //     if (items[i].type.indexOf("image") !== -1) {
+    //       file = items[i].getAsFile();
+    //       break;
+    //     }
+    //   }
+    //   if (!file) {
+    //     this.$message.error("粘贴内容非图片");
+    //     return;
+    //   }
+    //   // 此时file就是我们的剪切板中的图片对象
+    //   // 如果需要预览，可以执行下面代码
+    //   const reader = new FileReader();
+    //   reader.readAsDataURL(file);
+
+    //   reader.onload = (event) => {
+    //     // preview.innerHTML = `<img id="pase-img" src="${event.target.result}" style="width: 100%">`; // 添加style样式保证图片等比缩放
+    //     var obj_img = document.createElement("img");
+    //     obj_img.src = event.target.result;
+    //     contentInput.appendChild(obj_img);
+
+    //     // console.log("file 转 base64结果：" + reader.result);
+    //   };
+
+    //   console.log("file", file);
+    //   this.pasteFile = file;
+    // },
     //设置搜索条件的标签
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
@@ -204,40 +283,19 @@ export default {
       var that = this;
       that.pageInfo.pageNumber = curPage;
     },
-
-    //发送闪念
-    sendFun() {
-      var that = this;
-
-      if (!that.$Global.user.isLogin()) {
-        that.$message.info("请先登录");
-        return;
-      }
-      if (that.sendContent.length == 0) {
-        that.$message.error("请输入发表内容");
-        return;
-      }
-      that.$http
-        .post("/api/Note/SendAContent", {
-          sayContent: that.sendContent,
-          tagName: that.currentTagName,
-        })
-        .then((res) => {
-          //关闭面板
-          if (res.succeeded) {
-            that.$message.success("发表成功");
-            that.sendContent = "";
-            that.getNoteList();
-          } else {
-            that.$message.error(res.errors);
-          }
-        });
-    },
   },
 };
 </script>
   
-  <style scoped>
+  <style >
+.contentInput img {
+  width: 100px;
+}
+.contentInput {
+  min-height: 150px;
+  height: auto;
+  border: 1px solid #dadada;
+}
 .tagItemStyle {
   margin: 8px 9px;
   cursor: pointer;
@@ -246,8 +304,12 @@ export default {
   width: 20%;
   position: fixed;
 }
+.contentLine img {
+  width: 50%;
+}
 .contentLine {
   line-height: 26px;
+  white-space: pre-wrap;
 }
 .userHead:hover {
   opacity: 1;

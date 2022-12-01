@@ -9,6 +9,14 @@
             文件上传服务
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.File.FileService.GetCurrentFilePathName(System.String,System.String@)">
+            <summary>
+            获取文件名
+            </summary>
+            <param name="suffix"></param>
+            <param name="relativePath">相对路径</param>
+            <returns></returns>
+        </member>
         <member name="T:BackendAPI.Application.FlashContentService">
             <summary>
             闪念服务接口
@@ -51,6 +59,13 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.NoteDTO)">
+            <summary>
+            发表内容
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetMyNoteTagList">
             <summary>
             获取所有标签
@@ -75,13 +90,6 @@
         <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
             <summary>
             编辑保存笔记标签
-            </summary>
-            <param name="dto"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.NoteDTO)">
-            <summary>
-            发送一个闪念
             </summary>
             <param name="dto"></param>
             <returns></returns>
