@@ -15,8 +15,15 @@
     <div class="margin60Auto">
       <!-- <el-alert title="不可关闭的 alert" type="success" :closable="false">
       </el-alert> -->
-      <div v-if="currentTagName.length > 0" style="margin-bottom: 15px">
-        当前标签: <span style="color: #7b5505"> {{ currentTagName }}</span>
+      <div class="topTagContainer">
+        <div>当前标签:</div>
+        <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
+        <el-input
+          style="width: 200px"
+          placeholder=""
+          v-model="pageInfo.searchKeyValues[0].value"
+        >
+        </el-input>
       </div>
       <!-- <el-input
         type="textarea"
@@ -288,6 +295,11 @@ export default {
 </script>
   
   <style >
+.topTagContainer {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
 .contentInput img {
   width: 100px;
 }
