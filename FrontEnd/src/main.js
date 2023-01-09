@@ -21,11 +21,6 @@ Vue.prototype.$Global = Global
 Vue.prototype.$eventBus = new Vue()
 
 
-
-
-console.log('env', process.env)
-
-
 // 设置axios请求的基础路径
 axios.defaults.baseURL = process.env.VUE_APP_BASE_API
 // 设置axios别名

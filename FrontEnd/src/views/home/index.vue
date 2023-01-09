@@ -12,6 +12,7 @@
         >发表</el-button
       >
     </div>
+    <el-skeleton :rows="10" animated :loading="isLoading" />
 
     <div>
       <div
@@ -37,7 +38,7 @@
           <div>
             <span style="float: right; font-size: 13px">
               <el-popconfirm
-                v-if="userInfo&& userInfo.id == item.userId"
+                v-if="userInfo && userInfo.id == item.userId"
                 title="确定删除吗?"
                 @confirm="confirmDel(item)"
               >
@@ -69,6 +70,7 @@
 export default {
   data() {
     return {
+      isLoading: false,
       userInfo: {},
       dataList: [],
       pageInfo: {
@@ -118,12 +120,23 @@ export default {
       var that = this;
       that.pageInfo.pageNumber = curPage;
     },
+    // wait(ms) {
+    //   var start = new Date().getTime();
+    //   var end = start;
+    //   while (end < start + ms) {
+    //     end = new Date().getTime();
+    //   }
+    // },
     //获取闪念分页列表
     getFlashContentList() {
       var that = this;
+      // this.wait(30000);
+      that.isLoading = true;
       that.$http
         .post("/api/FlashContent/GetContentList", that.pageInfo)
         .then((res) => {
+          that.isLoading = false;
+
           console.log("GetContentList", res);
           that.dataList = res.data.list;
           that.pageInfo.totalCount = res.data.totalNumber.value;
@@ -137,7 +150,7 @@ export default {
         that.$message.info("请先登录");
         return;
       }
-      if(that.sendContent.length==0){
+      if (that.sendContent.length == 0) {
         that.$message.error("请输入发表内容");
         return;
       }

@@ -160,6 +160,8 @@ export default {
   },
   mounted() {
     var that = this;
+    console.log("process env", process.env);
+
     that.getNoteList();
     // setInterval(() => {
     //   that.getNoteList();
@@ -250,6 +252,7 @@ export default {
 
       that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
         that.dataList = res.data.list;
+        console.log('note list',that.dataList)
         that.pageInfo.totalCount = res.data.totalNumber.value;
       });
     },
@@ -309,11 +312,11 @@ export default {
   border: 1px solid #dadada;
 }
 .tagItemStyle {
-  margin: 8px 9px;
+  margin: 6px 2px;
   cursor: pointer;
 }
 .leftTagContainer {
-  width: 20%;
+  width: 16%;
   position: fixed;
 }
 .contentLine img {
