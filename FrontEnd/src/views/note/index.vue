@@ -54,6 +54,18 @@
           >发表</el-button
         >
       </div>
+      <el-row :gutter="20" style="margin-top: 13px">
+        <el-col :span="22"
+          ><el-input
+            v-model="pageInfo.searchKeyValues[1].value"
+            @keyup.enter.native="onSearch"
+            placeholder="请输入内容"
+          ></el-input
+        ></el-col>
+        <el-col :span="2"
+          ><el-button icon="el-icon-search" @click="onSearch" circle></el-button
+        ></el-col>
+      </el-row>
 
       <div>
         <div
@@ -133,6 +145,7 @@ export default {
   },
   data() {
     return {
+      searchContent: "",
       // tagColorArray: ["#fdf6ec", "#d3ffdb", "#ffdfb2", "#cee6ff",'rgb(24 37 113)'],
       tagColorArray: ["rgb(245 248 254)", "rgb(242 255 255)"],
       allTags: [],
@@ -145,6 +158,10 @@ export default {
         searchKeyValues: [
           {
             key: "tagName",
+            value: "",
+          },
+          {
+            key: "sayContent",
             value: "",
           },
         ],
@@ -168,7 +185,7 @@ export default {
   },
   mounted() {
     var that = this;
-    console.log("process env", process.env);
+    // console.log("process env", process.env);
 
     that.getNoteList();
     // setInterval(() => {
@@ -178,10 +195,15 @@ export default {
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
   },
   methods: {
+    //搜索
+    onSearch() {
+      var that = this;
+      // console.log("onSearch", this.searchContent);
+      this.getNoteList();
+    },
     //发送内容
     sendFun() {
       var that = this;
-      console.log("send", contentInput.innerHTML);
       that.sendContent = contentInput.innerHTML;
 
       if (!that.$Global.user.isLogin()) {
@@ -209,43 +231,7 @@ export default {
           }
         });
     },
-    // // 监听粘贴操作
-    // handlePaste(event) {
-    //   console.log("handle paste", event);
-    //   const items = (event.clipboardData || window.clipboardData).items;
-    //   let file = null;
-    //   if (!items || items.length === 0) {
-    //     this.$message.error("当前浏览器不支持本地");
-    //     return;
-    //   }
-    //   // 搜索剪切板items
-    //   for (let i = 0; i < items.length; i++) {
-    //     if (items[i].type.indexOf("image") !== -1) {
-    //       file = items[i].getAsFile();
-    //       break;
-    //     }
-    //   }
-    //   if (!file) {
-    //     this.$message.error("粘贴内容非图片");
-    //     return;
-    //   }
-    //   // 此时file就是我们的剪切板中的图片对象
-    //   // 如果需要预览，可以执行下面代码
-    //   const reader = new FileReader();
-    //   reader.readAsDataURL(file);
 
-    //   reader.onload = (event) => {
-    //     // preview.innerHTML = `<img id="pase-img" src="${event.target.result}" style="width: 100%">`; // 添加style样式保证图片等比缩放
-    //     var obj_img = document.createElement("img");
-    //     obj_img.src = event.target.result;
-    //     contentInput.appendChild(obj_img);
-
-    //     // console.log("file 转 base64结果：" + reader.result);
-    //   };
-
-    //   console.log("file", file);
-    //   this.pasteFile = file;
-    // },
     //设置搜索条件的标签
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
@@ -260,7 +246,6 @@ export default {
 
       that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
         that.dataList = res.data.list;
-        console.log("note list", that.dataList);
         that.pageInfo.totalCount = res.data.totalNumber.value;
       });
     },
@@ -274,7 +259,6 @@ export default {
     getAllTags() {
       var that = this;
       that.$http.post("/api/Note/GetMyNoteTagList").then((res) => {
-        console.log("GetMyNoteTagList", res);
         if (res.succeeded) {
           that.allTags = res.data;
           // that.$message.success("删除成功");
@@ -312,8 +296,9 @@ export default {
   color: #ffffff !important;
 }
 .mixMode {
-  mix-blend-mode: difference;
-  color: white;
+  /* mix-blend-mode: difference;
+  color: white; */
+  color: #022023;
 }
 .topTagContainer {
   margin-bottom: 15px;

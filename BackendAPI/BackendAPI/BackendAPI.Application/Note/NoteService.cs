@@ -40,20 +40,20 @@ namespace BackendAPI.Application
                 var nowTime = DateTime.Now;
                 var imgSrcRegex = "(?<=src=\").*?(?=\")";
 
-                var matches= Regex.Matches(dto.sayContent, imgSrcRegex);
+                var matches = Regex.Matches(dto.sayContent, imgSrcRegex);
                 //将base64加密转为图片并且替换
                 if (matches.Any())
                 {
-                    foreach(var matItem in matches)
+                    foreach (var matItem in matches)
                     {
                         var image = ImageHelper.Base64StringToImage(matItem.ToString());
-                        var filePathName = FileService.GetCurrentFilePathName(".png",out var relativePath);
+                        var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
 
                         var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
 
                         image.Save(filePathName);
                         //替换图片路径
-                        dto.sayContent = dto.sayContent.Replace(matItem.ToString(), urlPrefix+relativePath);
+                        dto.sayContent = dto.sayContent.Replace(matItem.ToString(), urlPrefix + relativePath);
                     }
                 }
 
@@ -123,15 +123,19 @@ namespace BackendAPI.Application
             exp.And(x => x.status == 0 && x.userId == CurrentUserInfo.UserId);
             dto.searchKeyValues.ForEach(item =>
             {
-                switch (item.key)
+                if (!string.IsNullOrWhiteSpace(item.value))
                 {
-                    case "tagName":
-                        if (!string.IsNullOrWhiteSpace(item.value))
-                        {
+                    switch (item.key)
+                    {
+                        case "tagName":
                             exp.And(x => x.noteTags.Any(c => c.tagName == item.value));
-                        }
-                        break;
+                            break;
+                        case "sayContent":
+                            exp.And(x => x.sayContent.Contains(item.value));
+                            break;
+                    }
                 }
+
             });
 
 
