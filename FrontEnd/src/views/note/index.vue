@@ -1,15 +1,21 @@
 <template>
   <div>
     <div class="leftTagContainer">
-      <el-tag @click="setTag('')" class="tagItemStyle" type="success">
+      <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
         全部
       </el-tag>
       <el-tag
-        v-for="item in allTags"
+        v-for="(item, index) in allTags"
         :key="item.tagName"
         @click="setTag(item.tagName)"
         class="tagItemStyle"
-        >{{ item.tagName }}({{ item.count }})</el-tag
+        :style="{
+          'background-color': tagColorArray[index % tagColorArray.length],
+        }"
+      >
+        <span class="mixMode"
+          >{{ item.tagName }}({{ item.count }})</span
+        ></el-tag
       >
     </div>
     <div class="margin60Auto">
@@ -127,6 +133,8 @@ export default {
   },
   data() {
     return {
+      // tagColorArray: ["#fdf6ec", "#d3ffdb", "#ffdfb2", "#cee6ff",'rgb(24 37 113)'],
+      tagColorArray: ["rgb(245 248 254)", "rgb(242 255 255)"],
       allTags: [],
       userInfo: {},
       dataList: [],
@@ -252,7 +260,7 @@ export default {
 
       that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
         that.dataList = res.data.list;
-        console.log('note list',that.dataList)
+        console.log("note list", that.dataList);
         that.pageInfo.totalCount = res.data.totalNumber.value;
       });
     },
@@ -298,6 +306,15 @@ export default {
 </script>
   
   <style >
+.tagAllStyle {
+  background-color: #447154;
+  border-color: #e1f3d8;
+  color: #ffffff !important;
+}
+.mixMode {
+  mix-blend-mode: difference;
+  color: white;
+}
 .topTagContainer {
   margin-bottom: 15px;
   display: flex;
@@ -312,6 +329,7 @@ export default {
   border: 1px solid #dadada;
 }
 .tagItemStyle {
+  color: #363f4e;
   margin: 6px 2px;
   cursor: pointer;
 }
