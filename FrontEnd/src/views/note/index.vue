@@ -66,6 +66,12 @@
           ><el-button icon="el-icon-search" @click="onSearch" circle></el-button
         ></el-col>
       </el-row>
+      <el-skeleton
+        v-if="isDataLoading"
+        :rows="20"
+        animated
+        style="margin-top: 10px"
+      />
 
       <div>
         <div
@@ -145,6 +151,7 @@ export default {
   },
   data() {
     return {
+      isDataLoading: false,
       searchContent: "",
       // tagColorArray: ["#fdf6ec", "#d3ffdb", "#ffdfb2", "#cee6ff",'rgb(24 37 113)'],
       tagColorArray: ["rgb(245 248 254)", "rgb(242 255 255)"],
@@ -241,13 +248,19 @@ export default {
     //获取闪念分页列表
     getNoteList() {
       var that = this;
+      that.isDataLoading = true;
+      that.dataList = [];
       //获取标签
       that.getAllTags();
 
+      // setTimeout(() => {
       that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
+        that.isDataLoading = false;
+
         that.dataList = res.data.list;
         that.pageInfo.totalCount = res.data.totalNumber.value;
       });
+      // }, 1000);
     },
     //编辑完笔记
     editOver() {
@@ -312,6 +325,7 @@ export default {
   min-height: 150px;
   height: auto;
   border: 1px solid #dadada;
+  padding: 2px 4px;
 }
 .tagItemStyle {
   color: #363f4e;
