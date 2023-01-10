@@ -242,6 +242,8 @@ export default {
     //设置搜索条件的标签
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
+      //清除搜索内容
+      this.pageInfo.searchKeyValues[1].value = '';
       //搜索
       this.getNoteList();
     },

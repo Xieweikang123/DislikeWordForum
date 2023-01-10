@@ -167,6 +167,7 @@ namespace BackendAPI.Application
                 }
 
                 findItem.status = 1;
+                findItem.updateTime = DateTime.Now;
                 await db.Updateable(findItem).ExecuteCommandAsync();
                 //删除标签
                 await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
