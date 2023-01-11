@@ -147,6 +147,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Application.TestService">
+            <summary>
+            闪念服务接口
+            </summary>
+            
+        </member>
         <member name="T:BackendAPI.Application.User.CurrentUserInfo">
             <summary>
             当前用户信息读取

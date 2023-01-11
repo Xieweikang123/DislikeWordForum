@@ -85,6 +85,10 @@ export default {
           name: "笔记",
           url: "/note",
         },
+        {
+          name: "测试",
+          url: "/test",
+        },
       ],
       isLogin: false,
     };

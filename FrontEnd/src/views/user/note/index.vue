@@ -73,18 +73,18 @@
         style="margin-top: 10px"
       />
 
-      <div
-        v-if="isMaskShow"
-        @click="clickMask"
-        class="medium-zoom-overlay"
-      ></div>
-      <div id="noteContainer">
+      <div>
         <div
           v-for="item in dataList"
           :key="item.id"
           style="border-bottom: 1px solid #e8e6e6; padding: 13px 0px"
         >
           <div class="disAlignCenter userHead" style="">
+            <!-- <el-avatar
+              style="margin-right: 10px"
+              :src="$Global.user.getAvatorUrl(item.avatar)"
+            ></el-avatar>
+            {{ item.nickName }}: -->
             <el-tag
               style="margin-right: 5px; cursor: pointer"
               @click="setTag(tagItem.tagName)"
@@ -100,6 +100,7 @@
             <div class="contentLine" v-html="item.sayContent">
               <!-- {{ item.sayContent }} -->
             </div>
+
             <div>
               <span style="float: right; font-size: 13px">
                 <el-link
@@ -150,9 +151,6 @@ export default {
   },
   data() {
     return {
-      beforeImgScaleScrollTop: 0,
-      curImg: {},
-      isMaskShow: false,
       isDataLoading: false,
       searchContent: "",
       // tagColorArray: ["#fdf6ec", "#d3ffdb", "#ffdfb2", "#cee6ff",'rgb(24 37 113)'],
@@ -194,73 +192,16 @@ export default {
   },
   mounted() {
     var that = this;
+    // console.log("process env", process.env);
+
     that.getNoteList();
+    // setInterval(() => {
+    //   that.getNoteList();
+    // }, 15000);
+
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-    this.listenImgScale();
   },
   methods: {
-    //注册鼠标点击图片放大事件
-    listenImgScale() {
-      var that = this;
-      document
-        .getElementById("noteContainer")
-        .addEventListener("click", (e) => {
-          console.log("click e", e);
-          var target = e.target;
-          console.dir("click target", target);
-          var docElement = document.documentElement;
-          console.dir(target);
-          // console.log("window.screenWidth", document.documentElement.clientWidth);
-          // console.log("window.screenWidth", document.documentElement.clientHeight);
-          // console.dir(document.documentElement);
-          //如果图片正在放大，返回
-
-          //如果点击图片
-          if (target.localName == "img") {
-            // target.className = target.className == "imgScale" ? "" : "imgScale";
-            //当前点中的图片
-            that.curImg = target;
-            target.className = "imgScale";
-            //图片首次点开
-            if (!that.isMaskShow) {
-              // target.style.transform = "scale(1.5)";
-              //记录滚动条
-              that.beforeImgScaleScrollTop = docElement.scrollTop;
-              //左右居中
-              var leftval = (docElement.clientWidth - target.width) / 2;
-              target.style.left = leftval + "px";
-              //上下居中
-              target.style.top =
-                (docElement.clientHeight - target.height) / 2 +
-                docElement.scrollTop +
-                "px";
-            } else {
-              // if (target.style.transform == "scale(1.5)") {
-              //   target.style.transform = "scale(2)";
-              // } else {
-              //   target.style.transform = "scale(1.5)";
-              // }
-            }
-            that.isMaskShow = true;
-          }
-        });
-
-      //键盘 事件
-      document.addEventListener("keydown", function (e) {
-        //此处填写你的业务逻辑即可
-        console.log("keydown", e);
-        if (e.keyCode == 27) {
-          // 逻辑处理，如隐藏div，调用动画等
-          console.log("esc");
-          that.clickMask();
-        }
-      });
-    },
-    clickMask() {
-      this.curImg.className = "";
-      this.isMaskShow = false;
-      document.documentElement.scrollTop = this.beforeImgScaleScrollTop;
-    },
     //搜索
     onSearch() {
       var that = this;
@@ -302,7 +243,7 @@ export default {
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
       //清除搜索内容
-      this.pageInfo.searchKeyValues[1].value = "";
+      this.pageInfo.searchKeyValues[1].value = '';
       //搜索
       this.getNoteList();
     },
@@ -364,32 +305,6 @@ export default {
 </script>
   
   <style >
-.contentLine img {
-  cursor: cell;
-}
-.medium-zoom-overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  opacity: 0.8;
-  transition: opacity 300ms;
-  will-change: opacity;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 2;
-}
-.imgScale {
-  position: absolute;
-  transform: scale(1.5);
-  z-index: 3;
-}
-/* .imgScale>div{
-  width:200px
-} */
-img {
-  transition: all 500ms cubic-bezier(0.2, 0, 0.2, 1);
-}
 .tagAllStyle {
   background-color: #447154;
   border-color: #e1f3d8;
@@ -429,7 +344,6 @@ img {
 .contentLine {
   line-height: 26px;
   white-space: pre-wrap;
-  /* position: relative; */
 }
 .userHead:hover {
   opacity: 1;

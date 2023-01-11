@@ -97,6 +97,14 @@ public static class DependencyInjectionServiceCollectionExtensions
             .Where(u => typeof(IPrivateDependency).IsAssignableFrom(u) && u.IsClass && !u.IsInterface && !u.IsAbstract)
             .OrderBy(u => GetOrder(u));
 
+        var itypes1 = App.EffectiveTypes
+            .Where(u => typeof(IPrivateDependency).IsAssignableFrom(u))
+            .OrderBy(u => GetOrder(u));
+
+        var itypes2 = App.EffectiveTypes
+        .Where(u => u.IsClass && !u.IsInterface && !u.IsAbstract)
+        .OrderBy(u => GetOrder(u));
+
         var projectAssemblies = App.Assemblies;
         var lifetimeInterfaces = new[] { typeof(ITransient), typeof(IScoped), typeof(ISingleton) };
 

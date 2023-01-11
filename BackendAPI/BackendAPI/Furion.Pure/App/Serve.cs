@@ -108,6 +108,7 @@ public static class Serve
             });
         }
 
+
         // 添加自定义配置
         if (options.ActionConfigurationManager != null)
         {
@@ -178,6 +179,7 @@ public static class Serve
 
         // 调用自定义配置
         builder = options?.ActionBuilder?.Invoke(builder) ?? builder;
+
 
         // 是否静默启动
         if (!options.IsSilence)
@@ -269,6 +271,8 @@ public static class Serve
             ? WebApplication.CreateBuilder(args)
             : WebApplication.CreateBuilder(options.Options));
 
+        //Console.WriteLine("test");
+
         // 注册 WebApplicationBuilder 组件
         if (options.WebComponents.Any())
         {
@@ -316,7 +320,7 @@ public static class Serve
 
         // 初始化 WebApplication
         var app = builder.Build();
-
+        //app.Logger.LogError("build ok");
         // 注册应用中间件组件
         if (options.ApplicationComponents.Any())
         {
