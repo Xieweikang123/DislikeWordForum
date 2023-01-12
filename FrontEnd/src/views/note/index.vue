@@ -136,8 +136,9 @@
           :total="pageInfo.totalCount"
         >
         </el-pagination>
-        <TagEditForm ref="editForm" @RefreshData="editOver"></TagEditForm>
       </div>
+      <TagEditForm ref="editForm" @RefreshData="editOver"></TagEditForm>
+
     </div>
   </div>
 </template>
@@ -205,16 +206,9 @@ export default {
       document
         .getElementById("noteContainer")
         .addEventListener("click", (e) => {
-          console.log("click e", e);
           var target = e.target;
-          console.dir("click target", target);
           var docElement = document.documentElement;
-          console.dir(target);
-          // console.log("window.screenWidth", document.documentElement.clientWidth);
-          // console.log("window.screenWidth", document.documentElement.clientHeight);
-          // console.dir(document.documentElement);
           //如果图片正在放大，返回
-
           //如果点击图片
           if (target.localName == "img") {
             // target.className = target.className == "imgScale" ? "" : "imgScale";
@@ -248,10 +242,8 @@ export default {
       //键盘 事件
       document.addEventListener("keydown", function (e) {
         //此处填写你的业务逻辑即可
-        console.log("keydown", e);
         if (e.keyCode == 27) {
           // 逻辑处理，如隐藏div，调用动画等
-          console.log("esc");
           that.clickMask();
         }
       });
@@ -271,7 +263,10 @@ export default {
     sendFun() {
       var that = this;
       that.sendContent = contentInput.innerHTML;
+      // console.log('send contentInput',contentInput)
+      // console.dir(contentInput)
 
+      // return
       if (!that.$Global.user.isLogin()) {
         that.$message.info("请先登录");
         return;

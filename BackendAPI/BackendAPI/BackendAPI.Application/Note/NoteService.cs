@@ -87,7 +87,12 @@ namespace BackendAPI.Application
             }
             catch (Exception ex)
             {
+
                 db.RollbackTran();
+                throw new Exception(ex.Message);
+
+                //return ex.Message;
+
             }
             return "ok";
         }

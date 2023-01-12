@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-drawer
+      size="50%"
       :title="dynamicTitle"
       custom-class="drawerStyle"
       :visible.sync="isShowDrawer"
@@ -13,13 +14,13 @@
         @submit.native.prevent
         label-width="80px"
       >
-        <el-form-item label="内容:">
-          <el-input
-            type="textarea"
-            :rows="4"
-            v-model="editRow.sayContent"
-          ></el-input>
-        </el-form-item>
+        <el-input
+          ref="contentIpt"
+          @paste.native="onContentPaste"
+          type="textarea"
+          :rows="18"
+          v-model="editRow.sayContent"
+        ></el-input>
         <el-form-item label="标签:">
           <el-tag
             :key="titem.id"
@@ -62,6 +63,10 @@
           </el-popconfirm></el-col
         >
       </el-row>
+
+      <div class="leftPreview">
+        <div class="contentLine" v-html="editRow.sayContent"></div>
+      </div>
     </el-drawer>
   </div>
 </template>
@@ -103,6 +108,39 @@ export default {
       this.editRow = JSON.parse(JSON.stringify(row));
       console.log("show data", this.editRow);
       this.dynamicTags = this.editRow.noteTags;
+
+      //监听内容粘贴事件
+      // this.$refs.contentIpt.addEventListener("paste", this.onContentPaste);
+    },
+    //向字符串指定下标插入字符串
+    //index 插入的下标
+    insertStr(str, index, insertStr) {
+      return str.substring(0, index) + insertStr + str.substring(index);
+    },
+    onContentPaste(e) {
+      var that = this;
+      var file = e.clipboardData.files[0];
+      var txtAreaEl = e.srcElement;
+      var oriSelectionStart = txtAreaEl.selectionStart;
+      //有文件、图片
+      if (file) {
+        let formData = new FormData();
+        formData.append("file", file);
+        that.$http.post("/api/File/UploadImg", formData).then((res) => {
+          console.log("uploadimg res", res);
+          if (res.succeeded) {
+            var insertImgSrc = `<img src="${process.env.VUE_APP_BASE_API}${res.data.url}" alt="">`;
+            txtAreaEl.value = that.insertStr(
+              txtAreaEl.value,
+              oriSelectionStart,
+              insertImgSrc
+            );
+            txtAreaEl.selectionStart = oriSelectionStart + insertImgSrc.length;
+            txtAreaEl.selectionEnd = txtAreaEl.selectionStart;
+            that.editRow.sayContent = txtAreaEl.value;
+          }
+        });
+      }
     },
     //关闭标签
     handleCloseTag(tagItem) {
@@ -155,6 +193,16 @@ export default {
 };
 </script>
 <style >
+.leftPreview {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #f9feff;
+  width: 50%;
+  height: 100%;
+  overflow: scroll;
+  /* transition: all 5000ms cubic-bezier(0.2, 0, 0.2, 1); */
+}
 .el-tag + .el-tag {
   margin-left: 10px;
 }
