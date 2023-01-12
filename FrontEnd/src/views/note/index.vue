@@ -138,7 +138,6 @@
         </el-pagination>
       </div>
       <TagEditForm ref="editForm" @RefreshData="editOver"></TagEditForm>
-
     </div>
   </div>
 </template>
@@ -200,6 +199,14 @@ export default {
     this.listenImgScale();
   },
   methods: {
+    //编辑完笔记
+    editOver() {
+      //重新获取笔记和标签
+      this.getNoteList();
+      this.getAllTags();
+      //回原处
+      document.documentElement.scrollTop = this.beforeImgScaleScrollTop;
+    },
     //注册鼠标点击图片放大事件
     listenImgScale() {
       var that = this;
@@ -245,6 +252,7 @@ export default {
         if (e.keyCode == 27) {
           // 逻辑处理，如隐藏div，调用动画等
           that.clickMask();
+          that.$refs.editForm.isShowDrawer = false;
         }
       });
     },
@@ -318,12 +326,7 @@ export default {
       });
       // }, 1000);
     },
-    //编辑完笔记
-    editOver() {
-      //重新获取笔记和标签
-      this.getNoteList();
-      this.getAllTags();
-    },
+
     //获取所有去重之后的标签
     getAllTags() {
       var that = this;
@@ -337,6 +340,7 @@ export default {
     },
     // 编辑笔记
     onEditTag(item) {
+      this.beforeImgScaleScrollTop = document.documentElement.scrollTop;
       this.$refs.editForm.show(item);
     },
     //确定删除

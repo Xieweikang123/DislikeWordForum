@@ -6,6 +6,7 @@
       custom-class="drawerStyle"
       :visible.sync="isShowDrawer"
       direction="rtl"
+      :modal="false"
       :before-close="handleClose"
     >
       <el-form
@@ -63,11 +64,10 @@
           </el-popconfirm></el-col
         >
       </el-row>
-
-      <div class="leftPreview">
-        <div class="contentLine" v-html="editRow.sayContent"></div>
-      </div>
     </el-drawer>
+    <div v-if="isShowDrawer" class="leftPreview">
+      <div class="contentLinePreview" v-html="editRow.sayContent"></div>
+    </div>
   </div>
 </template>
 
@@ -193,15 +193,22 @@ export default {
 };
 </script>
 <style >
+.contentLinePreview {
+  padding: 35px 44px;
+  line-height: 26px;
+  white-space: pre-wrap;
+}
 .leftPreview {
   position: fixed;
   left: 0;
   top: 0;
-  background: #f9feff;
+  background: #fefefe;
   width: 50%;
   height: 100%;
   overflow: scroll;
-  /* transition: all 5000ms cubic-bezier(0.2, 0, 0.2, 1); */
+  /* padding: 38px 0 0 23px; */
+  /* transition: all 2s; */
+  z-index: 9999;
 }
 .el-tag + .el-tag {
   margin-left: 10px;
