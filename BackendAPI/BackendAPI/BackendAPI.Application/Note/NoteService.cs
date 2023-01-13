@@ -46,7 +46,13 @@ namespace BackendAPI.Application
                 {
                     foreach (var matItem in matches)
                     {
-                        var image = ImageHelper.Base64StringToImage(matItem.ToString());
+                        var imgStr = matItem.ToString();
+                        //不是base64图片不处理
+                        if (!imgStr.Contains("data:image/png;base64"))
+                        {
+                            continue;
+                        }
+                        var image = ImageHelper.Base64StringToImage(imgStr);
                         var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
 
                         var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
