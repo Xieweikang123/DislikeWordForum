@@ -322,6 +322,12 @@ export default {
         that.isDataLoading = false;
 
         that.dataList = res.data.list;
+        var searchKeyword = that.pageInfo.searchKeyValues[1].value;
+        console.log("searchKeyword", searchKeyword);
+        if (searchKeyword && searchKeyword.length > 0) {
+          console.log('标红')
+        }
+
         that.pageInfo.totalCount = res.data.totalNumber.value;
       });
       // }, 1000);
