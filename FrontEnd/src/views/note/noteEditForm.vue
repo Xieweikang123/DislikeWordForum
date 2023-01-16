@@ -24,12 +24,14 @@
         label-width="80px"
       >
         <el-input
+          id="myinput"
           ref="contentIpt"
           @paste.native="onContentPaste"
           type="textarea"
           @blur="onContentInputBlur"
           :rows="18"
           v-model="editRow.sayContent"
+          @keydown.9.native.prevent="tabFunc"
         ></el-input>
         <el-form-item label="标签:">
           <el-tag
@@ -117,6 +119,36 @@ export default {
     },
   },
   methods: {
+    tabFunc() {
+      this.insertInputTxt("myinput", "\t");
+      // var elInput = document.getElementById("myinput");
+      // this.editRow.sayContent = this.replaceStr2(
+      //   this.editRow.sayContent,
+      //   elInput.selectionStart,
+      //   elInput.selectionEnd,
+      //   "\t"
+      // );
+
+      // elInput.focus();
+      // elInput.selectionStart = elInput.selectionStart + "\t".length;
+      // elInput.selectionEnd=elInput.selectionStart+1
+      // console.log('elInput.selectionStart')
+    },
+    insertInputTxt(id, insertTxt) {
+      var elInput = document.getElementById(id);
+      var startPos = elInput.selectionStart;
+      var endPos = elInput.selectionEnd;
+      if (startPos === undefined || endPos === undefined) return;
+      var txt = elInput.value;
+      // var result =
+      //   txt.substring(0, startPos) + insertTxt + txt.substring(endPos);
+      var result = this.replaceStr2(txt, startPos, endPos, insertTxt);
+      elInput.value = result;
+      elInput.focus();
+      elInput.selectionStart = startPos + insertTxt.length;
+      elInput.selectionEnd = startPos + insertTxt.length;
+      this.editRow.sayContent = result;
+    },
     //退回 上一步内容
     onGoBackStep() {
       this.editRow.sayContent = this.oldContentVal;
@@ -130,9 +162,7 @@ export default {
     },
     //替换指定位置字符串
     replaceStr2(str, startIndex, endIndex, repStr) {
-      return (
-        str.substring(0, startIndex) + repStr + str.substring(endIndex + 1)
-      );
+      return str.substring(0, startIndex) + repStr + str.substring(endIndex);
     },
     //转超链接
     onConvertUrl() {
@@ -298,14 +328,14 @@ export default {
 /* 可以设置不同的进入和离开动画 */
 /* 设置持续时间和动画函数 */
 .slide-fade-enter-active {
-  transition: all .5s linear;
+  transition: all 0.3s linear;
 }
 .slide-fade-leave-active {
   transition: all 0.3s cubic-bezier(1, 1, 1, 2);
 }
 .slide-fade-enter,
 .slide-fade-leave-to {
-  transform: translateX(200%);
+  transform: translateX(-100%);
   opacity: 0;
 }
 .contentLinePreview {
@@ -327,6 +357,9 @@ export default {
   /* padding: 38px 0 0 23px; */
   /* transition: all 2s; */
   z-index: 9998;
+}
+.leftPreview img {
+  width: 50%;
 }
 .el-tag + .el-tag {
   margin-left: 10px;

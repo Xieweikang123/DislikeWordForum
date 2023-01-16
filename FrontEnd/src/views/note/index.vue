@@ -1,6 +1,12 @@
 <template>
   <div>
     <div class="leftTagContainer">
+      <div>
+        <el-button @click="onTagEditClick" type="primary" plain
+          >标签更名</el-button
+        >
+      </div>
+
       <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
         全部
       </el-tag>
@@ -20,7 +26,9 @@
     </div>
     <div class="margin60Auto">
       <!-- <el-alert title="不可关闭的 alert" type="success" :closable="false">
-      </el-alert> -->
+      </el-alert> 
+       -->
+
       <div class="topTagContainer">
         <div>当前标签:</div>
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
@@ -44,6 +52,7 @@
         id="contentInput"
         class="contentInput"
         contenteditable
+        @keydown.9.prevent="tabFunc1"
         placeholder="请输入内容"
       ></div>
       <!-- <div id="preview">
@@ -137,16 +146,19 @@
         >
         </el-pagination>
       </div>
-      <TagEditForm ref="editForm" @RefreshData="editOver"></TagEditForm>
+      <NoteEditForm ref="editForm" @RefreshData="editOver"></NoteEditForm>
+      <TagEditPop ref="tagEditPop" @RefreshData="editOver"></TagEditPop>
     </div>
   </div>
 </template>
    <script>
-import TagEditForm from "../note/tagEditForm.vue";
+import NoteEditForm from "../note/noteEditForm";
+import TagEditPop from "../note/tagEditPop";
 
 export default {
   components: {
-    TagEditForm,
+    NoteEditForm,
+    TagEditPop,
   },
   data() {
     return {
@@ -199,6 +211,31 @@ export default {
     this.listenImgScale();
   },
   methods: {
+    //点击 标签更名
+    onTagEditClick() {
+      console.log("onTagEditClick", this.$refs.tagEditPop);
+      this.$refs.tagEditPop.form.oriTagName = this.currentTagName;
+
+      this.$refs.tagEditPop.dialogFormVisible = true;
+    },
+    tabFunc1() {
+      // console.log("tabfunc1 ");
+      // // this.insertInputTxt("contentInput", "\t");
+      // return;
+    },
+    // insertInputTxt(id, insertTxt) {
+    //   var elInput = document.getElementById(id);
+    //   var startPos = elInput.selectionStart;
+    //   var endPos = elInput.selectionEnd;
+    //   if (startPos === undefined || endPos === undefined) return;
+    //   var txt = elInput.value;
+    //   var result =
+    //     txt.substring(0, startPos) + insertTxt + txt.substring(endPos);
+    //   elInput.value = result;
+    //   elInput.focus();
+    //   elInput.selectionStart = startPos + insertTxt.length;
+    //   elInput.selectionEnd = startPos + insertTxt.length;
+    // },
     //编辑完笔记
     editOver() {
       //重新获取笔记和标签
@@ -236,11 +273,6 @@ export default {
                 docElement.scrollTop +
                 "px";
             } else {
-              // if (target.style.transform == "scale(1.5)") {
-              //   target.style.transform = "scale(2)";
-              // } else {
-              //   target.style.transform = "scale(1.5)";
-              // }
             }
             that.isMaskShow = true;
           }
@@ -325,7 +357,7 @@ export default {
         var searchKeyword = that.pageInfo.searchKeyValues[1].value;
         console.log("searchKeyword", searchKeyword);
         if (searchKeyword && searchKeyword.length > 0) {
-          console.log('标红')
+          console.log("标红");
         }
 
         that.pageInfo.totalCount = res.data.totalNumber.value;
@@ -426,7 +458,7 @@ img {
 }
 .leftTagContainer {
   width: 16%;
-  position: fixed;
+  position: absolute;
 }
 .contentLine img {
   width: 50%;

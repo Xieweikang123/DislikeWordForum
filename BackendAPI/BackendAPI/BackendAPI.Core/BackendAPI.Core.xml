@@ -14,6 +14,16 @@
             SqlSugar 数据库实例
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTagDTO.oriTagName">
+            <summary>
+            原标签名
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteTagDTO.newTagName">
+            <summary>
+            新标签名
+            </summary>
+        </member>
         <member name="P:BackendAPI.Core.Entities.CoreUser.Id">
              <summary>
               

@@ -102,6 +102,19 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Application.TagService">
+            <summary>
+            标签服务接口
+            </summary>
+            
+        </member>
+        <member name="M:BackendAPI.Application.TagService.ChangeTagName(BackendAPI.Core.Entities.NoteTagDTO)">
+            <summary>
+            发表内容
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="T:BackendAPI.Application.PageInfoRanking">
             <summary>
             
