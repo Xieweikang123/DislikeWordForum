@@ -189,10 +189,10 @@ export default {
   margin: 6px 2px;
   cursor: pointer;
 }
-.leftTagContainer {
+/* .leftTagContainer {
   width: 16%;
   position: fixed;
-}
+} */
 .contentLine img {
   width: 50%;
 }
