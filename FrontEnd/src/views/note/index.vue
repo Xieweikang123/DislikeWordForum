@@ -280,11 +280,11 @@ export default {
 
       //键盘 事件
       document.addEventListener("keydown", function (e) {
-        //此处填写你的业务逻辑即可
+        //此处填写你的业务逻辑即可  esc
         if (e.keyCode == 27) {
           // 逻辑处理，如隐藏div，调用动画等
           that.clickMask();
-          that.$refs.editForm.isShowDrawer = false;
+          // that.$refs.editForm.isShowDrawer = false;
         }
       });
     },
@@ -338,6 +338,9 @@ export default {
       this.pageInfo.searchKeyValues[0].value = tagName;
       //清除搜索内容
       this.pageInfo.searchKeyValues[1].value = "";
+      //页数
+      this.pageInfo.pageNumber = 1;
+
       //搜索
       this.getNoteList();
     },
