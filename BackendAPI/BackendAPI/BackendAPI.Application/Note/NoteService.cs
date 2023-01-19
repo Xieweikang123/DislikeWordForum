@@ -20,6 +20,42 @@ namespace BackendAPI.Application
     {
 
         /// <summary>
+        /// 将内容里的bsse64转图片
+        /// </summary>
+        /// <param name="oriContent"></param>
+        /// <returns></returns>
+        private string ConvertBase64toUrl(string oriContent)
+        {
+            //var retStr = string.Empty;
+            var imgSrcRegex = "(?<=src=\").*?(?=\")";
+
+            var matches = Regex.Matches(oriContent, imgSrcRegex);
+            //将base64加密转为图片并且替换
+            if (matches.Any())
+            {
+                foreach (var matItem in matches)
+                {
+                    var imgStr = matItem.ToString();
+                    //不是base64图片不处理
+                    if (!imgStr.Contains("data:image/png;base64"))
+                    {
+                        continue;
+                    }
+                    var image = ImageHelper.Base64StringToImage(imgStr);
+                    var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
+
+                    var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
+
+                    image.Save(filePathName);
+                    //替换图片路径
+                    oriContent = oriContent.Replace(imgStr, urlPrefix + relativePath);
+                }
+            }
+
+            return oriContent;
+        }
+
+        /// <summary>
         /// 发表内容
         /// </summary>
         /// <param name="dto"></param>
@@ -38,30 +74,32 @@ namespace BackendAPI.Application
             {
                 db.BeginTran();
                 var nowTime = DateTime.Now;
-                var imgSrcRegex = "(?<=src=\").*?(?=\")";
+                //var imgSrcRegex = "(?<=src=\").*?(?=\")";
 
-                var matches = Regex.Matches(dto.sayContent, imgSrcRegex);
-                //将base64加密转为图片并且替换
-                if (matches.Any())
-                {
-                    foreach (var matItem in matches)
-                    {
-                        var imgStr = matItem.ToString();
-                        //不是base64图片不处理
-                        if (!imgStr.Contains("data:image/png;base64"))
-                        {
-                            continue;
-                        }
-                        var image = ImageHelper.Base64StringToImage(imgStr);
-                        var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
+                //var matches = Regex.Matches(dto.sayContent, imgSrcRegex);
+                ////将base64加密转为图片并且替换
+                //if (matches.Any())
+                //{
+                //    foreach (var matItem in matches)
+                //    {
+                //        var imgStr = matItem.ToString();
+                //        //不是base64图片不处理
+                //        if (!imgStr.Contains("data:image/png;base64"))
+                //        {
+                //            continue;
+                //        }
+                //        var image = ImageHelper.Base64StringToImage(imgStr);
+                //        var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
 
-                        var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
+                //        var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
 
-                        image.Save(filePathName);
-                        //替换图片路径
-                        dto.sayContent = dto.sayContent.Replace(matItem.ToString(), urlPrefix + relativePath);
-                    }
-                }
+                //        image.Save(filePathName);
+                //        //替换图片路径
+                //        dto.sayContent = dto.sayContent.Replace(matItem.ToString(), urlPrefix + relativePath);
+                //    }
+                //}
+                dto.sayContent = ConvertBase64toUrl(dto.sayContent);
+
 
                 var newNote = new Note()
 
@@ -102,6 +140,58 @@ namespace BackendAPI.Application
             }
             return "ok";
         }
+
+        /// <summary>
+        /// 编辑保存笔记标签
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> SaveNoteWithTag(Note dto)
+        {
+
+            var db = DbContext.Instance;
+            var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
+
+            try
+            {
+                db.BeginTran();
+                var nowTime = DateTime.Now;
+                var userId = CurrentUserInfo.UserId;
+                //更新笔记内容
+                findNote.updateTime = nowTime;
+                //findNote.sayContent = dto.sayContent;
+                findNote.sayContent = ConvertBase64toUrl(dto.sayContent);
+                //更新
+                await db.Updateable(findNote).ExecuteCommandAsync();
+
+                //标签
+                //先删后加 删除成功数量
+                var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
+                //新增
+                var addTags = dto.noteTags;
+                addTags.ForEach(x =>
+                {
+                    x.id = IDGen.GetStrId();
+                    x.createTime = nowTime;
+                    x.status = 0;
+                    x.userId = userId;
+                    x.noteId = dto.id;
+                });
+
+                await db.Insertable(addTags).ExecuteCommandAsync();
+                db.CommitTran();
+            }
+            catch (Exception ex)
+            {
+                db.RollbackTran();
+
+                throw new Exception("更新失败:" + ex.Message);
+            }
+
+            return new { findNote };
+        }
+
 
         /// <summary>
         /// 获取所有标签
@@ -191,57 +281,6 @@ namespace BackendAPI.Application
             }
             return "删除成功";
         }
-
-        /// <summary>
-        /// 编辑保存笔记标签
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<object> SaveNoteWithTag(Note dto)
-        {
-
-            var db = DbContext.Instance;
-
-            try
-            {
-                db.BeginTran();
-                var nowTime = DateTime.Now;
-                var userId = CurrentUserInfo.UserId;
-                //更新笔记内容
-                var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
-                findNote.updateTime = nowTime;
-                findNote.sayContent = dto.sayContent;
-                //更新
-                await db.Updateable(findNote).ExecuteCommandAsync();
-
-                //标签
-                //先删后加 删除成功数量
-                var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
-                //新增
-                var addTags = dto.noteTags;
-                addTags.ForEach(x =>
-                {
-                    x.id = IDGen.GetStrId();
-                    x.createTime = nowTime;
-                    x.status = 0;
-                    x.userId = userId;
-                    x.noteId = dto.id;
-                });
-
-                await db.Insertable(addTags).ExecuteCommandAsync();
-                db.CommitTran();
-            }
-            catch (Exception ex)
-            {
-                db.RollbackTran();
-
-                throw new Exception("更新失败:" + ex.Message);
-            }
-
-            return "ok";
-        }
-
 
 
         /// <summary>

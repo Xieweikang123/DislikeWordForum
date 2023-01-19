@@ -59,9 +59,23 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.NoteService.ConvertBase64toUrl(System.String)">
+            <summary>
+            将内容里的bsse64转图片
+            </summary>
+            <param name="oriContent"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.NoteDTO)">
             <summary>
             发表内容
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
+            <summary>
+            编辑保存笔记标签
             </summary>
             <param name="dto"></param>
             <returns></returns>
@@ -86,13 +100,6 @@
             <param name="dto"></param>
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
-        </member>
-        <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
-            <summary>
-            编辑保存笔记标签
-            </summary>
-            <param name="dto"></param>
-            <returns></returns>
         </member>
         <member name="M:BackendAPI.Application.NoteService.GetTodayRanking(BackendAPI.Core.PageInfo)">
             <summary>
