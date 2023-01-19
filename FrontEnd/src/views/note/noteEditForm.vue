@@ -147,13 +147,6 @@ export default {
     },
   },
   methods: {
-    //格式化代码
-    onFormatHTML() {
-      var res = this.formatHTML(this.editRow.sayContent);
-      console.log("onFormatHTML", res);
-      this.editRow.sayContent = res;
-      // console.log("onFormatHTML", JSON.stringify(res));
-    },
     formatHTML(strs) {
       console.log("formatHTML");
 
@@ -168,36 +161,49 @@ export default {
       //存放若干个blank变量，用于控制代码缩进的深度
       var fmt = [];
       var isInTag = false;
-      // //对需要格式化的代码字符串进行遍历
-      // for (var i = 0; i < strs.length; i++) {
-      //   var curStr = strs[i];
-      //   str += fmt.join("") + curStr;
+      //对需要格式化的代码字符串进行遍历
+      for (var i = 0; i < strs.length; i++) {
+        var curStr = strs[i];
 
-      //   //记录一个缩进
-      //   if (curStr == "<" && strs[i + 1] != "/") {
-      //     // str += "\n";
-      //     //如果在标签内，插入缩进
-      //     if (isInTag) {
-      //       fmt.push(blank);
-      //     } else {
-      //       isInTag = true;
-      //     }
-      //   } else if (curStr == ">") {
-      //     //发现右尖括号后将其记录在right变量上
-      //     right = i;
-      //     str += "\n";
-      //   }
-      //   if (curStr == "/") {
-      //     //出栈
-      //     fmt.pop();
-      //     //如果出完了，标识为不在标签内
-      //     if (fmt.length == 0) {
-      //       isInTag = false;
-      //     }
-      //   }
+        // str += fmt.join("") + curStr;
+
+        //记录一个缩进
+        if (curStr == "<" && strs[i + 1] != "/") {
+          str += "\n";
+          str += curStr;
+
+          // str = str.substring(0, i) + "\n" + curStr;
+          //如果在标签内，插入缩进
+          // if (isInTag) {
+          //   fmt.push(blank);
+          // } else {
+          //   isInTag = true;
+          // }
+        } else if (curStr == ">") {
+          //发现右尖括号后将其记录在right变量上
+          str += curStr;
+          // str += "\n";
+        } else if (curStr == "<" && strs[i + 1] == "/") {
+          str += "\n";
+          str += curStr;
+        } else {
+          str += curStr;
+        }
+        // if (curStr == "/") {
+        //   //出栈
+        //   fmt.pop();
+        //   //如果出完了，标识为不在标签内
+        //   if (fmt.length == 0) {
+        //     isInTag = false;
+        //   }
+        // }
+      }
+      return str;
+      var noTag = "";
       for (var i = 0; i < strs.length; i++) {
         //发现左尖括号后将其位置记录在left变量上
         if (strs[i] == "<") {
+          // str += "\n";
           left = i;
         } else if (strs[i] == ">") {
           //发现右尖括号后将其记录在right变量上
@@ -205,6 +211,10 @@ export default {
         }
         // 当做尖括号右尖括号都记录了一个位置后，说明二者之间的内容为代码的一行
         if (typeof left == "number" && typeof right == "number") {
+          console.log("in double number");
+          // str += noTag;
+          // noTag = "";
+
           //判断字符串左尖括号后是否为‘/’，如果满足，表明该行代码为双标签的闭合标签
           if (strs[left + 1] == "/") {
             //对数组中的空格做出栈，确保代码缩进正确
@@ -227,26 +237,29 @@ export default {
             //向数组中堆入一个空格，确保下一行双标签的左标签的缩进正确
             fmt.push(blank);
           }
+
           //对right位置后的字符串进行遍历
-          for (var j = right; j < strs.length; j++) {
-            //查找right位置后，第一个左尖括号的位置，二者之间的内容即为代码中的文本内容
-            if (strs[j] == "<") {
-              //去掉文本中多余的空格
-              var s = strs.slice(right + 1, j).replace(/\s*/g, "");
-              if (s) {
-                //当文本中去掉空格后任然有内容，则将文本拼入str变量进行存储
-                str += s;
-              }
-              break;
-            }
-          }
+          // for (var j = right; j < strs.length; j++) {
+          //   //查找right位置后，第一个左尖括号的位置，二者之间的内容即为代码中的文本内容
+          //   if (strs[j] == "<") {
+          //     //去掉文本中多余的空格
+          //     var s = strs.slice(right + 1, j).replace(/\s*/g, "");
+          //     if (s) {
+          //       //当文本中去掉空格后任然有内容，则将文本拼入str变量进行存储
+          //       str += s;
+          //     }
+          //     break;
+          //   }
+          // }
           //每次获得一次左右尖括号的位置后，即得到了一行代码，为代码做换行处理
           str += "\n";
           //重置left、right的值，用于for循环的下次存储做右尖括号的位置
           left = null;
           right = null;
-        } else {
-          // str += strs[i];
+        } else if (typeof left != "number" && typeof right != "number") {
+          str += strs[i];
+          // noTag += strs[i];
+          // console.log("noTag", noTag);
         }
       }
       //返回得到的格式化完成的html代码字符串
@@ -263,8 +276,8 @@ export default {
           that.editRow.sayContent = that.formatHTML(
             contentLinePreview.innerHTML
           );
-          // that.$nextTick(() => {
-          // });
+
+          // that.editRow.sayContent = contentLinePreview.innerHTML;
         });
       });
 
@@ -498,8 +511,8 @@ export default {
 }
 .contentLinePreview {
   padding: 35px 44px;
-  line-height: 26px;
-  white-space: pre-wrap;
+  /* line-height: 26px;
+  white-space: pre-wrap; */
 }
 .el-message {
   z-index: 9999 !important;

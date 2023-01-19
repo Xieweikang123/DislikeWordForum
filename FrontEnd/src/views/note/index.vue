@@ -467,8 +467,8 @@ img {
   width: 50%;
 }
 .contentLine {
-  line-height: 26px;
-  white-space: pre-wrap;
+  /* line-height: 26px; */
+  /* white-space: pre-wrap; */
   overflow: auto;
   /* position: relative; */
 }
