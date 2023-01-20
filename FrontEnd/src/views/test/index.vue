@@ -159,7 +159,7 @@ export default {
 };
 </script>
   
-  <style >
+  <style scoped>
 .tagAllStyle {
   background-color: #447154;
   border-color: #e1f3d8;

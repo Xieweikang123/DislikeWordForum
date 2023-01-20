@@ -93,13 +93,12 @@ export default {
   mounted() {
     var that = this;
     that.getFlashContentList();
-    setInterval(() => {
-      console.log("interval ");
-      that.getFlashContentList();
-    }, 15000);
+    // setInterval(() => {
+    //   console.log("interval ");
+    //   that.getFlashContentList();
+    // }, 15000);
 
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-    console.log("header  this.userInfo", this.userInfo);
   },
   methods: {
     //确定删除
@@ -136,8 +135,6 @@ export default {
         .post("/api/FlashContent/GetContentList", that.pageInfo)
         .then((res) => {
           that.isLoading = false;
-
-          console.log("GetContentList", res);
           that.dataList = res.data.list;
           that.pageInfo.totalCount = res.data.totalNumber.value;
         });

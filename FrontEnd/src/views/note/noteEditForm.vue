@@ -84,9 +84,22 @@
 
     <transition name="slide-fade">
       <div v-if="isShowDrawer" class="leftPreview">
+        <div style="margin: 30px 14px 13px; display: flex">
+          <el-color-picker v-model="pickColor" show-alpha> </el-color-picker>
+          <el-button
+            @click="onExecCommand('foreColor', pickColor)"
+            size="mini"
+            plain
+            >设置文字颜色</el-button
+          >
+          <el-button @click="onExecCommand('bold', null)" size="mini" plain
+            >加粗</el-button
+          >
+        </div>
         <div
           id="contentLinePreview"
           class="contentLinePreview"
+          @keydown.9.prevent="onExecCommand('indent', null)"
           contenteditable
           v-html="divContent"
         ></div>
@@ -99,6 +112,7 @@
 export default {
   data() {
     return {
+      pickColor: "red",
       divContent: "",
       oldContentVal: "",
       iptBlurSelectObj: {},
@@ -147,6 +161,38 @@ export default {
     },
   },
   methods: {
+    onExecCommand(commandName, args) {
+      document.execCommand(commandName, false, args);
+      this.previewHtmlToInput();
+    },
+    //文字标红
+    onMarkFontRed() {
+      // document.execCommand("foreColor", false, this.pickColor);
+      // this.previewHtmlToInput();
+
+      return;
+
+      var anchorNode = selection.anchorNode;
+      var parentNode = anchorNode.parentElement;
+      if (parentNode.localName == "font") {
+        parentNode.color = color;
+      } else {
+        var selTxt = parentNode.innerText.substring(
+          selection.anchorOffset,
+          selection.extentOffset
+        );
+
+        parentNode.innerHTML = parentNode.innerHTML.replaceAll(
+          selTxt,
+          `<font color="${color}">` + selTxt + "</font>"
+        );
+      }
+    },
+    previewHtmlToInput() {
+      var that = this;
+      var contentLinePreview = document.getElementById("contentLinePreview");
+      that.editRow.sayContent = contentLinePreview.innerHTML;
+    },
     formatHTML(strs) {
       console.log("formatHTML");
 
@@ -271,13 +317,14 @@ export default {
 
       that.$nextTick(() => {
         var contentLinePreview = document.getElementById("contentLinePreview");
-
+        // document.onselectionchange = (e) => {
+        //   console.log('onselectionchange',document.getSelection())
+        // };
         contentLinePreview.addEventListener("keyup", (e) => {
-          that.editRow.sayContent = that.formatHTML(
-            contentLinePreview.innerHTML
-          );
-
-          // that.editRow.sayContent = contentLinePreview.innerHTML;
+          // that.editRow.sayContent = that.formatHTML(
+          //   contentLinePreview.innerHTML
+          // );
+          that.editRow.sayContent = contentLinePreview.innerHTML;
         });
       });
 
@@ -475,7 +522,7 @@ export default {
     confirmDel() {
       var that = this;
       that.$http
-        .post("/api/Word/OnDelWord", { id: that.editRow.id })
+        .post("/api/Note/DelAContent", { id: that.editRow.id })
         .then((res) => {
           //关闭面板
           if (res.succeeded) {
@@ -489,6 +536,9 @@ export default {
 };
 </script>
 <style  >
+.el-color-picker__panel {
+  z-index: 9999 !important;
+}
 #myinput {
   background: black;
   color: white;
@@ -511,6 +561,7 @@ export default {
 }
 .contentLinePreview {
   padding: 35px 44px;
+  border: 1px solid #d5d5d5;
   /* line-height: 26px;
   white-space: pre-wrap; */
 }
