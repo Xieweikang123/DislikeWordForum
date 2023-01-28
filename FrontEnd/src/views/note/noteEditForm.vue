@@ -85,7 +85,12 @@
     <transition name="slide-fade">
       <div v-if="isShowDrawer" class="leftPreview">
         <div style="margin: 30px 14px 13px; display: flex">
-          <el-color-picker v-model="pickColor" show-alpha> </el-color-picker>
+          <el-color-picker
+            @change="onPickColorChange"
+            v-model="pickColor"
+            show-alpha
+          >
+          </el-color-picker>
           <el-button
             @click="onExecCommand('foreColor', pickColor)"
             size="mini"
@@ -112,7 +117,8 @@
 export default {
   data() {
     return {
-      pickColor: "red",
+      isJustNowClose: false,
+      pickColor: "#ff4500",
       divContent: "",
       oldContentVal: "",
       iptBlurSelectObj: {},
@@ -161,7 +167,12 @@ export default {
     },
   },
   methods: {
+    onPickColorChange(nVal) {
+      console.log("onPickColorChange", nVal);
+      // this.pickColor=nVal
+    },
     onExecCommand(commandName, args) {
+      console.log("command", args);
       document.execCommand(commandName, false, args);
       this.previewHtmlToInput();
     },
@@ -331,7 +342,12 @@ export default {
       document.onkeyup = (e) => {
         switch (e.key) {
           case "Escape":
-            that.handleClose();
+            //刚刚关闭
+            if (that.isJustNowClose) {
+              that.isJustNowClose = false;
+            } else {
+              that.handleClose();
+            }
             break;
         }
       };
@@ -388,7 +404,10 @@ export default {
           // done();
           that.isShowDrawer = false;
         })
-        .catch((_) => {});
+        .catch((_) => {
+          console.log("catch", _);
+          that.isJustNowClose = true;
+        });
     },
 
     tabFunc() {
@@ -560,10 +579,10 @@ export default {
   opacity: 0;
 }
 .contentLinePreview {
-  padding: 35px 44px;
+  padding: 7px 34px;
   border: 1px solid #d5d5d5;
-  /* line-height: 26px;
-  white-space: pre-wrap; */
+  overflow: auto;
+  height: 80%;
 }
 .el-message {
   z-index: 9999 !important;
@@ -575,7 +594,7 @@ export default {
   background: #fefefe;
   width: 50%;
   height: 100%;
-  overflow: scroll;
+  /* overflow: scroll; */
   /* padding: 38px 0 0 23px; */
   /* transition: all 2s; */
   z-index: 9998;
