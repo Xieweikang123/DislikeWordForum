@@ -39,15 +39,7 @@
         >
         </el-input>
       </div>
-      <!-- <el-input
-        type="textarea"
-        id="contentInput"
-        :rows="3"
-        placeholder="请输入内容"
-        @paste.native="handlePaste($event)"
-        v-model="sendContent"
-      >
-      </el-input> -->
+
       <div
         id="contentInput"
         class="contentInput"
@@ -68,7 +60,7 @@
           ><el-input
             v-model="pageInfo.searchKeyValues[1].value"
             @keyup.enter.native="onSearch"
-            placeholder="请输入内容"
+            placeholder="搜索"
           ></el-input
         ></el-col>
         <el-col :span="2"
@@ -467,7 +459,7 @@ img {
   width: 50%;
 }
 .contentLine {
-  /* line-height: 26px; */
+  line-height: 26px;
   /* white-space: pre-wrap; */
   overflow: auto;
   /* position: relative; */

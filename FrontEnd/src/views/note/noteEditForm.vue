@@ -138,7 +138,6 @@ export default {
     },
     "editRow.sayContent": {
       handler(nVal, oVal) {
-        console.log("watch sayContent");
         //html 编辑处于焦点时
         if (
           document.activeElement.id == "myinput" ||
@@ -168,45 +167,19 @@ export default {
   },
   methods: {
     onPickColorChange(nVal) {
-      console.log("onPickColorChange", nVal);
       // this.pickColor=nVal
     },
     onExecCommand(commandName, args) {
-      console.log("command", args);
       document.execCommand(commandName, false, args);
       this.previewHtmlToInput();
     },
-    //文字标红
-    onMarkFontRed() {
-      // document.execCommand("foreColor", false, this.pickColor);
-      // this.previewHtmlToInput();
 
-      return;
-
-      var anchorNode = selection.anchorNode;
-      var parentNode = anchorNode.parentElement;
-      if (parentNode.localName == "font") {
-        parentNode.color = color;
-      } else {
-        var selTxt = parentNode.innerText.substring(
-          selection.anchorOffset,
-          selection.extentOffset
-        );
-
-        parentNode.innerHTML = parentNode.innerHTML.replaceAll(
-          selTxt,
-          `<font color="${color}">` + selTxt + "</font>"
-        );
-      }
-    },
     previewHtmlToInput() {
       var that = this;
       var contentLinePreview = document.getElementById("contentLinePreview");
       that.editRow.sayContent = contentLinePreview.innerHTML;
     },
     formatHTML(strs) {
-      console.log("formatHTML");
-
       //声明left变量用于存放html标签中左尖括号（‘<’）位置
       var left = null;
       //声明right变量用于存放html标签中右尖括号（‘<’）位置
@@ -268,7 +241,6 @@ export default {
         }
         // 当做尖括号右尖括号都记录了一个位置后，说明二者之间的内容为代码的一行
         if (typeof left == "number" && typeof right == "number") {
-          console.log("in double number");
           // str += noTag;
           // noTag = "";
 
@@ -316,7 +288,6 @@ export default {
         } else if (typeof left != "number" && typeof right != "number") {
           str += strs[i];
           // noTag += strs[i];
-          // console.log("noTag", noTag);
         }
       }
       //返回得到的格式化完成的html代码字符串
@@ -329,7 +300,7 @@ export default {
       that.$nextTick(() => {
         var contentLinePreview = document.getElementById("contentLinePreview");
         // document.onselectionchange = (e) => {
-        //   console.log('onselectionchange',document.getSelection())
+
         // };
         contentLinePreview.addEventListener("keyup", (e) => {
           // that.editRow.sayContent = that.formatHTML(
@@ -353,10 +324,10 @@ export default {
       };
 
       document.onkeydown = (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "s"||e.key === "S")) {
           //  执行save方法
           // this.save();
-
+          
           that.onSubmit();
           // 阻止默认事件
           e.preventDefault();
@@ -405,8 +376,9 @@ export default {
           that.isShowDrawer = false;
         })
         .catch((_) => {
-          console.log("catch", _);
-          that.isJustNowClose = true;
+          if (_ == "close") {
+            that.isJustNowClose = true;
+          }
         });
     },
 
@@ -490,7 +462,6 @@ export default {
       var file = e.clipboardData.files[0];
       var txtAreaEl = e.srcElement;
       var oriSelectionStart = txtAreaEl.selectionStart;
-      // console.log('tt')
       // return
       //有文件、图片
       if (file) {
@@ -582,6 +553,7 @@ export default {
   padding: 7px 34px;
   border: 1px solid #d5d5d5;
   overflow: auto;
+  line-height: 26px;
   height: 80%;
 }
 .el-message {
