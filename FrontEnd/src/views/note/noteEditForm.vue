@@ -100,6 +100,19 @@
           <el-button @click="onExecCommand('bold', null)" size="mini" plain
             >加粗</el-button
           >
+          <el-input-number
+            v-model="fontSize"
+            :min="1"
+            :max="7"
+            label="描述文字"
+          ></el-input-number>
+
+          <el-button
+            @click="onExecCommand('fontSize', fontSize)"
+            size="mini"
+            plain
+            >字号</el-button
+          >
         </div>
         <div
           id="contentLinePreview"
@@ -117,6 +130,7 @@
 export default {
   data() {
     return {
+      fontSize: 1,
       isJustNowClose: false,
       pickColor: "#ff4500",
       divContent: "",
@@ -324,10 +338,10 @@ export default {
       };
 
       document.onkeydown = (e) => {
-        if ((e.ctrlKey || e.metaKey) && (e.key === "s"||e.key === "S")) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
           //  执行save方法
           // this.save();
-          
+
           that.onSubmit();
           // 阻止默认事件
           e.preventDefault();

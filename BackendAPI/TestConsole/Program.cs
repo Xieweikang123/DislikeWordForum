@@ -25,12 +25,19 @@ public class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         WebApplication app = builder.Build();
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
+        var ss1 = Array.Empty<object>();
         app.UseStaticFiles();
 
+        //app.UseMiddleware(Array.Empty<object>());
+
         // Add a single endpoint
-        app.MapGet("/", () => "Hello World!");
+        app.MapGet("/", () => "Hello World! ");
+        app.MapGet("/test", () => "test! ").WithName("hi");
         app.Run();
+        //var port = "5008";
+
+        //app.Run($"http://localhost:{port}");
 
 
         Console.WriteLine("ok");
