@@ -130,7 +130,7 @@
 export default {
   data() {
     return {
-      fontSize: 1,
+      fontSize: 3,
       isJustNowClose: false,
       pickColor: "#ff4500",
       divContent: "",
