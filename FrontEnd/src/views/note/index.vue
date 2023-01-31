@@ -80,11 +80,7 @@
         class="medium-zoom-overlay"
       ></div>
       <div id="noteContainer">
-        <div
-          v-for="item in dataList"
-          :key="item.id"
-          style="border-bottom: 1px solid #e8e6e6; padding: 13px 0px"
-        >
+        <div v-for="item in dataList" :key="item.id" class="noteItemCls">
           <div class="disAlignCenter userHead" style="">
             <el-tag
               style="margin-right: 5px; cursor: pointer"
@@ -94,38 +90,39 @@
               >{{ tagItem.tagName }}</el-tag
             >
           </div>
-
-          <!-- {{ $Global.user.getAvatorUrl(item.avatar) }} -->
-
-          <div style="padding: 14px 40px">
-            <div class="contentLine" v-html="item.sayContent">
-              <!-- {{ item.sayContent }} -->
+          <div>
+            <div
+              :ref="'noteItem' + item.id"
+              class="contentLine"
+              v-html="item.sayContent"
+            ></div>
+            <div
+              v-if="isShowOpenMore(item)"
+              class="openMore"
+              @click="removeNoteMask(item)"
+            >
+              ﹀
             </div>
-            <div>
-              <span style="float: right; font-size: 13px">
-                <el-link
-                  @click="onEditTag(item)"
-                  type="primary"
-                  style="font-size: 12px; margin-right: 5px"
-                  >编辑</el-link
-                >
-                <el-popconfirm
-                  v-if="userInfo && userInfo.id == item.userId"
-                  title="确定删除吗?"
-                  @confirm="confirmDel(item)"
-                >
-                  <el-link
-                    slot="reference"
-                    type="danger"
-                    style="font-size: 12px"
-                    >删除</el-link
-                  >
-                </el-popconfirm>
-                <span>
-                  {{ $Global.Common.formatTTime(item.createTime) }}
-                </span>
-              </span>
-            </div>
+          </div>
+          <div style="float: right; font-size: 13px">
+            <el-link
+              @click="onEditTag(item)"
+              type="primary"
+              style="font-size: 12px; margin-right: 5px"
+              >编辑</el-link
+            >
+            <el-popconfirm
+              v-if="userInfo && userInfo.id == item.userId"
+              title="确定删除吗?"
+              @confirm="confirmDel(item)"
+            >
+              <el-link slot="reference" type="danger" style="font-size: 12px"
+                >删除</el-link
+              >
+            </el-popconfirm>
+            <span>
+              {{ $Global.Common.formatTTime(item.createTime) }}
+            </span>
           </div>
         </div>
 
@@ -138,6 +135,8 @@
         >
         </el-pagination>
       </div>
+      <el-backtop></el-backtop>
+
       <NoteEditForm ref="editForm" @RefreshData="editOver"></NoteEditForm>
       <TagEditPop ref="tagEditPop" @RefreshData="editOver"></TagEditPop>
     </div>
@@ -154,6 +153,7 @@ export default {
   },
   data() {
     return {
+      maskNoteEls: [],
       beforeImgScaleScrollTop: 0,
       curImg: {},
       isMaskShow: false,
@@ -184,6 +184,25 @@ export default {
     };
   },
   watch: {
+    dataList: {
+      handler(nVal) {
+        var that = this;
+
+        if (nVal && nVal.length > 0) {
+          this.$nextTick(() => {
+            that.maskNoteEls = [];
+            nVal.forEach((item) => {
+              var curRefEl = this.$refs["noteItem" + item.id][0];
+              //高度大于400px 折叠
+              if (curRefEl.offsetHeight > 600) {
+                curRefEl.classList.value += " noteMask";
+                that.maskNoteEls.push(item);
+              }
+            });
+          });
+        }
+      },
+    },
     "pageInfo.pageNumber": {
       handler(nVal) {
         this.getNoteList();
@@ -203,6 +222,38 @@ export default {
     this.listenImgScale();
   },
   methods: {
+    // 点击图片回到顶部方法，加计时器是为了过渡顺滑
+    backTop() {
+      // document.body.scrollTop = 0;
+      // document.documentElement.scrollTop = 0;
+      // var timer = setInterval(() => {
+      //   var curScrollTop=document.documentElement.scrollTop
+      //   let ispeed = Math.floor(curScrollTop / 10);
+      //   document.documentElement.scrollTop -= ispeed;
+      //   if (document.documentElement.scrollTop <= 10) {
+      //     clearInterval(timer);
+      //   }
+      // }, 16);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+
+    //移除笔记 的noteMask类
+    removeNoteMask(item) {
+      console.log("remove mask", item);
+      var curEl = this.$refs["noteItem" + item.id][0];
+      curEl.classList.remove("noteMask");
+      //删除当前元素
+      this.maskNoteEls = this.maskNoteEls.filter((el) => el.id != item.id);
+    },
+    //是否显示更多按钮
+    isShowOpenMore(item) {
+      var that = this;
+      return that.maskNoteEls.some((x) => x.id == item.id);
+    },
+
     //点击 标签更名
     onTagEditClick() {
       console.log("onTagEditClick", this.$refs.tagEditPop);
@@ -215,19 +266,6 @@ export default {
       // // this.insertInputTxt("contentInput", "\t");
       // return;
     },
-    // insertInputTxt(id, insertTxt) {
-    //   var elInput = document.getElementById(id);
-    //   var startPos = elInput.selectionStart;
-    //   var endPos = elInput.selectionEnd;
-    //   if (startPos === undefined || endPos === undefined) return;
-    //   var txt = elInput.value;
-    //   var result =
-    //     txt.substring(0, startPos) + insertTxt + txt.substring(endPos);
-    //   elInput.value = result;
-    //   elInput.focus();
-    //   elInput.selectionStart = startPos + insertTxt.length;
-    //   elInput.selectionEnd = startPos + insertTxt.length;
-    // },
     //编辑完笔记
     editOver() {
       //重新获取笔记和标签
@@ -259,6 +297,7 @@ export default {
               //左右居中
               var leftval = (docElement.clientWidth - target.width) / 2;
               target.style.left = leftval + "px";
+              console.log("top");
               //上下居中
               target.style.top =
                 (docElement.clientHeight - target.height) / 2 +
@@ -390,12 +429,52 @@ export default {
     changePageNumber(curPage) {
       var that = this;
       that.pageInfo.pageNumber = curPage;
+      that.backTop();
     },
   },
 };
 </script>
   
   <style >
+.openMore {
+  width: 100%;
+  text-align: center;
+  color: #205924;
+  font-weight: bold;
+  font-size: 32px;
+  margin-top: -37px;
+  cursor: pointer;
+}
+.contentLine {
+  /* position: relative; */
+  padding: 14px 40px;
+  line-height: 26px;
+}
+.contentLine img {
+  width: 50%;
+}
+/* .noteMask::after {
+  content: "展开";
+  position: absolute;
+  bottom: 20px;
+  color: red;
+  font-size: 22px;
+  width: 100%;
+  background: #181859;
+} */
+.noteMask {
+  max-height: 600px;
+  overflow-y: hidden;
+  background-image: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0%) 50%,
+    #b0b0b0 100%
+  );
+}
+.noteItemCls {
+  border-bottom: 1px solid #e8e6e6;
+  padding: 24px 0px;
+}
 .contentLine img {
   cursor: cell;
 }
@@ -455,15 +534,7 @@ img {
   width: 16%;
   position: absolute;
 }
-.contentLine img {
-  width: 50%;
-}
-.contentLine {
-  line-height: 26px;
-  /* white-space: pre-wrap; */
-  overflow: auto;
-  /* position: relative; */
-}
+
 .userHead:hover {
   opacity: 1;
 }
