@@ -369,6 +369,7 @@ export default {
           // that.isShowDrawer = false;
           that.$message.success("保存成功");
           that.editRow.sayContent = res.data.findNote.sayContent;
+          that.divContent = that.editRow.sayContent;
           that.oldContentVal = that.editRow.sayContent;
           that.$emit("RefreshData");
         }

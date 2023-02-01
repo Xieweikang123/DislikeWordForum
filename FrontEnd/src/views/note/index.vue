@@ -236,7 +236,7 @@ export default {
       // }, 16);
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     },
 
