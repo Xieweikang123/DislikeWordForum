@@ -122,6 +122,20 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Application.NotifyService">
+            <summary>
+            通知服务接口
+            </summary>
+            
+        </member>
+        <member name="M:BackendAPI.Application.NotifyService.GetTuReplyMsg(BackendAPI.Application.NotifyService.RepEntity)">
+            <summary>
+            获取兔小巢回复消息
+            </summary>
+            <param name="repEntity">cookie</param>
+            <returns></returns>
+            
+        </member>
         <member name="T:BackendAPI.Application.PageInfoRanking">
             <summary>
             

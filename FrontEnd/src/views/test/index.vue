@@ -1,159 +1,113 @@
 <template>
   <div>
-   
-    233
+    cookie:
+    <el-input v-model="curCookie"> </el-input>
+    <el-button @click="hasRead">消息已读</el-button>
+    <div v-for="item in dataList" :key="item.reply_id">
+      {{ item.post_user_nick }}:
+
+      <div style="text-indent: 2em">
+        {{ item.reply_text }} -------------- {{ item.created_at }}
+      </div>
+    </div>
   </div>
 </template>
    <script>
-
 export default {
-  
   data() {
     return {
-      isDataLoading: false,
-      searchContent: "",
-      // tagColorArray: ["#fdf6ec", "#d3ffdb", "#ffdfb2", "#cee6ff",'rgb(24 37 113)'],
-      tagColorArray: ["rgb(245 248 254)", "rgb(242 255 255)"],
-      allTags: [],
-      userInfo: {},
+      curCookie: "",
+      curNewRepId: "",
       dataList: [],
-      pageInfo: {
-        pageNumber: 1,
-        pageSize: 15,
-        totalCount: 0,
-        searchKeyValues: [
-          {
-            key: "tagName",
-            value: "",
-          },
-          {
-            key: "sayContent",
-            value: "",
-          },
-        ],
-      },
-      sendContent: "",
-      count: 0,
+      oriTitle: "",
+      curIntervalId: 0,
+      getRepIntervalId: 0,
     };
   },
   watch: {
-    "pageInfo.pageNumber": {
+    //当前id变化，储存
+    curNewRepId(nVal) {
+      localStorage.setItem("curNewRepId", nVal);
+    },
+    curCookie(nVal) {
+      console.log("watch cok", nVal);
+      localStorage.setItem("cookie", nVal);
+    },
+    dataList: {
       handler(nVal) {
-        this.getNoteList();
+        console.log("watch datalist");
+        if (nVal && nVal.length > 0) {
+          //如果新旧id不一样
+          if (this.curNewRepId != nVal[0].reply_id) {
+            this.startNotice();
+          }
+
+          this.curNewRepId = nVal[0].reply_id;
+        }
       },
+      deep: true,
     },
   },
-  computed: {
-    //当前标签
-    currentTagName() {
-      return this.pageInfo.searchKeyValues[0].value;
-    },
-  },
+  computed: {},
   mounted() {
     var that = this;
-    // console.log("process env", process.env);
+    that.oriTitle = document.title;
+    //读取cookie
+    that.curCookie = localStorage.getItem("cookie");
+    that.curNewRepId = localStorage.getItem("curNewRepId");
 
-   
-    
+    that.getRepIntervalId = setInterval(() => {
+      that.getNewData();
+    }, 5000);
+  },
+  destroyed() {
+    console.log("destroyed");
+    clearInterval(this.curIntervalId);
+    clearInterval(this.getRepIntervalId);
   },
   methods: {
-    //搜索
-    onSearch() {
-      var that = this;
-      // console.log("onSearch", this.searchContent);
-      this.getNoteList();
+    //消息已读
+    hasRead() {
+      this.stopNotice();
     },
-    //发送内容
-    sendFun() {
+    //获取消息
+    getNewData() {
       var that = this;
-      that.sendContent = contentInput.innerHTML;
+      //新消息提醒中，不获取
+      if (that.curIntervalId != 0) {
+        return;
+      }
 
-      if (!that.$Global.user.isLogin()) {
-        that.$message.info("请先登录");
-        return;
-      }
-      if (that.sendContent.length == 0) {
-        that.$message.error("请输入发表内容");
-        return;
-      }
       that.$http
-        .post("/api/Note/SendAContent", {
-          sayContent: that.sendContent,
-          tagName: that.currentTagName,
+        .post("/api/Notify/GetTuReplyMsg", {
+          cookie: that.curCookie,
         })
         .then((res) => {
-          //关闭面板
-          if (res.succeeded) {
-            that.$message.success("发表成功");
-            that.sendContent = "";
-            contentInput.innerHTML = "";
-            that.getNoteList();
-          } else {
-            that.$message.error(res.errors);
-          }
+          console.log("get tu rep", res);
+
+          console.log("d1", JSON.parse(res.data));
+          that.dataList = JSON.parse(res.data).data;
         });
     },
-
-    //设置搜索条件的标签
-    setTag(tagName) {
-      this.pageInfo.searchKeyValues[0].value = tagName;
-      //清除搜索内容
-      this.pageInfo.searchKeyValues[1].value = '';
-      //搜索
-      this.getNoteList();
+    //关闭消息提示
+    stopNotice() {
+      //恢复标题
+      document.title = this.oriTitle;
+      clearInterval(this.curIntervalId);
+      this.curIntervalId = 0;
     },
-    //获取闪念分页列表
-    getNoteList() {
+    // 开启消息提示
+    startNotice() {
       var that = this;
-      that.isDataLoading = true;
-      that.dataList = [];
-      //获取标签
-      that.getAllTags();
-
-      // setTimeout(() => {
-      that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
-        that.isDataLoading = false;
-
-        that.dataList = res.data.list;
-        that.pageInfo.totalCount = res.data.totalNumber.value;
-      });
-      // }, 1000);
-    },
-    //编辑完笔记
-    editOver() {
-      //重新获取笔记和标签
-      this.getNoteList();
-      this.getAllTags();
-    },
-    //获取所有去重之后的标签
-    getAllTags() {
-      var that = this;
-      that.$http.post("/api/Note/GetMyNoteTagList").then((res) => {
-        if (res.succeeded) {
-          that.allTags = res.data;
-          // that.$message.success("删除成功");
-          // that.getNoteList();
+      console.log("start notice");
+      this.curIntervalId = setInterval(function () {
+        var title = document.title;
+        if (title == that.oriTitle) {
+          document.title = "【你有新消息】";
+        } else {
+          document.title = that.oriTitle;
         }
-      });
-    },
-    // 编辑笔记
-    onEditTag(item) {
-      this.$refs.editForm.show(item);
-    },
-    //确定删除
-    confirmDel(el) {
-      var that = this;
-      that.$http.post("/api/Note/DelAContent", el).then((res) => {
-        if (res.succeeded) {
-          that.$message.success("删除成功");
-          that.getNoteList();
-        }
-      });
-    },
-    //页码改变时
-    changePageNumber(curPage) {
-      var that = this;
-      that.pageInfo.pageNumber = curPage;
+      }, 500);
     },
   },
 };

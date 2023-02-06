@@ -49,7 +49,7 @@ const routes = [
     path: '/test',
     meta: {
       // 页面标题title
-      title: '测试'
+      title: '兔小巢消息通知'
     },
     component: () => import('@/views/test/index')
   },

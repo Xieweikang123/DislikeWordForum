@@ -86,7 +86,7 @@ export default {
           url: "/note",
         },
         {
-          name: "测试",
+          name: "兔小巢消息通知",
           url: "/test",
         },
       ],
@@ -134,6 +134,10 @@ export default {
     //跳转
     jumpTo(url) {
       console.log("jump url", url);
+      //链接一样，不跳转
+      if(this.activeUrl==url){
+        return
+      }
       this.activeUrl = url;
       this.$router.push(url);
     },
