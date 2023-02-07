@@ -1,62 +1,72 @@
-﻿using Microsoft.AspNetCore.Builder;
-using System.Linq.Expressions;
-using System.Net;
-using Wechaty;
-using Wechaty.Module.Puppet.Schemas;
-//using Wechaty.Module;
+﻿using System;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using OpenAI_API;
+using OpenAI_API.Completions;
 
-
-
-public class Program
+namespace ChatGPT_API
 {
-
-
-
-    public static void Main(string[] args)
+    class Program
     {
-
-
-        var options = new PuppetOptions();
-        //WechatyScanEventListener wechatyScanEventListener = (qrcode, status, data) =>
-        //{
-        //    Console.WriteLine($"Scan QR Code to login: {status} https://wechaty.js.org/qrcode/{(qrcode)}`");
-        //};
-        var wechaty = new Wechaty.Wechaty(options).OnScan((qrcode, status, data) =>
+        async static Task Main(string[] args)
         {
-            Console.WriteLine($"Scan QR Code to login: {status} https://wechaty.js.org/qrcode/{(qrcode)}`");
-        }).OnLogin(user =>
+
+
+            var client = new HttpClient();
+            var apiKey = "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";
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            var engine_id = "text-davinci-003";
+
+            //text - davinci - 003
+            //await GetEnginesAsync(apiKey);
+
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.openai.com/v1/engines/{engine_id}/completions");
+            var input = new
+            {
+                prompt = "你好",
+                max_tokens = 100,
+                n = 1,
+                stop = new string[] { "." },
+                temperature = 0.5
+            };
+
+            request.Content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+
+            var response = client.SendAsync(request).Result;
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+
+
+            //Console.WriteLine(result);
+
+            Console.WriteLine("OK");
+        }
+
+        /// <summary>
+		/// List all engines via the API
+		/// </summary>
+		/// <param name="auth">API authentication in order to call the API endpoint.  If not specified, attempts to use a default.</param>
+		/// <returns>Asynchronously returns the list of all <see cref="Engine"/>s</returns>
+		public static async Task GetEnginesAsync(string apiKey)
         {
-            Console.WriteLine("User {user} logined");
-        }).OnMessage(message =>
-        {
-            Console.WriteLine($"Message: {message}");
-        }).Start();
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+            client.DefaultRequestHeaders.Add("User-Agent", "williamwelsh/openai-dotnet");
 
+            var response = await client.GetAsync("https://api.openai.com/v1/engines");
+            var resultAsString = await response.Content.ReadAsStringAsync();
+            //var resultAsString = await response.Content.ReadAsString();
 
+            if (response.IsSuccessStatusCode)
+            {
+                //var engines = JsonConvert.DeserializeObject<JsonHelperRoot>(resultAsString).data;
+                //return engines;
+            }
 
-        //var options = new PuppetOptions();
-
-        //var wechaty = new Wechaty.Wechaty(options).OnScan((qrcode, status, null) => {
-        //    Console.WriteLine($"Scan QR Code to login: {status} https://wechaty.js.org/qrcode/{(qrcode)}`");
-        //}).OnLogin(user =>
-        //{
-        //    Console.WriteLine("User {user} logined");
-        //}).OnMessage(message =>
-        //{
-        //    Console.WriteLine($"Message: {message}");
-        //}).Start();
-
-
-        Console.WriteLine("ok");
-        Console.ReadKey();
+            throw new HttpRequestException("Error calling OpenAi API to get list of engines.  HTTP status code: " + response.StatusCode + ". Content: " + resultAsString);
+        }
 
 
     }
-
 }
-
-
-
-
-
-

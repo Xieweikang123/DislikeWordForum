@@ -4,5 +4,10 @@
         <name>BackendAPI.Web.Core</name>
     </assembly>
     <members>
+        <member name="T:BackendAPI.Web.Core.TimerHelper">
+            <summary>
+            定时任务
+            </summary>
+        </member>
     </members>
 </doc>

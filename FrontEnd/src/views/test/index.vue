@@ -58,7 +58,7 @@ export default {
 
     that.getRepIntervalId = setInterval(() => {
       that.getNewData();
-    }, 5000);
+    }, 15000);
   },
   destroyed() {
     console.log("destroyed");

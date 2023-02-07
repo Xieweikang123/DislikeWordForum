@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
+using System;
 
 namespace BackendAPI.Web.Core
 {
@@ -11,6 +12,8 @@ namespace BackendAPI.Web.Core
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            Console.WriteLine("configureservices");
+
             // 默认授权机制，需授权的即可（方法）需贴 `[Authorize]` 特性
             //services.AddJwt<JwtHandler>();
             services.AddJwt<JwtHandler>(enableGlobalAuthorize: true);
@@ -21,11 +24,9 @@ namespace BackendAPI.Web.Core
             services.AddCorsAccessor();
 
             services.AddControllers()
-                    //.AddJsonOptions(options =>
-                    //{
-                    //    options.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    //})
                     .AddInjectWithUnifyResult();
+            TimerHelper.Start();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

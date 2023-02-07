@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="OpenAI" Version="1.4.0" />
     <PackageReference Include="System.Speech" Version="6.0.0" />
     <PackageReference Include="Wechaty" Version="0.2.3" />
 
