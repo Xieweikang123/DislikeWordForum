@@ -521,6 +521,31 @@
              更新时间 
             </summary>
         </member>
+        <member name="T:BackendAPI.Core.Entities.SysLog">
+             <summary>
+             系统日志
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.SysLog.Id">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.SysLog.Createdate">
+             <summary>
+             创建时间 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.SysLog.Modifydate">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.SysLog.Content">
+             <summary>
+             日志内容 
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.TempNote">
             <summary>
             

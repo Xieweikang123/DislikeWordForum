@@ -4,10 +4,52 @@
         <name>BackendAPI.Web.Core</name>
     </assembly>
     <members>
-        <member name="T:BackendAPI.Web.Core.TimerHelper">
+        <member name="F:BackendAPI.Web.Core.ConstValueMg.CacheReplyId">
+            <summary>
+            缓存回复id key
+            </summary>
+        </member>
+        <member name="T:BackendAPI.Web.Core.Helper.LogHelper">
+            <summary>
+            缓存
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Web.Core.Helper.LogHelper.WriteLog(System.String)">
+            <summary>
+            写入日志
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:BackendAPI.Web.Core.Helper.MyCache">
+            <summary>
+            缓存
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Web.Core.Helper.MyCache.SetSliding``1(System.String,``0,System.TimeSpan)">
+            <summary>
+            平滑过渡时间
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="expireIn"></param>
+        </member>
+        <member name="T:BackendAPI.Web.Core.Helper.NoticeHelper">
+            <summary>
+            windows 右下角通知
+            </summary>
+        </member>
+        <member name="T:BackendAPI.Web.Core.Helper.TimerHelper">
             <summary>
             定时任务
             </summary>
+        </member>
+        <member name="M:BackendAPI.Web.Core.Helper.TimerHelper.DeUnicode(System.String)">
+            <summary>
+            Unicode解码
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

@@ -1,4 +1,5 @@
-﻿using Furion;
+﻿using BackendAPI.Web.Core.Helper;
+using Furion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +26,9 @@ namespace BackendAPI.Web.Core
 
             services.AddControllers()
                     .AddInjectWithUnifyResult();
-            TimerHelper.Start();
 
+            LogHelper.WriteLog("startup ConfigureServices");
+            TimerHelper.Start();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
