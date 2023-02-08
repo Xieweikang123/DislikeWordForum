@@ -36,7 +36,7 @@ namespace BackendAPI.Web.Core.Helper
         private static void SetTimer()
         {
             // Create a timer with a two second interval.
-            aTimer = new System.Timers.Timer(5000);
+            aTimer = new System.Timers.Timer(15000);
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
@@ -71,6 +71,7 @@ namespace BackendAPI.Web.Core.Helper
                     {
                         //通知
                         NoticeHelper.ShowNotification("兔小巢：", "有新回复了");
+                        MyCache.SetSliding(chcheId, firstRepId, TimeSpan.FromMinutes(300));
                     }
                 }
                 else
