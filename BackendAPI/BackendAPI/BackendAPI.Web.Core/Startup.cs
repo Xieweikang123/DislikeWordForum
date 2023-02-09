@@ -28,7 +28,7 @@ namespace BackendAPI.Web.Core
                     .AddInjectWithUnifyResult();
 
             LogHelper.WriteLog("startup ConfigureServices");
-            TimerHelper.Start();
+            //TimerHelper.Start();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

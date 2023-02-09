@@ -107,6 +107,7 @@ namespace BackendAPI.Application
                     id = IDGen.NextID().ToString(),
                     userId = userId,
                     createTime = nowTime,
+                    updateTime = nowTime,
                     sayContent = dto.sayContent,
 
                 };
@@ -240,7 +241,7 @@ namespace BackendAPI.Application
             });
 
 
-            var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(exp.ToExpression()).OrderByDescending(x => x.id).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
+            var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(exp.ToExpression()).OrderByDescending(x => x.updateTime).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
             return new { list, totalNumber };
         }
 
