@@ -1,11 +1,5 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
-using BackendAPI.Web.Core.Helper;
-using Confluent.Kafka;
-using Newtonsoft.Json;
-using OpenAI_API;
-using OpenAI_API.Completions;
+﻿using BackendAPI.Web.Core.Helper;
+using Microsoft.Extensions.Configuration;
 
 namespace ChatGPT_API
 {
@@ -13,6 +7,13 @@ namespace ChatGPT_API
     {
         async static Task Main(string[] args)
         {
+
+            TimerHelper.configuration = new ConfigurationBuilder()
+              .AddJsonFile("appsettings.json")
+              .Build();
+
+            //var value1 = configuration.GetSection("Settings")["Key1"];
+            //var value2 = configuration.GetSection("Settings")["Key2"];
 
 
 
@@ -25,7 +26,7 @@ namespace ChatGPT_API
             Console.ReadLine();
         }
 
-     
+
 
 
     }

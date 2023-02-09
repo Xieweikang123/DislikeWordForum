@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BackendAPI\BackendAPI.Application\BackendAPI.Application.csproj" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
 
