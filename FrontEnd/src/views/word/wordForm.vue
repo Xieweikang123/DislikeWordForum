@@ -21,6 +21,7 @@
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
     <el-table
+      v-loading="loading"
       @row-dblclick="rowDbClick"
       @sort-change="sortChange"
       :data="tableData"
@@ -90,6 +91,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       sbtnConfig: [
         {
           text: "全部",
@@ -153,7 +155,7 @@ export default {
       that.$http
         .post("/api/Word/RecordWord", { Word: that.paging.searchContent })
         .then((res) => {
-          that.$message.success("记录成功")
+          that.$message.success("记录成功");
           that.GetMyWordList();
         });
     },
@@ -182,9 +184,13 @@ export default {
     GetMyWordList() {
       console.log("parent RefreshData");
       var that = this;
+      that.loading = true;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
+        // Your code here
         that.tableData = res.data.pageList;
         that.paging.totalCount = res.data.allCount;
+
+        that.loading = false;
       });
     },
     //页码改变时
