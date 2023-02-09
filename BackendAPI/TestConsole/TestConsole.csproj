@@ -19,10 +19,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BackendAPI\BackendAPI.Application\BackendAPI.Application.csproj" />
-  </ItemGroup>
   
 
 </Project>

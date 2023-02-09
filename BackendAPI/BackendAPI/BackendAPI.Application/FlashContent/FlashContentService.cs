@@ -25,7 +25,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> GetContentList(PageInfo dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
 
             RefAsync<int> totalNumber = 0;
 
@@ -51,7 +51,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> DelAContent(FlashContent dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
             //改闪念是否为当前人的
@@ -75,7 +75,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> SendAContent(FlashContent dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
             if (string.IsNullOrWhiteSpace(dto.sayContent))
@@ -102,7 +102,7 @@ namespace BackendAPI.Application
         public async Task<object> GetTodayRanking(PageInfo dto)
         {
 
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var today = DateTime.Now.Date;
             var list = await db.Queryable<EnglishWord, CoreUser>((e, c) => e.BelongUserId == c.Id)
                .Where(e => e.Createdate >= today || e.Modifydate >= today)

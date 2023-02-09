@@ -41,7 +41,7 @@ namespace BackendAPI.Application
         public async Task<object> GetTodayRanking(PageInfoRanking dto)
         {
 
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var today = DateTime.Now.Date;
             var list = await db.Queryable<EnglishWord, CoreUser>((e, c) => e.BelongUserId == c.Id)
                .Where(e => e.Createdate >= today || e.Modifydate >= today)

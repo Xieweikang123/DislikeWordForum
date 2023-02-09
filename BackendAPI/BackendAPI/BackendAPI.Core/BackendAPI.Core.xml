@@ -4,12 +4,12 @@
         <name>BackendAPI.Core</name>
     </assembly>
     <members>
-        <member name="T:BackendAPI.Core.DbContext">
+        <member name="T:BackendAPI.Core.DbContextStatic">
             <summary>
             数据库上下文对象
             </summary>
         </member>
-        <member name="F:BackendAPI.Core.DbContext.Instance">
+        <member name="F:BackendAPI.Core.DbContextStatic.Instance">
             <summary>
             SqlSugar 数据库实例
             </summary>

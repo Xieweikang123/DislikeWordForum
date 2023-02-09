@@ -18,7 +18,7 @@ namespace BackendAPI.Web.Core.Helper
         /// <param name="text"></param>
         public static void WriteLog(string text)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var logItem = new SysLog()
             {
                 Id = IDGen.GetStrId(),

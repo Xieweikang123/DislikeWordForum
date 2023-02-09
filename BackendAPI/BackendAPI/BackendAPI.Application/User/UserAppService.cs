@@ -29,8 +29,8 @@ namespace BackendAPI.Application
 
             var userId = CurrentUserInfo.UserId;
 
-            var db = DbContext.Instance;
-            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
+            var db = DbContextStatic.Instance;
+            var queryUser = await DbContextStatic.Instance.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
 
             return RetUserInfo(queryUser);
             //return new { queryUser.UserName, queryUser.NickName, queryUser.UserSex, queryUser.Avatar, queryUser.PersonalSignature };
@@ -44,7 +44,7 @@ namespace BackendAPI.Application
         public async Task<Object> SaveUserInfo(UserDTO dto)
         {
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var queryUser = await db.Queryable<CoreUser>().FirstAsync(x => x.Id == userId);
             //保存当前用户信息
             queryUser.NickName = dto.NickName;
@@ -66,8 +66,8 @@ namespace BackendAPI.Application
         public async Task<Object> Login(UserDTO dto)
         {
 
-            var db = DbContext.Instance;
-            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName && x.Password == dto.Password);
+            var db = DbContextStatic.Instance;
+            var queryUser = await DbContextStatic.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName && x.Password == dto.Password);
             if (queryUser == null)
             {
                 throw new Exception("用户不存在或者密码错误");
@@ -115,9 +115,9 @@ namespace BackendAPI.Application
                 throw new Exception("两次密码不一致");
             }
 
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
 
-            var queryUser = await DbContext.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName);
+            var queryUser = await DbContextStatic.Instance.Queryable<CoreUser>().FirstAsync(x => x.UserName == dto.UserName);
 
             if (queryUser != null)
             {

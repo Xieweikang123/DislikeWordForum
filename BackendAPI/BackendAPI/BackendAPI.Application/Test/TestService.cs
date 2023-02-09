@@ -22,7 +22,7 @@ namespace BackendAPI.Application
         [HttpGet]
         public async Task<object> SendAContent(NoteDTO dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
             if (string.IsNullOrWhiteSpace(dto.sayContent))

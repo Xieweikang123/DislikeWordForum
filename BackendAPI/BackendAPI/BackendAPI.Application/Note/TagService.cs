@@ -35,7 +35,7 @@ namespace BackendAPI.Application
             {
                 throw new Exception("请输入新标签");
             }
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
             try
             {

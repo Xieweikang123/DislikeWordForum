@@ -65,7 +65,7 @@ namespace BackendAPI.Application
         {
 
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var wordlist = GetCacheEnglishWords();
             var list = wordlist.Where(x => x.BelongUserId == userId && x.RecordTimes >= recordTimes).ToList();
             return list;
@@ -153,7 +153,7 @@ namespace BackendAPI.Application
         public async Task<object> OnSaveWord(EnglishWord dto)
         {
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             //删除
             //await db.Deleteable<EnglishWord>(x => x.id == dto.id && x.BelongUserId == userId).ExecuteCommandAsync();
             var wordList = GetCacheEnglishWords();
@@ -190,7 +190,7 @@ namespace BackendAPI.Application
         public async Task<object> OnDelWord(EnglishWord dto)
         {
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             //删除
             await db.Deleteable<EnglishWord>(x => x.id == dto.id && x.BelongUserId == userId).ExecuteCommandAsync();
 
@@ -209,7 +209,7 @@ namespace BackendAPI.Application
         public async Task<object> RecordWord(EnglishWord dto)
         {
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
 
             //获取缓存单词
             var cacheEnglishWordList = GetCacheEnglishWords();
@@ -251,7 +251,7 @@ namespace BackendAPI.Application
         public List<EnglishWord> GetCacheEnglishWords(bool isGetNew = false)
         {
             var userId = CurrentUserInfo.UserId;
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var curUserWordCache = wordCacheKey + userId;
             //清缓存
             if (isGetNew)

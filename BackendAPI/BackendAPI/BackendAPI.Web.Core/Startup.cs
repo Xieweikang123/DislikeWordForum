@@ -1,4 +1,5 @@
-﻿using BackendAPI.Web.Core.Helper;
+﻿using BackendAPI.Core;
+using BackendAPI.Web.Core.Helper;
 using Furion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,10 @@ namespace BackendAPI.Web.Core
 
             services.AddControllers()
                     .AddInjectWithUnifyResult();
+
+
+            //Startup.cs文件添加下面代码
+            services.AddSqlsugarSetup();
 
             LogHelper.WriteLog("startup ConfigureServices");
             //TimerHelper.Start();

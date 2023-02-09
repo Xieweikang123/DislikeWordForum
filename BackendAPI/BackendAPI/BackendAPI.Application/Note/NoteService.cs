@@ -1,13 +1,7 @@
 ﻿using BackendAPI.Application.File;
 using BackendAPI.Application.User;
 using BackendAPI.Core;
-using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
-using Furion.LinqBuilder;
-using Microsoft.Extensions.Caching.Memory;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace BackendAPI.Application
@@ -18,7 +12,12 @@ namespace BackendAPI.Application
     /// 
     public class NoteService : IDynamicApiController
     {
+        private readonly ISqlSugarClient _dbContext;
 
+        public NoteService(ISqlSugarClient dbContext)
+        {
+            _dbContext = dbContext;
+        }
         /// <summary>
         /// 将内容里的bsse64转图片
         /// </summary>
@@ -63,7 +62,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> SendAContent(NoteDTO dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
             if (string.IsNullOrWhiteSpace(dto.sayContent))
@@ -151,7 +150,7 @@ namespace BackendAPI.Application
         public async Task<object> SaveNoteWithTag(Note dto)
         {
 
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
 
             try
@@ -201,7 +200,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> GetMyNoteTagList()
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             //var tagList = await db.Queryable<NoteTag>().Distinct().Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateDistinctCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
 
             var tagList = await db.Queryable<NoteTag>().GroupBy(x => new { x.tagName, x.userId }).Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
@@ -219,7 +218,9 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> GetContentList(PageInfo dto)
         {
-            var db = DbContext.Instance;
+            //var db = DbContextStatic.Instance;
+
+            var db = _dbContext;
             RefAsync<int> totalNumber = 0;
             var exp = Expressionable.Create<Note>(); //创建表达式
             exp.And(x => x.status == 0 && x.userId == CurrentUserInfo.UserId);
@@ -254,7 +255,7 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> DelAContent(Note dto)
         {
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
             try
@@ -295,7 +296,7 @@ namespace BackendAPI.Application
         public async Task<object> GetTodayRanking(PageInfo dto)
         {
 
-            var db = DbContext.Instance;
+            var db = DbContextStatic.Instance;
             var today = DateTime.Now.Date;
             var list = await db.Queryable<EnglishWord, CoreUser>((e, c) => e.BelongUserId == c.Id)
                .Where(e => e.Createdate >= today || e.Modifydate >= today)

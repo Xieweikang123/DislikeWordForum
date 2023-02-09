@@ -1,11 +1,8 @@
-﻿using BackendAPI.Application;
-using Furion.RemoteRequest.Extensions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
 using TestConsole;
-using static BackendAPI.Application.NotifyService;
 
 namespace BackendAPI.Web.Core.Helper
 {
