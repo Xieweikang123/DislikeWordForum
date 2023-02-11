@@ -481,6 +481,49 @@
             标签
             </summary>
         </member>
+        <member name="T:BackendAPI.Core.Entities.NoteRecord">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.sayContent">
+            <summary>
+            Desc:发送内容
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.createTime">
+            <summary>
+            Desc:创建时间
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.updateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.status">
+            <summary>
+            Desc:0正常  1删除 
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.NoteRecord.NoteId">
+            <summary>
+            笔记id
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.NoteTag">
              <summary>
              笔记标签表

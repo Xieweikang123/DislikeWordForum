@@ -90,6 +90,14 @@
               >{{ tagItem.tagName }}</el-tag
             >
           </div>
+          <div style="text-align: center; font-size: 13px">
+            <el-link
+              @click="onEditTag(item)"
+              type="primary"
+              style="font-size: 12px; margin-right: 5px"
+              >编辑</el-link
+            >
+          </div>
           <div>
             <div
               :ref="'noteItem' + item.id"

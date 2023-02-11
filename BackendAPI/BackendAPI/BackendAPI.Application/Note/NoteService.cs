@@ -140,7 +140,22 @@ namespace BackendAPI.Application
             }
             return "ok";
         }
-
+        /// <summary>
+        /// 记录笔记 日志
+        /// </summary>
+        /// <param name="dto"></param>
+        private async void RecordOldNote(Note dto)
+        {
+            var noteRecord = new NoteRecord()
+            {
+                id = IDGen.GetStrId(),
+                createTime = DateTime.Now,
+                NoteId = dto.id,
+                sayContent = dto.sayContent,
+                status = 0,
+            };
+            await _dbContext.Insertable(noteRecord).ExecuteCommandAsync();
+        }
         /// <summary>
         /// 编辑保存笔记标签
         /// </summary>
@@ -152,10 +167,11 @@ namespace BackendAPI.Application
 
             var db = DbContextStatic.Instance;
             var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
-
             try
             {
                 db.BeginTran();
+                RecordOldNote(findNote);
+
                 var nowTime = DateTime.Now;
                 var userId = CurrentUserInfo.UserId;
                 //更新笔记内容
@@ -208,13 +224,24 @@ namespace BackendAPI.Application
             return tagList;
         }
 
-
         /// <summary>
-        /// 获取闪念分页列表
+        /// 获取当前笔记的历史记录
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [AllowAnonymous]
+        [HttpPost]
+        public async Task<Object> GetCurNoteHisList(Note dto)
+        {
+            //找到此笔记的历史记录
+            var noteRecordList = await _dbContext.Queryable<NoteRecord>().Where(x => x.status == 0 && x.NoteId == dto.id).ToListAsync();
+            return noteRecordList;
+        }
+
+        /// <summary>
+        /// 获取笔记分页列表
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<object> GetContentList(PageInfo dto)
         {

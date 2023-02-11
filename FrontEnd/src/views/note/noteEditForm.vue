@@ -84,35 +84,50 @@
 
     <transition name="slide-fade">
       <div v-if="isShowDrawer" class="leftPreview">
-        <div style="margin: 30px 14px 13px; display: flex">
-          <el-color-picker
-            @change="onPickColorChange"
-            v-model="pickColor"
-            show-alpha
-          >
-          </el-color-picker>
-          <el-button
-            @click="onExecCommand('foreColor', pickColor)"
-            size="mini"
-            plain
-            >设置文字颜色</el-button
-          >
-          <el-button @click="onExecCommand('bold', null)" size="mini" plain
-            >加粗</el-button
-          >
-          <el-input-number
-            v-model="fontSize"
-            :min="1"
-            :max="7"
-            label="描述文字"
-          ></el-input-number>
+        <div style="height: 20%">
+          <div style="margin: 18px 31px">
+            历史版本:
+            <el-slider
+              v-if="noteHisList.length > 0"
+              v-model="sliderValue"
+              :step="sliderStep"
+              :max="sliderMax"
+              :format-tooltip="formatTooltip"
+              show-stops
+            >
+            </el-slider>
+          </div>
 
-          <el-button
-            @click="onExecCommand('fontSize', fontSize)"
-            size="mini"
-            plain
-            >字号</el-button
-          >
+          <div style="margin: 30px 14px 13px; display: flex">
+            <el-color-picker
+              @change="onPickColorChange"
+              v-model="pickColor"
+              show-alpha
+            >
+            </el-color-picker>
+            <el-button
+              @click="onExecCommand('foreColor', pickColor)"
+              size="mini"
+              plain
+              >设置文字颜色</el-button
+            >
+            <el-button @click="onExecCommand('bold', null)" size="mini" plain
+              >加粗</el-button
+            >
+            <el-input-number
+              v-model="fontSize"
+              :min="1"
+              :max="7"
+              label="描述文字"
+            ></el-input-number>
+
+            <el-button
+              @click="onExecCommand('fontSize', fontSize)"
+              size="mini"
+              plain
+              >字号</el-button
+            >
+          </div>
         </div>
         <div
           id="contentLinePreview"
@@ -130,6 +145,12 @@
 export default {
   data() {
     return {
+      sliderMax: 1,
+      curNoteContent: "",
+      sliderStep: 1,
+      noteHisList: [],
+      lastSliderValue: -1,
+      sliderValue: 100,
       fontSize: 3,
       isJustNowClose: false,
       pickColor: "#ff4500",
@@ -147,6 +168,14 @@ export default {
     };
   },
   watch: {
+    noteHisList: {
+      handler(nVal) {
+        console.log("watch noteHisList", nVal);
+        // this.sliderStep = 1;
+        this.sliderMax = nVal.length;
+        this.sliderValue = this.sliderMax;
+      },
+    },
     divContent: {
       handler(nVal) {},
     },
@@ -180,6 +209,64 @@ export default {
     },
   },
   methods: {
+    show(row) {
+      var that = this;
+      this.isShowDrawer = true;
+      console.log("show");
+      this.editRow = JSON.parse(JSON.stringify(row));
+      //初始加载时，记录当前笔记内容。
+      this.curNoteContent = this.editRow.sayContent;
+      this.dynamicTags = this.editRow.noteTags;
+      this.oldContentVal = this.editRow.sayContent;
+      that.divContent = this.editRow.sayContent;
+      that.addListener();
+
+      //获取笔记历史
+      that.getCurNoteHis();
+    },
+    //获取当前笔记对应的所有历史笔记
+    getCurNoteHis() {
+      console.log("getCurNoteHis");
+      var that = this;
+
+      that.$http
+        .post("/api/Note/GetCurNoteHisList", that.editRow)
+        .then((res) => {
+          console.log("GetCurNoteHisList", res);
+          that.noteHisList = res.data;
+        });
+    },
+    //历史版本滑动条文本格式化显示
+    formatTooltip(value) {
+      //value 没变的话，也不往下
+      console.log("sliderValue", this.sliderValue);
+      // 如果本次value和上次一样，不往下进行
+      if (value == null || value == this.lastSliderValue) {
+        return;
+      }
+      this.lastSliderValue = value;
+      this.editRow.sayContent = "";
+      this.divContent = this.editRow.sayContent;
+      if (value == this.noteHisList.length) {
+        //切换内容到当前内容
+        this.setTwoContent(this.curNoteContent);
+        return "当前版本";
+      }
+      console.log("formattool tip value", value);
+      // var index = parseInt(value / this.sliderStep);
+      // console.log(" sliderStep", this.sliderStep);
+      // console.log(" index", index);
+
+      var slideItem = this.noteHisList[value];
+      var time = slideItem.createTime.replace("T", " ");
+      this.setTwoContent(slideItem.sayContent);
+      return time;
+    },
+    //设置两个控件的值
+    setTwoContent(content) {
+      this.editRow.sayContent = content;
+      this.divContent = content;
+    },
     onPickColorChange(nVal) {
       // this.pickColor=nVal
     },
@@ -324,18 +411,18 @@ export default {
         });
       });
 
-      document.onkeyup = (e) => {
-        switch (e.key) {
-          case "Escape":
-            //刚刚关闭
-            if (that.isJustNowClose) {
-              that.isJustNowClose = false;
-            } else {
-              that.handleClose();
-            }
-            break;
-        }
-      };
+      // document.onkeyup = (e) => {
+      //   switch (e.key) {
+      //     case "Escape":
+      //       //刚刚关闭
+      //       if (that.isJustNowClose) {
+      //         that.isJustNowClose = false;
+      //       } else {
+      //         that.handleClose();
+      //       }
+      //       break;
+      //   }
+      // };
 
       document.onkeydown = (e) => {
         if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
@@ -348,17 +435,7 @@ export default {
         }
       };
     },
-    show(row) {
-      var that = this;
-      this.isShowDrawer = true;
 
-      this.editRow = JSON.parse(JSON.stringify(row));
-
-      this.dynamicTags = this.editRow.noteTags;
-      this.oldContentVal = this.editRow.sayContent;
-      that.divContent = this.editRow.sayContent;
-      that.addListener();
-    },
     // 保存
     onSubmit() {
       var that = this;
@@ -368,9 +445,15 @@ export default {
         if (res.succeeded) {
           // that.isShowDrawer = false;
           that.$message.success("保存成功");
-          that.editRow.sayContent = res.data.findNote.sayContent;
-          that.divContent = that.editRow.sayContent;
+          
+          that.setTwoContent( res.data.findNote.sayContent)
+          // that.editRow.sayContent = res.data.findNote.sayContent;
+          // that.divContent = that.editRow.sayContent;
           that.oldContentVal = that.editRow.sayContent;
+          //初始加载时，记录当前笔记内容。
+          that.curNoteContent = that.editRow.sayContent;
+          //保存之后重新获取历史笔记
+          that.getCurNoteHis();
           that.$emit("RefreshData");
         }
       });
@@ -569,11 +652,13 @@ export default {
   border: 1px solid #d5d5d5;
   overflow: auto;
   line-height: 26px;
-  height: 80%;
+  height: 70%;
 }
-.el-message {
+.el-message,
+.el-tooltip__popper {
   z-index: 9999 !important;
 }
+
 .leftPreview {
   position: fixed;
   left: 0;
@@ -581,10 +666,8 @@ export default {
   background: #fefefe;
   width: 50%;
   height: 100%;
-  /* overflow: scroll; */
-  /* padding: 38px 0 0 23px; */
-  /* transition: all 2s; */
-  z-index: 9998;
+
+  z-index: 9990;
 }
 .leftPreview img {
   width: 50%;

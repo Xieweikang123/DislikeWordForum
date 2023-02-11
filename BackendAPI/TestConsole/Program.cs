@@ -1,55 +1,31 @@
 ﻿using System;
-using System.Net.Http;
-using System.Reflection;
-using System.Text;
-using BackendAPI.Web.Core.Helper;
-using Confluent.Kafka;
-using Newtonsoft.Json;
-using OpenAI_API;
-using OpenAI_API.Completions;
+using Castle.DynamicProxy;
 
-namespace ChatGPT_API
+public class LogInterceptor : IInterceptor
 {
-
-
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class MyAttribute : Attribute
+    public void Intercept(IInvocation invocation)
     {
-        public string Value { get; set; }
+        Console.WriteLine("Entering method: " + invocation.Method.Name);
+        invocation.Proceed();
+        Console.WriteLine("Exiting method: " + invocation.Method.Name);
     }
+}
 
-    [MyAttribute(Value = "Hello, 11!")]
-    public class MyClass
+public class MyClass
+{
+    public virtual void MyMethod(string a)
     {
-        [MyAttribute(Value = "Hello, World!")]
-        public void MyMethod()
-        {
-            Console.WriteLine("MyMethod is executing");
-        }
+        Console.WriteLine("MyMethod is executing " + a);
     }
+}
 
-
-    class Program
+class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
+        var proxyGenerator = new ProxyGenerator();
+        var myObj = proxyGenerator.CreateClassProxy<MyClass>(new LogInterceptor());
 
-            using (StreamReader reader = new StreamReader("example.txt"))
-            {
-                string line;
-                //while ((line = reader.ReadLine()) != null)
-                while ((line = reader.ReadLine()) != null)
-                {
-                    Console.WriteLine(line);
-                }
-            }
-
-            Console.WriteLine("OK");
-            Console.ReadLine();
-        }
-
-
-
-
+        myObj.MyMethod("zz");
     }
 }

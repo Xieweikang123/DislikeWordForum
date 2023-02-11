@@ -73,6 +73,12 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.RecordOldNote(BackendAPI.Core.Entities.Note)">
+            <summary>
+            记录笔记 日志
+            </summary>
+            <param name="dto"></param>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
             <summary>
             编辑保存笔记标签
@@ -86,9 +92,16 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.GetCurNoteHisList(BackendAPI.Core.Entities.Note)">
+            <summary>
+            获取当前笔记的历史记录
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
-            获取闪念分页列表
+            获取笔记分页列表
             </summary>
             <param name="dto"></param>
             <returns></returns>
