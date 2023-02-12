@@ -85,10 +85,9 @@
     <transition name="slide-fade">
       <div v-if="isShowDrawer" class="leftPreview">
         <div style="height: 20%">
-          <div style="margin: 18px 31px">
-            历史版本:
+          <div v-if="noteHisList.length > 0" style="margin: 18px 31px">
+            历史版本: {{ noteHisList.length }}个
             <el-slider
-              v-if="noteHisList.length > 0"
               v-model="sliderValue"
               :step="sliderStep"
               :max="sliderMax"
@@ -411,18 +410,18 @@ export default {
         });
       });
 
-      // document.onkeyup = (e) => {
-      //   switch (e.key) {
-      //     case "Escape":
-      //       //刚刚关闭
-      //       if (that.isJustNowClose) {
-      //         that.isJustNowClose = false;
-      //       } else {
-      //         that.handleClose();
-      //       }
-      //       break;
-      //   }
-      // };
+      document.onkeyup = (e) => {
+        switch (e.key) {
+          case "Escape":
+            //刚刚关闭
+            if (that.isJustNowClose) {
+              that.isJustNowClose = false;
+            } else {
+              that.handleClose();
+            }
+            break;
+        }
+      };
 
       document.onkeydown = (e) => {
         if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
@@ -445,8 +444,8 @@ export default {
         if (res.succeeded) {
           // that.isShowDrawer = false;
           that.$message.success("保存成功");
-          
-          that.setTwoContent( res.data.findNote.sayContent)
+
+          that.setTwoContent(res.data.findNote.sayContent);
           // that.editRow.sayContent = res.data.findNote.sayContent;
           // that.divContent = that.editRow.sayContent;
           that.oldContentVal = that.editRow.sayContent;
@@ -462,13 +461,13 @@ export default {
       var that = this;
 
       //内容没有更改，直接关闭
-      if (this.editRow.sayContent == this.oldContentVal) {
-        // done();
-        that.isShowDrawer = false;
-        return;
-      }
+      // if (this.editRow.sayContent == this.oldContentVal) {
+      //   // done();
+      //   that.isShowDrawer = false;
+      //   return;
+      // }
       // done();
-      this.$confirm("内容变更,关闭将丢失更改,确认关闭？")
+      this.$confirm("确认关闭？")
         .then((_) => {
           // done();
           that.isShowDrawer = false;
