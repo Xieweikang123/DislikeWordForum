@@ -39,18 +39,20 @@ namespace BackendAPI.Web.Core.Helper
             var interval = int.Parse(configuration.GetSection("Settings")["RequestInterval"]);
             aTimer = new System.Timers.Timer(interval);
             // Hook up the Elapsed event for the timer. 
+
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+            OnTimedEvent(null, null);
         }
 
-        private static void OnTimedEvent(object? source, ElapsedEventArgs e)
+        private static void OnTimedEvent(object? source, ElapsedEventArgs? e)
         {
             //Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
             //                  e.SignalTime);
             try
             {
-                Console.WriteLine("兔小巢 定时器运行  {0:HH:mm:ss.fff}", e.SignalTime);
+                Console.WriteLine("兔小巢 定时器运行  {0:HH:mm:ss.fff}", e?.SignalTime);
 
                 //请求消息
                 //var configuration = App.Configuration;
