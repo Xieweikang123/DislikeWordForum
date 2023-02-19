@@ -1,31 +1,71 @@
 ﻿using System;
-using Castle.DynamicProxy;
+using System.Reflection;
 
-public class LogInterceptor : IInterceptor
+class MyClass
 {
-    public void Intercept(IInvocation invocation)
-    {
-        Console.WriteLine("Entering method: " + invocation.Method.Name);
-        invocation.Proceed();
-        Console.WriteLine("Exiting method: " + invocation.Method.Name);
-    }
-}
 
-public class MyClass
-{
-    public virtual void MyMethod(string a)
-    {
-        Console.WriteLine("MyMethod is executing " + a);
-    }
+    public string MyProperty { get; set; }
 }
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        var proxyGenerator = new ProxyGenerator();
-        var myObj = proxyGenerator.CreateClassProxy<MyClass>(new LogInterceptor());
+        MyClass obj = new MyClass { MyProperty = "hello world" };
+        string propertyName = "MyProperty";
 
-        myObj.MyMethod("zz");
+
+        var ss1 = obj.GetPropertyValue(propertyName);
+        //var propertyAccessor = new PropertyAccessor(obj);
+
+        //var name = propertyAccessor[propertyName];
+
+        Console.WriteLine("ok");
+        //// 使用反射获取对象的属性值
+        //PropertyInfo propertyInfo = obj.GetType().GetProperty(propertyName);
+        //if (propertyInfo != null)
+        //{
+        //    object propertyValue = propertyInfo.GetValue(obj);
+        //    Console.WriteLine(propertyValue);
+        //}
     }
+
+
+
+}
+
+static class PropertyAccessor
+{
+    //private object obj;
+
+    public static object GetPropertyValue(this object obj, string propertyName)
+    {
+        var propertyInfo = obj.GetType().GetProperty(propertyName);
+        if (propertyInfo != null)
+        {
+            return propertyInfo.GetValue(obj);
+        }
+        return null;
+    }
+
+
+    //public PropertyAccessor(object obj)
+    //{
+    //    this.obj = obj;
+    //}
+
+    //public object this[string key]
+    //{
+    //    get
+    //    {
+    //        var propertyInfo = obj.GetType().GetProperty(key);
+    //        if (propertyInfo != null)
+    //        {
+    //            return propertyInfo.GetValue(obj);
+    //        }
+    //        return null;
+    //    }
+    //}
+
+
 }

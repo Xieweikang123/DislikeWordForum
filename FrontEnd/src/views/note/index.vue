@@ -97,6 +97,12 @@
               style="font-size: 12px; margin-right: 5px"
               >编辑</el-link
             >
+            <el-link
+              @click="onShare(item)"
+              type="primary"
+              style="font-size: 12px; margin-right: 5px"
+              >分享</el-link
+            >
           </div>
           <div>
             <div
@@ -147,17 +153,20 @@
 
       <NoteEditForm ref="editForm" @RefreshData="editOver"></NoteEditForm>
       <TagEditPop ref="tagEditPop" @RefreshData="editOver"></TagEditPop>
+      <ShareCard ref="shareCard"></ShareCard>
     </div>
   </div>
 </template>
    <script>
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
+import ShareCard from "../note/shareCard";
 
 export default {
   components: {
     NoteEditForm,
     TagEditPop,
+    ShareCard,
   },
   data() {
     return {
@@ -230,18 +239,12 @@ export default {
     this.listenImgScale();
   },
   methods: {
+    onShare(item) {
+      console.log("onShare", item);
+      this.$refs.shareCard.show(item);
+    },
     // 点击图片回到顶部方法，加计时器是为了过渡顺滑
     backTop() {
-      // document.body.scrollTop = 0;
-      // document.documentElement.scrollTop = 0;
-      // var timer = setInterval(() => {
-      //   var curScrollTop=document.documentElement.scrollTop
-      //   let ispeed = Math.floor(curScrollTop / 10);
-      //   document.documentElement.scrollTop -= ispeed;
-      //   if (document.documentElement.scrollTop <= 10) {
-      //     clearInterval(timer);
-      //   }
-      // }, 16);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
