@@ -2,27 +2,17 @@
   <div>
     <div class="leftTagContainer">
       <div>
-        <el-button @click="onTagEditClick" type="primary" plain
-          >标签更名</el-button
-        >
+        <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
       </div>
 
       <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
         全部
       </el-tag>
-      <el-tag
-        v-for="(item, index) in allTags"
-        :key="item.tagName"
-        @click="setTag(item.tagName)"
-        class="tagItemStyle"
+      <el-tag v-for="(item, index) in allTags" :key="item.tagName" @click="setTag(item.tagName)" class="tagItemStyle"
         :style="{
           'background-color': tagColorArray[index % tagColorArray.length],
-        }"
-      >
-        <span class="mixMode"
-          >{{ item.tagName }}({{ item.count }})</span
-        ></el-tag
-      >
+        }">
+        <span class="mixMode">{{ item.tagName }}({{ item.count }})</span></el-tag>
     </div>
     <div class="margin60Auto">
       <!-- <el-alert title="不可关闭的 alert" type="success" :closable="false">
@@ -32,107 +22,45 @@
       <div class="topTagContainer">
         <div>当前标签:</div>
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
-        <el-input
-          style="width: 200px"
-          placeholder=""
-          v-model="pageInfo.searchKeyValues[0].value"
-        >
+        <el-input style="width: 200px" placeholder="" v-model="pageInfo.searchKeyValues[0].value">
         </el-input>
       </div>
 
-      <div
-        id="contentInput"
-        class="contentInput"
-        contenteditable
-        @keydown.9.prevent="tabFunc1"
-        placeholder="请输入内容"
-      ></div>
+      <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容"></div>
       <!-- <div id="preview">
         <span>将图片按Ctrl+V 粘贴至此处</span>
       </div> -->
       <div style="text-align: right">
-        <el-button @click="sendFun" style="margin-top: 10px" type="primary"
-          >发表</el-button
-        >
+        <el-button @click="sendFun" style="margin-top: 10px" type="primary">发表</el-button>
       </div>
       <el-row :gutter="20" style="margin-top: 13px">
-        <el-col :span="22"
-          ><el-input
-            v-model="pageInfo.searchKeyValues[1].value"
-            @keyup.enter.native="onSearch"
-            placeholder="搜索"
-          ></el-input
-        ></el-col>
-        <el-col :span="2"
-          ><el-button icon="el-icon-search" @click="onSearch" circle></el-button
-        ></el-col>
+        <el-col :span="22"><el-input v-model="pageInfo.searchKeyValues[1].value" @keyup.enter.native="onSearch"
+            placeholder="搜索"></el-input></el-col>
+        <el-col :span="2"><el-button icon="el-icon-search" @click="onSearch" circle></el-button></el-col>
       </el-row>
-      <el-skeleton
-        v-if="isDataLoading"
-        :rows="20"
-        animated
-        style="margin-top: 10px"
-      />
+      <el-skeleton v-if="isDataLoading" :rows="20" animated style="margin-top: 10px" />
 
-      <div
-        v-if="isMaskShow"
-        @click="clickMask"
-        class="medium-zoom-overlay"
-      ></div>
+      <div v-if="isMaskShow" @click="clickMask" class="medium-zoom-overlay"></div>
       <div id="noteContainer">
         <div v-for="item in dataList" :key="item.id" class="noteItemCls">
           <div class="disAlignCenter userHead" style="">
-            <el-tag
-              style="margin-right: 5px; cursor: pointer"
-              @click="setTag(tagItem.tagName)"
-              v-for="tagItem in item.noteTags"
-              :key="tagItem.id"
-              >{{ tagItem.tagName }}</el-tag
-            >
+            <el-tag style="margin-right: 5px; cursor: pointer" @click="setTag(tagItem.tagName)"
+              v-for="tagItem in item.noteTags" :key="tagItem.id">{{ tagItem.tagName }}</el-tag>
           </div>
           <div style="text-align: center; font-size: 13px">
-            <el-link
-              @click="onEditTag(item)"
-              type="primary"
-              style="font-size: 12px; margin-right: 5px"
-              >编辑</el-link
-            >
-            <el-link
-              @click="onShare(item)"
-              type="primary"
-              style="font-size: 12px; margin-right: 5px"
-              >分享</el-link
-            >
+            <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
+            <el-link @click="onShare(item)" type="primary" style="font-size: 12px; margin-right: 5px">分享</el-link>
           </div>
           <div>
-            <div
-              :ref="'noteItem' + item.id"
-              class="contentLine"
-              v-html="item.sayContent"
-            ></div>
-            <div
-              v-if="isShowOpenMore(item)"
-              class="openMore"
-              @click="removeNoteMask(item)"
-            >
+            <div :ref="'noteItem' + item.id" class="contentLine" v-html="item.sayContent"></div>
+            <div v-if="isShowOpenMore(item)" class="openMore" @click="removeNoteMask(item)">
               ﹀
             </div>
           </div>
           <div style="float: right; font-size: 13px">
-            <el-link
-              @click="onEditTag(item)"
-              type="primary"
-              style="font-size: 12px; margin-right: 5px"
-              >编辑</el-link
-            >
-            <el-popconfirm
-              v-if="userInfo && userInfo.id == item.userId"
-              title="确定删除吗?"
-              @confirm="confirmDel(item)"
-            >
-              <el-link slot="reference" type="danger" style="font-size: 12px"
-                >删除</el-link
-              >
+            <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
+            <el-popconfirm v-if="userInfo && userInfo.id == item.userId" title="确定删除吗?" @confirm="confirmDel(item)">
+              <el-link slot="reference" type="danger" style="font-size: 12px">删除</el-link>
             </el-popconfirm>
             <span>
               {{ $Global.Common.formatTTime(item.createTime) }}
@@ -140,13 +68,8 @@
           </div>
         </div>
 
-        <el-pagination
-          v-if="pageInfo.totalCount > 0"
-          layout="prev, pager, next"
-          :page-size="pageInfo.pageSize"
-          @current-change="changePageNumber"
-          :total="pageInfo.totalCount"
-        >
+        <el-pagination v-if="pageInfo.totalCount > 0" layout="prev, pager, next" :page-size="pageInfo.pageSize"
+          @current-change="changePageNumber" :total="pageInfo.totalCount">
         </el-pagination>
       </div>
       <el-backtop></el-backtop>
@@ -157,7 +80,7 @@
     </div>
   </div>
 </template>
-   <script>
+<script>
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
 import ShareCard from "../note/shareCard";
@@ -241,6 +164,7 @@ export default {
   methods: {
     onShare(item) {
       console.log("onShare", item);
+      this.beforeImgScaleScrollTop = document.documentElement.scrollTop;
       this.$refs.shareCard.show(item);
     },
     // 点击图片回到顶部方法，加计时器是为了过渡顺滑
@@ -446,7 +370,7 @@ export default {
 };
 </script>
   
-  <style >
+<style >
 .openMore {
   width: 100%;
   text-align: center;
@@ -456,14 +380,17 @@ export default {
   margin-top: -37px;
   cursor: pointer;
 }
+
 .contentLine {
   /* position: relative; */
   padding: 14px 40px;
   line-height: 26px;
 }
+
 .contentLine img {
   width: 50%;
 }
+
 /* .noteMask::after {
   content: "展开";
   position: absolute;
@@ -476,19 +403,20 @@ export default {
 .noteMask {
   max-height: 600px;
   overflow-y: hidden;
-  background-image: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0%) 50%,
-    #b0b0b0 100%
-  );
+  background-image: linear-gradient(180deg,
+      rgb(255 255 255 / 0%) 50%,
+      #b0b0b0 100%);
 }
+
 .noteItemCls {
   border-bottom: 1px solid #e8e6e6;
   padding: 24px 0px;
 }
+
 .contentLine img {
   cursor: cell;
 }
+
 .medium-zoom-overlay {
   position: fixed;
   top: 0;
@@ -501,46 +429,55 @@ export default {
   background: rgba(0, 0, 0, 0.8);
   z-index: 2;
 }
+
 .imgScale {
   position: absolute;
   transform: scale(1.5);
   z-index: 3;
 }
+
 /* .imgScale>div{
   width:200px
 } */
 img {
   transition: all 500ms cubic-bezier(0.2, 0, 0.2, 1);
 }
+
 .tagAllStyle {
   background-color: #447154;
   border-color: #e1f3d8;
   color: #ffffff !important;
 }
+
 .mixMode {
   /* mix-blend-mode: difference;
   color: white; */
   color: #022023;
 }
+
 .topTagContainer {
   margin-bottom: 15px;
   display: flex;
   align-items: center;
 }
+
 .contentInput img {
   width: 100px;
 }
+
 .contentInput {
   min-height: 150px;
   height: auto;
   border: 1px solid #dadada;
   padding: 2px 4px;
 }
+
 .tagItemStyle {
   color: #363f4e;
   margin: 6px 2px;
   cursor: pointer;
 }
+
 .leftTagContainer {
   width: 16%;
   position: absolute;
@@ -549,6 +486,7 @@ img {
 .userHead:hover {
   opacity: 1;
 }
+
 .userHead {
   opacity: 90%;
   /* margin-top: 12px; */

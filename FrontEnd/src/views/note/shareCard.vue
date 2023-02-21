@@ -8,10 +8,7 @@
   >
     <div ref="container" class="container">
       <blockquote class="quote-card">
-        <p id="quote" v-html="curItem.sayContent">
-          <!-- "No one has a finer command of language than the person who keeps his
-          mouth shut. " -->
-        </p>
+        <p id="quote" v-html="curItem.sayContent"></p>
         <!-- <cite>#SamRayburn</cite> -->
       </blockquote>
     </div>
@@ -90,7 +87,6 @@ export default {
       this.downloadUrl = "";
     },
     handleClose(done) {
-
       done();
 
       // this.$confirm("确认关闭？")

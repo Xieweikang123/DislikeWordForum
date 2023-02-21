@@ -11,15 +11,18 @@ class Program
 {
     static void Main()
     {
-        MyClass obj = new MyClass { MyProperty = "hello world" };
-        string propertyName = "MyProperty";
+        //MyClass obj = new MyClass { MyProperty = "hello world" };
+        //string propertyName = "MyProperty";
 
 
-        var ss1 = obj.GetPropertyValue(propertyName);
+        //var ss1 = obj.GetPropertyValue(propertyName);
         //var propertyAccessor = new PropertyAccessor(obj);
 
         //var name = propertyAccessor[propertyName];
 
+        Method2();
+
+        Method1();
         Console.WriteLine("ok");
         //// 使用反射获取对象的属性值
         //PropertyInfo propertyInfo = obj.GetType().GetProperty(propertyName);
@@ -28,6 +31,25 @@ class Program
         //    object propertyValue = propertyInfo.GetValue(obj);
         //    Console.WriteLine(propertyValue);
         //}
+    }
+
+
+
+    static void Method1()
+    {
+        throw new Exception("我错了1");
+    }
+    static Task Method2()
+    {
+        Console.WriteLine("m2 执行");
+        return Task.Run(() =>
+          {
+              Console.WriteLine("m2 task");
+               
+              throw new Exception("我错了2");
+
+          });
+
     }
 
 
