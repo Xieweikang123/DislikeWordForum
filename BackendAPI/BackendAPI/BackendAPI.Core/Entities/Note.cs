@@ -64,6 +64,8 @@ namespace BackendAPI.Core.Entities
         /// 标签
         /// </summary>
         public string tagName { get; set; }
+
+        public bool isRecycleBin { get; set; }
     }
 
 }

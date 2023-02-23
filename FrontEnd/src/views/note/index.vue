@@ -2,31 +2,41 @@
   <div>
     <div class="leftTagContainer">
       <div>
-        <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
-      </div>
 
-      <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
-        全部
-      </el-tag>
-      <el-tag v-for="(item, index) in allTags" :key="item.tagName" @click="setTag(item.tagName)" class="tagItemStyle"
-        :style="{
-          'background-color': tagColorArray[index % tagColorArray.length],
-        }">
-        <span class="mixMode">{{ item.tagName }}({{ item.count }})</span></el-tag>
+        <div style="margin-bottom:15px">
+          <el-checkbox-group v-model="isRecycleBin">
+            <el-checkbox-button v-for="item in ['回收站']" :label="item" :key="item">{{ item }}</el-checkbox-button>
+          </el-checkbox-group>
+        </div>
+
+      </div>
+      <div v-if="!isRecycleBin">
+        <el-divider content-position="center">标签</el-divider>
+
+        <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
+        <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
+          全部
+        </el-tag>
+        <el-tag v-for="(item, index) in allTags" :key="item.tagName" @click="setTag(item.tagName)" class="tagItemStyle"
+          :style="{
+            'background-color': tagColorArray[index % tagColorArray.length],
+          }">
+          <span class="mixMode">{{ item.tagName }}({{ item.count }})</span>
+        </el-tag>
+      </div>
     </div>
     <div class="margin60Auto">
-      <!-- <el-alert title="不可关闭的 alert" type="success" :closable="false">
-      </el-alert> 
-       -->
 
       <div class="topTagContainer">
+
         <div>当前标签:</div>
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
         <el-input style="width: 200px" placeholder="" v-model="pageInfo.searchKeyValues[0].value">
         </el-input>
       </div>
 
-      <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容"></div>
+      <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容">
+      </div>
       <!-- <div id="preview">
         <span>将图片按Ctrl+V 粘贴至此处</span>
       </div> -->
@@ -59,7 +69,10 @@
           </div>
           <div style="float: right; font-size: 13px">
             <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
-            <el-popconfirm v-if="userInfo && userInfo.id == item.userId" title="确定删除吗?" @confirm="confirmDel(item)">
+            <el-link v-if="isRecycleBin" @click="onRecovery(item)" type="success"
+              style="font-size: 12px; margin-right: 5px">恢复</el-link>
+            <el-popconfirm v-if="!isRecycleBin && userInfo && userInfo.id == item.userId" title="确定删除吗?"
+              @confirm="confirmDel(item)">
               <el-link slot="reference" type="danger" style="font-size: 12px">删除</el-link>
             </el-popconfirm>
             <span>
@@ -93,6 +106,7 @@ export default {
   },
   data() {
     return {
+      isRecycleBin: false,
       maskNoteEls: [],
       beforeImgScaleScrollTop: 0,
       curImg: {},
@@ -116,6 +130,10 @@ export default {
           {
             key: "sayContent",
             value: "",
+          },
+          {
+            key: "status",
+            value: "0",
           },
         ],
       },
@@ -143,6 +161,22 @@ export default {
         }
       },
     },
+    "isRecycleBin": {
+      handler(nVal) {
+        console.log('watch pageInfo.searchKeyValues.2.value', nVal)
+        //回收站
+        if (nVal) {
+          this.pageInfo.searchKeyValues[2].value = '1'
+          document.title = "笔记-回收站"
+        } else {
+          this.pageInfo.searchKeyValues[2].value = '0'
+          document.title = "笔记"
+        }
+
+        //请求一次
+        this.getNoteList();
+      },
+    },
     "pageInfo.pageNumber": {
       handler(nVal) {
         this.getNoteList();
@@ -162,6 +196,17 @@ export default {
     this.listenImgScale();
   },
   methods: {
+    // 恢复
+    onRecovery(item) {
+      console.log('onRecovery', item)
+      var that = this;
+      that.$http.post("/api/Note/RecoveryAContent", item).then((res) => {
+        if (res.succeeded) {
+          that.$message.success("恢复成功");
+          that.getNoteList();
+        }
+      });
+    },
     onShare(item) {
       console.log("onShare", item);
       this.beforeImgScaleScrollTop = document.documentElement.scrollTop;
@@ -337,7 +382,7 @@ export default {
     //获取所有去重之后的标签
     getAllTags() {
       var that = this;
-      that.$http.post("/api/Note/GetMyNoteTagList").then((res) => {
+      that.$http.post("/api/Note/GetMyNoteTagList", { isRecycleBin: that.isRecycleBin }).then((res) => {
         if (res.succeeded) {
           that.allTags = res.data;
           // that.$message.success("删除成功");

@@ -86,7 +86,7 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
-        <member name="M:BackendAPI.Application.NoteService.GetMyNoteTagList">
+        <member name="M:BackendAPI.Application.NoteService.GetMyNoteTagList(BackendAPI.Core.Entities.NoteDTO)">
             <summary>
             获取所有标签
             </summary>
@@ -102,6 +102,13 @@
         <member name="M:BackendAPI.Application.NoteService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
             获取笔记分页列表
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.NoteService.RecoveryAContent(BackendAPI.Core.Entities.Note)">
+            <summary>
+            恢复笔记
             </summary>
             <param name="dto"></param>
             <returns></returns>

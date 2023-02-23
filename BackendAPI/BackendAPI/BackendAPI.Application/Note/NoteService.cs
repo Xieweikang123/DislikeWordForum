@@ -214,11 +214,9 @@ namespace BackendAPI.Application
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> GetMyNoteTagList()
+        public async Task<object> GetMyNoteTagList(NoteDTO dto)
         {
             var db = DbContextStatic.Instance;
-            //var tagList = await db.Queryable<NoteTag>().Distinct().Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateDistinctCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
-
             var tagList = await db.Queryable<NoteTag>().GroupBy(x => new { x.tagName, x.userId }).Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
 
             return tagList;
@@ -245,12 +243,10 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> GetContentList(PageInfo dto)
         {
-            //var db = DbContextStatic.Instance;
-
             var db = _dbContext;
             RefAsync<int> totalNumber = 0;
             var exp = Expressionable.Create<Note>(); //创建表达式
-            exp.And(x => x.status == 0 && x.userId == CurrentUserInfo.UserId);
+            exp.And(x => x.userId == CurrentUserInfo.UserId);
             dto.searchKeyValues.ForEach(item =>
             {
                 if (!string.IsNullOrWhiteSpace(item.value))
@@ -263,6 +259,10 @@ namespace BackendAPI.Application
                         case "sayContent":
                             exp.And(x => x.sayContent.Contains(item.value));
                             break;
+                        case "status":
+                            var status = Convert.ToInt16(item.value);
+                            exp.And(x => x.status == status);
+                            break;
                     }
                 }
 
@@ -273,6 +273,18 @@ namespace BackendAPI.Application
             return new { list, totalNumber };
         }
 
+        /// <summary>
+        /// 恢复笔记
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> RecoveryAContent(Note dto)
+        {
+            await _dbContext.Updateable<Note>().SetColumns(x => new Note() { status = 0, updateTime = DateTime.Now })
+                .Where(x => x.userId == CurrentUserInfo.UserId && x.id == dto.id).ExecuteCommandAsync();
+            return "ok";
+        }
         /// <summary>
         /// 删除一条笔记
         /// </summary>
@@ -300,7 +312,7 @@ namespace BackendAPI.Application
                 findItem.updateTime = DateTime.Now;
                 await db.Updateable(findItem).ExecuteCommandAsync();
                 //删除标签
-                await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
+                //await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
 
                 db.CommitTran();
             }
