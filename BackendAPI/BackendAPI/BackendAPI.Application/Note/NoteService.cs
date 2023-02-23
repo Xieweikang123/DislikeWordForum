@@ -234,6 +234,27 @@ namespace BackendAPI.Application
             var noteRecordList = await _dbContext.Queryable<NoteRecord>().Where(x => x.status == 0 && x.NoteId == dto.id).ToListAsync();
             return noteRecordList;
         }
+        /// <summary>
+        /// 获取日历热图
+        /// </summary>
+        /// <returns></returns>
+
+        [HttpGet]
+        public async Task<object> GetCalendarHeatmapList()
+        {
+
+            var result = await _dbContext.Queryable<Note>().Where(x => x.userId == CurrentUserInfo.UserId && x.updateTime != null)
+                .GroupBy(n => n.updateTime.Value.ToString("yyyy-MM-dd"))
+                .Select(n => new
+                {
+                    UpdateDate = n.updateTime.Value.ToString("yyyy-MM-dd"),
+                    NoteCount = SqlFunc.AggregateCount(n.id)
+                })
+                .ToListAsync();
+
+            return result;
+
+        }
 
         /// <summary>
         /// 获取笔记分页列表

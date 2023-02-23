@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
 import axios from 'axios'
 import Global from '@/utils/global'
+import moment from 'moment'
 
 //请求配置
 import request from '@/config/request';
@@ -17,6 +18,7 @@ Vue.config.productionTip = false
 
 
 Vue.prototype.$Global = Global
+Vue.prototype.$moment = moment
 
 Vue.prototype.$eventBus = new Vue()
 

@@ -30,6 +30,10 @@
     </div>
     <div class="margin60Auto">
 
+      <calendar-heatmap @day-click="onDayClick" :locale="locale" tooltip-unit="条笔记" :end-date="endDate"
+        :values="timeValue" />
+
+
       <div class="topTagContainer">
 
         <div>当前标签:</div>
@@ -102,15 +106,28 @@
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
 import ShareCard from "../note/shareCard";
+// import { CalendarHeatmap } from "vue-calendar-heatmap";
+import CalendarHeatmap from "@/components/CalendarHeatmap/CalendarHeatmap.vue"
+
 
 export default {
   components: {
     NoteEditForm,
     TagEditPop,
     ShareCard,
+    CalendarHeatmap
   },
   data() {
     return {
+      endDate: '',
+      locale: {
+        months: ['一月', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        days: ['Sun', '星期一', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        on: 'on',
+        less: 'Less',
+        more: 'More'
+      },
+      timeValue: [],
       isRecycleBin: false,
       maskNoteEls: [],
       beforeImgScaleScrollTop: 0,
@@ -208,11 +225,51 @@ export default {
   },
   mounted() {
     var that = this;
+    // 注册 visibilitychange 事件的监听器
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
     that.getNoteList();
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     this.listenImgScale();
+
+
+    const date = new Date();
+    this.endDate = date.toISOString().slice(0, 10);
+
+    this.getCalendarHeatmapList()
   },
   methods: {
+    getCalendarHeatmapList() {
+      var that = this;
+      that.$http.get("/api/Note/GetCalendarHeatmapList").then((res) => {
+        console.log('GetCalendarHeatmapList', res)
+        // that.timeValue=res.data.map((date,index)=>{
+        //   return {date,count:}
+        // })
+
+        that.timeValue = res.data.map((data, index) => {
+          return { date: data.updateDate, count: data.noteCount }
+        })
+
+      });
+    },
+    // 处理 visibilitychange 事件的处理函数
+    handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        // 网页处于可见状态，执行需要的操作
+        console.log('页面可见');
+        //清除
+        var allTooltips = document.querySelectorAll('.tooltip-inner')
+        if (allTooltips.length) {
+          Array.from(allTooltips).map((node) => document.removeChild(node))
+        }
+      } else {
+        // 网页处于不可见状态，执行需要的操作
+        console.log('页面不可见');
+      }
+    },
+    onDayClick(day) {
+      console.log('onDayClick', day)
+    },
     // 恢复
     onRecovery(item) {
       console.log('onRecovery', item)

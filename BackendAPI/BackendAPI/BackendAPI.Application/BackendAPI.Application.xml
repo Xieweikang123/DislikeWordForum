@@ -99,6 +99,12 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.GetCalendarHeatmapList">
+            <summary>
+            获取日历热图
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
             获取笔记分页列表

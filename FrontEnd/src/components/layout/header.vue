@@ -85,10 +85,6 @@ export default {
           name: "笔记",
           url: "/note",
         },
-        {
-          name: "兔小巢消息通知",
-          url: "/test",
-        },
       ],
       isLogin: false,
     };
