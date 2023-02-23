@@ -14,11 +14,14 @@
         <el-divider content-position="center">标签</el-divider>
 
         <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
-        <el-tag @click="setTag('')" class="tagItemStyle tagAllStyle">
+        <br>
+        <el-tag @click="setTag('')" :class="pageInfo.searchKeyValues[0].value == '' ? 'tagAllStyle' : ''"
+          class="tagItemStyle">
           全部
         </el-tag>
-        <el-tag v-for="(item, index) in allTags" :key="item.tagName" @click="setTag(item.tagName)" class="tagItemStyle"
-          :style="{
+        <el-tag v-for="(item, index) in allTags"
+          :class="pageInfo.searchKeyValues[0].value == item.tagName ? 'tagAllStyle' : ''" :key="item.tagName"
+          @click="setTag(item.tagName)" class="tagItemStyle" :style="{
             'background-color': tagColorArray[index % tagColorArray.length],
           }">
           <span class="mixMode">{{ item.tagName }}({{ item.count }})</span>
@@ -75,8 +78,10 @@
               @confirm="confirmDel(item)">
               <el-link slot="reference" type="danger" style="font-size: 12px">删除</el-link>
             </el-popconfirm>
-            <span>
-              {{ $Global.Common.formatTTime(item.createTime) }}
+            <span style="color: #626262;">
+              更新:{{ $Global.Common.formatTTime(item.updateTime) }}
+
+              创建:{{ $Global.Common.formatTTime(item.createTime) }}
             </span>
           </div>
         </div>
@@ -174,6 +179,18 @@ export default {
         }
 
         //请求一次
+        this.getNoteList();
+      },
+    },
+    'pageInfo.searchKeyValues.0.value':
+    {
+      handler(nVal) {
+        // this.getNoteList();
+        //清除搜索内容
+        this.pageInfo.searchKeyValues[1].value = "";
+        //页数
+        this.pageInfo.pageNumber = 1;
+        //搜索
         this.getNoteList();
       },
     },
@@ -347,13 +364,12 @@ export default {
     //设置搜索条件的标签
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
-      //清除搜索内容
-      this.pageInfo.searchKeyValues[1].value = "";
-      //页数
-      this.pageInfo.pageNumber = 1;
-
-      //搜索
-      this.getNoteList();
+      // //清除搜索内容
+      // this.pageInfo.searchKeyValues[1].value = "";
+      // //页数
+      // this.pageInfo.pageNumber = 1;
+      // //搜索
+      // this.getNoteList();
     },
     //获取闪念分页列表
     getNoteList() {
@@ -489,16 +505,11 @@ img {
 }
 
 .tagAllStyle {
-  background-color: #447154;
+  background-color: #447154 !important;
   border-color: #e1f3d8;
   color: #ffffff !important;
 }
 
-.mixMode {
-  /* mix-blend-mode: difference;
-  color: white; */
-  color: #022023;
-}
 
 .topTagContainer {
   margin-bottom: 15px;

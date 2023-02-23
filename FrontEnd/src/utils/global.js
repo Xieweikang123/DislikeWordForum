@@ -1,7 +1,10 @@
 
 var Common = {
- 
+
   formatTTime(time) {
+    if (!time) {
+      return ''
+    }
     return time.replace("T", " ");
   }
 }
