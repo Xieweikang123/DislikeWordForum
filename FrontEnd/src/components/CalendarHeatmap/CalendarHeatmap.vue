@@ -54,7 +54,7 @@
           :height="SQUARE_SIZE - SQUARE_BORDER_SIZE",
           :style="{ fill: rangeColor[day.colorIndex] }",
           v-tooltip="tooltipOptions(day)",
-          @click="$emit('day-click', day)"
+          @click="handleClick(day)"
         )
 </template>
 
@@ -64,7 +64,6 @@ import Heatmap from './Heatmap'
 import { DAYS_IN_WEEK, DEFAULT_LOCALE, DEFAULT_RANGE_COLOR, DEFAULT_TOOLTIP_UNIT, SQUARE_SIZE } from './consts.js'
 
 VTooltip.enabled = window.innerWidth > 768
-
 export default {
   directives: {
     tooltip: VTooltip
@@ -121,6 +120,7 @@ export default {
       return new Heatmap(this.endDate, this.values, this.max)
     },
     width() {
+
       return {
         horizontal: this.LEFT_SECTION_WIDTH + (this.SQUARE_SIZE * this.heatmap.weekCount) + this.SQUARE_BORDER_SIZE,
         vertical: this.LEFT_SECTION_WIDTH + (this.SQUARE_SIZE * DAYS_IN_WEEK) + this.RIGHT_SECTION_WIDTH
@@ -133,7 +133,11 @@ export default {
       }
     },
     viewbox() {
-      return `0 0 ${this.width[this.position]} ${this.heigth[this.position]}`
+      var p3 = this.width[this.position]
+      if (!p3) {
+        p3 = 0
+      }
+      return `0 0 ${p3} ${this.heigth[this.position]}`
     },
     daysLabelWrapperTransform() {
       return {
@@ -148,12 +152,14 @@ export default {
       }
     },
     legendWrapperTransform() {
+
       return {
         horizontal: `translate(${this.width[this.position] - (this.SQUARE_SIZE * this.rangeColor.length) - 30}, ${this.heigth[this.position] - this.BOTTOM_SECTION_HEIGTH})`,
         vertical: `translate(${this.LEFT_SECTION_WIDTH + (this.SQUARE_SIZE * DAYS_IN_WEEK)}, ${this.TOP_SECTION_HEIGTH})`
       }
     },
     yearWrapperTransform() {
+
       return `translate(${this.LEFT_SECTION_WIDTH}, ${this.TOP_SECTION_HEIGTH})`
     },
 
@@ -179,12 +185,17 @@ export default {
   },
 
   methods: {
-
+    handleClick(day) {
+      // 移除焦点
+      document.activeElement.blur();
+      // 发送事件
+      this.$emit('day-click', day);
+    },
     tooltipOptions(day) {
       if (this.tooltip) {
         return {
           content: `<b>${day.count} ${this.tooltipUnit}</b> ${this.lo.on} ${this.lo.months[day.date.getMonth()]} ${day.date.getDate()}, ${day.date.getFullYear()}`,
-          delay: { show: 150, hide: 50 }
+          delay: { show: 150, hide: 100 }
         }
       }
       return false

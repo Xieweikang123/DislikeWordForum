@@ -30,8 +30,8 @@
     </div>
     <div class="margin60Auto">
 
-      <calendar-heatmap @day-click="onDayClick" :locale="locale" tooltip-unit="条笔记" :end-date="endDate"
-        :values="timeValue" />
+      <calendar-heatmap v-if="timeValue.length > 0" @day-click="onDayClick" :locale="locale" tooltip-unit="条笔记"
+        :end-date="endDate" :values="timeValue" />
 
 
       <div class="topTagContainer">
@@ -256,15 +256,15 @@ export default {
     handleVisibilityChange() {
       if (document.visibilityState === 'visible') {
         // 网页处于可见状态，执行需要的操作
-        console.log('页面可见');
         //清除
-        var allTooltips = document.querySelectorAll('.tooltip-inner')
+        var allTooltips = document.querySelectorAll('.vue-tooltip-theme')
+        console.log('allTooltips', allTooltips)
         if (allTooltips.length) {
-          Array.from(allTooltips).map((node) => document.removeChild(node))
+          // Array.from(allTooltips).map((node) => node.attributes['aria-hidden'].nodeValue = 'true')
+          Array.from(allTooltips).map((node) => node.style.display = 'none')
         }
       } else {
         // 网页处于不可见状态，执行需要的操作
-        console.log('页面不可见');
       }
     },
     onDayClick(day) {
