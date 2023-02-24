@@ -105,6 +105,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.SetPageWhere(BackendAPI.Core.PageInfo,SqlSugar.Expressionable{BackendAPI.Core.Entities.Note},System.Int32)">
+            <summary>
+            封装pagewhere
+            </summary>
+            <param name="dto"></param>
+            <param name="exp"></param>
+            <param name="type">type=1 assignTime不参与筛选</param>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
             获取笔记分页列表

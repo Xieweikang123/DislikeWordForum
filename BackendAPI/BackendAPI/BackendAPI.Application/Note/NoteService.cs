@@ -245,7 +245,7 @@ namespace BackendAPI.Application
 
             var exp = Expressionable.Create<Note>(); //创建表达式
             exp.And(x => x.status == 0);
-            SetPageWhere(dto, exp);
+            SetPageWhere(dto, exp, 1);
 
             var result = await _dbContext.Queryable<Note>().Where(exp.ToExpression())
                 .GroupBy(n => n.updateTime.Value.ToString("yyyy-MM-dd"))
@@ -259,8 +259,13 @@ namespace BackendAPI.Application
             return result;
 
         }
-
-        void SetPageWhere(PageInfo dto, Expressionable<Note> exp)
+        /// <summary>
+        /// 封装pagewhere
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="exp"></param>
+        /// <param name="type">type=1 assignTime不参与筛选</param>
+        void SetPageWhere(PageInfo dto, Expressionable<Note> exp, int type = 0)
         {
             exp.And(x => x.userId == CurrentUserInfo.UserId);
             dto.searchKeyValues.ForEach(item =>
@@ -280,7 +285,10 @@ namespace BackendAPI.Application
                             exp.And(x => x.status == status);
                             break;
                         case "assignTime":
-                            //var status = Convert.ToInt16(item.value);
+                            if (type == 1)
+                            {
+                                break;
+                            }
                             exp.And(x => x.updateTime.Value.ToString("yyyy-MM-dd") == item.value);
                             break;
                     }
@@ -299,32 +307,6 @@ namespace BackendAPI.Application
             RefAsync<int> totalNumber = 0;
             var exp = Expressionable.Create<Note>(); //创建表达式
             SetPageWhere(dto, exp);
-            //dto.searchKeyValues.ForEach(item =>
-            //{
-            //    if (!string.IsNullOrWhiteSpace(item.value))
-            //    {
-            //        switch (item.key)
-            //        {
-            //            case "tagName":
-            //                exp.And(x => x.noteTags.Any(c => c.tagName == item.value));
-            //                break;
-            //            case "sayContent":
-            //                exp.And(x => x.sayContent.Contains(item.value));
-            //                break;
-            //            case "status":
-            //                var status = Convert.ToInt16(item.value);
-            //                exp.And(x => x.status == status);
-            //                break;
-            //            case "assignTime":
-            //                //var status = Convert.ToInt16(item.value);
-            //                exp.And(x => x.updateTime.Value.ToString("yyyy-MM-dd") == item.value);
-            //                break;
-            //        }
-            //    }
-
-            //});
-
-
             var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(exp.ToExpression()).OrderByDescending(x => x.updateTime).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
             return new { list, totalNumber };
         }
