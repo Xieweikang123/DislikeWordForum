@@ -30,8 +30,8 @@
     </div>
     <div class="margin60Auto">
 
-      <calendar-heatmap v-if="timeValue.length > 0" @day-click="onDayClick" :locale="locale" tooltip-unit="条笔记"
-        :end-date="endDate" :values="timeValue" />
+      <calendar-heatmap v-if="!isRecycleBin && timeValue.length > 0" @day-click="onDayClick" :locale="locale"
+        tooltip-unit="条笔记" :end-date="endDate" :values="timeValue" />
 
 
       <div class="topTagContainer">
@@ -40,6 +40,9 @@
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
         <el-input style="width: 200px" placeholder="" v-model="pageInfo.searchKeyValues[0].value">
         </el-input>
+        <el-tag v-if="pageInfo.searchKeyValues[3].value" style="margin-left:15px" closable @close="handleTagClose()">
+          {{ pageInfo.searchKeyValues[3].value }}
+        </el-tag>
       </div>
 
       <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容">
@@ -157,6 +160,10 @@ export default {
             key: "status",
             value: "0",
           },
+          {
+            key: "assignTime",
+            value: "",
+          },
         ],
       },
       sendContent: "",
@@ -199,6 +206,13 @@ export default {
         this.getNoteList();
       },
     },
+    'pageInfo.searchKeyValues.3.value':
+    {
+      handler(nVal) {
+        //搜索
+        this.onSearch()
+      },
+    },
     'pageInfo.searchKeyValues.0.value':
     {
       handler(nVal) {
@@ -238,14 +252,29 @@ export default {
     this.getCalendarHeatmapList()
   },
   methods: {
+    //关闭标签
+    handleTagClose() {
+      this.pageInfo.searchKeyValues[3].value = ''
+    },
+    onDayClick(day) {
+      console.log('onDayClick', day)
+      var timeStr = day.date.toISOString().slice(0, 10);
+      var timeStr1 = this.$moment(day.date).format("YYYY-MM-DD")
+      console.log('timeStr', timeStr)
+      console.log('timeStr1', timeStr1)
+      this.pageInfo.searchKeyValues[3].value = timeStr1
+
+    },
+    //搜索
+    onSearch() {
+      var that = this;
+      // console.log("onSearch", this.searchContent);
+      this.getNoteList();
+    },
     getCalendarHeatmapList() {
       var that = this;
       that.$http.get("/api/Note/GetCalendarHeatmapList").then((res) => {
         console.log('GetCalendarHeatmapList', res)
-        // that.timeValue=res.data.map((date,index)=>{
-        //   return {date,count:}
-        // })
-
         that.timeValue = res.data.map((data, index) => {
           return { date: data.updateDate, count: data.noteCount }
         })
@@ -267,9 +296,7 @@ export default {
         // 网页处于不可见状态，执行需要的操作
       }
     },
-    onDayClick(day) {
-      console.log('onDayClick', day)
-    },
+
     // 恢复
     onRecovery(item) {
       console.log('onRecovery', item)
@@ -378,12 +405,7 @@ export default {
       this.isMaskShow = false;
       document.documentElement.scrollTop = this.beforeImgScaleScrollTop;
     },
-    //搜索
-    onSearch() {
-      var that = this;
-      // console.log("onSearch", this.searchContent);
-      this.getNoteList();
-    },
+
     //发送内容
     sendFun() {
       var that = this;

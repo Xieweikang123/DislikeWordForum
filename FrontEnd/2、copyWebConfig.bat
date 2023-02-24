@@ -1,2 +1,0 @@
-copy web.config  dist 
-

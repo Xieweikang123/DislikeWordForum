@@ -243,7 +243,7 @@ namespace BackendAPI.Application
         public async Task<object> GetCalendarHeatmapList()
         {
 
-            var result = await _dbContext.Queryable<Note>().Where(x => x.userId == CurrentUserInfo.UserId && x.updateTime != null)
+            var result = await _dbContext.Queryable<Note>().Where(x => x.status == 0 && x.userId == CurrentUserInfo.UserId && x.updateTime != null)
                 .GroupBy(n => n.updateTime.Value.ToString("yyyy-MM-dd"))
                 .Select(n => new
                 {
@@ -283,6 +283,10 @@ namespace BackendAPI.Application
                         case "status":
                             var status = Convert.ToInt16(item.value);
                             exp.And(x => x.status == status);
+                            break;
+                        case "assignTime":
+                            //var status = Convert.ToInt16(item.value);
+                            exp.And(x => x.updateTime.Value.ToString("yyyy-MM-dd") == item.value);
                             break;
                     }
                 }
