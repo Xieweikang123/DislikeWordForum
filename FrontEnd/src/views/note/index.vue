@@ -265,6 +265,31 @@ export default {
       this.pageInfo.searchKeyValues[3].value = timeStr1
 
     },
+    //获取闪念分页列表
+    getNoteList() {
+      var that = this;
+      that.isDataLoading = true;
+      that.dataList = [];
+      //获取标签
+      that.getAllTags();
+      //重新获取热点图
+      that.getCalendarHeatmapList()
+
+      // setTimeout(() => {
+      that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
+        that.isDataLoading = false;
+
+        that.dataList = res.data.list;
+        var searchKeyword = that.pageInfo.searchKeyValues[1].value;
+        console.log("searchKeyword", searchKeyword);
+        if (searchKeyword && searchKeyword.length > 0) {
+          console.log("标红");
+        }
+
+        that.pageInfo.totalCount = res.data.totalNumber.value;
+      });
+      // }, 1000);
+    },
     //搜索
     onSearch() {
       var that = this;
@@ -273,7 +298,7 @@ export default {
     },
     getCalendarHeatmapList() {
       var that = this;
-      that.$http.get("/api/Note/GetCalendarHeatmapList").then((res) => {
+      that.$http.post("/api/Note/GetCalendarHeatmapList", that.pageInfo).then((res) => {
         console.log('GetCalendarHeatmapList', res)
         that.timeValue = res.data.map((data, index) => {
           return { date: data.updateDate, count: data.noteCount }
@@ -450,29 +475,7 @@ export default {
       // //搜索
       // this.getNoteList();
     },
-    //获取闪念分页列表
-    getNoteList() {
-      var that = this;
-      that.isDataLoading = true;
-      that.dataList = [];
-      //获取标签
-      that.getAllTags();
 
-      // setTimeout(() => {
-      that.$http.post("/api/Note/GetContentList", that.pageInfo).then((res) => {
-        that.isDataLoading = false;
-
-        that.dataList = res.data.list;
-        var searchKeyword = that.pageInfo.searchKeyValues[1].value;
-        console.log("searchKeyword", searchKeyword);
-        if (searchKeyword && searchKeyword.length > 0) {
-          console.log("标红");
-        }
-
-        that.pageInfo.totalCount = res.data.totalNumber.value;
-      });
-      // }, 1000);
-    },
 
     //获取所有去重之后的标签
     getAllTags() {

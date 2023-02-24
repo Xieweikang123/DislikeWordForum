@@ -239,11 +239,15 @@ namespace BackendAPI.Application
         /// </summary>
         /// <returns></returns>
 
-        [HttpGet]
-        public async Task<object> GetCalendarHeatmapList()
+        [HttpPost]
+        public async Task<object> GetCalendarHeatmapList(PageInfo dto)
         {
 
-            var result = await _dbContext.Queryable<Note>().Where(x => x.status == 0 && x.userId == CurrentUserInfo.UserId && x.updateTime != null)
+            var exp = Expressionable.Create<Note>(); //创建表达式
+            exp.And(x => x.status == 0);
+            SetPageWhere(dto, exp);
+
+            var result = await _dbContext.Queryable<Note>().Where(exp.ToExpression())
                 .GroupBy(n => n.updateTime.Value.ToString("yyyy-MM-dd"))
                 .Select(n => new
                 {
@@ -256,17 +260,8 @@ namespace BackendAPI.Application
 
         }
 
-        /// <summary>
-        /// 获取笔记分页列表
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<object> GetContentList(PageInfo dto)
+        void SetPageWhere(PageInfo dto, Expressionable<Note> exp)
         {
-            var db = _dbContext;
-            RefAsync<int> totalNumber = 0;
-            var exp = Expressionable.Create<Note>(); //创建表达式
             exp.And(x => x.userId == CurrentUserInfo.UserId);
             dto.searchKeyValues.ForEach(item =>
             {
@@ -290,8 +285,44 @@ namespace BackendAPI.Application
                             break;
                     }
                 }
-
             });
+        }
+        /// <summary>
+        /// 获取笔记分页列表
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> GetContentList(PageInfo dto)
+        {
+            var db = _dbContext;
+            RefAsync<int> totalNumber = 0;
+            var exp = Expressionable.Create<Note>(); //创建表达式
+            SetPageWhere(dto, exp);
+            //dto.searchKeyValues.ForEach(item =>
+            //{
+            //    if (!string.IsNullOrWhiteSpace(item.value))
+            //    {
+            //        switch (item.key)
+            //        {
+            //            case "tagName":
+            //                exp.And(x => x.noteTags.Any(c => c.tagName == item.value));
+            //                break;
+            //            case "sayContent":
+            //                exp.And(x => x.sayContent.Contains(item.value));
+            //                break;
+            //            case "status":
+            //                var status = Convert.ToInt16(item.value);
+            //                exp.And(x => x.status == status);
+            //                break;
+            //            case "assignTime":
+            //                //var status = Convert.ToInt16(item.value);
+            //                exp.And(x => x.updateTime.Value.ToString("yyyy-MM-dd") == item.value);
+            //                break;
+            //        }
+            //    }
+
+            //});
 
 
             var list = await db.Queryable<Note>().Includes(x => x.noteTags).Where(exp.ToExpression()).OrderByDescending(x => x.updateTime).ToPageListAsync(dto.pageNumber, dto.pageSize, totalNumber);
