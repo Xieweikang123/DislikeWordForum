@@ -217,12 +217,10 @@ export default {
     {
       handler(nVal) {
         // this.getNoteList();
-        //清除搜索内容
-        this.pageInfo.searchKeyValues[1].value = "";
-        //页数
-        this.pageInfo.pageNumber = 1;
+
+
         //搜索
-        this.getNoteList();
+        this.onSearch()
       },
     },
     "pageInfo.pageNumber": {
@@ -292,8 +290,11 @@ export default {
     },
     //搜索
     onSearch() {
-      var that = this;
-      // console.log("onSearch", this.searchContent);
+      //清除搜索内容
+      this.pageInfo.searchKeyValues[1].value = "";
+      //页数
+      this.pageInfo.pageNumber = 1;
+      //搜索
       this.getNoteList();
     },
     getCalendarHeatmapList() {
