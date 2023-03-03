@@ -20,9 +20,10 @@ class Program
 
         //var name = propertyAccessor[propertyName];
 
-        Method2();
 
-        Method1();
+
+        var res = -8 % 7;
+
         Console.WriteLine("ok");
         //// 使用反射获取对象的属性值
         //PropertyInfo propertyInfo = obj.GetType().GetProperty(propertyName);

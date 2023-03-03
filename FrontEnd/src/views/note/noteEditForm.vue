@@ -1,84 +1,38 @@
 <template>
   <div id="noteDrawer">
-    <el-drawer
-      size="50%"
-      ref="noteDrawerRef"
-      :title="dynamicTitle"
-      custom-class="drawerStyle"
-      :visible.sync="isShowDrawer"
-      direction="rtl"
-      :modal="false"
-      :close-on-press-escape="false"
-      :before-close="handleClose"
-    >
+    <el-drawer size="50%" ref="noteDrawerRef" :title="dynamicTitle" custom-class="drawerStyle"
+      :visible.sync="isShowDrawer" direction="rtl" :modal="false" :close-on-press-escape="false"
+      :before-close="handleClose">
       <div style="margin-bottom: 12px">
-        <el-button @click="onConvertUrl" type="primary" size="mini"
-          >超链接转换</el-button
-        >
-        <el-button @click="onGoBackStep" type="primary" size="mini"
-          >恢复</el-button
-        >
+        <el-button @click="onConvertUrl" type="primary" size="mini">超链接转换</el-button>
+        <el-button @click="onGoBackStep" type="primary" size="mini">恢复</el-button>
         <!-- <el-button @click="onFormatHTML" type="primary" size="mini"
           >格式化代码</el-button
         > -->
       </div>
-      <el-form
-        ref="form"
-        :model="editRow"
-        @submit.native.prevent
-        label-width="80px"
-      >
-        <el-input
-          id="myinput"
-          ref="contentIpt"
-          @paste.native="onContentPaste"
-          type="textarea"
-          @blur="onContentInputBlur"
-          :rows="18"
-          v-model="editRow.sayContent"
-          @keydown.9.native.prevent="tabFunc"
-        ></el-input>
+      <el-form ref="form" :model="editRow" @submit.native.prevent label-width="80px">
+        <el-input id="myinput" ref="contentIpt" @paste.native="onContentPaste" type="textarea" @blur="onContentInputBlur"
+          :rows="18" v-model="editRow.sayContent" @keydown.9.native.prevent="tabFunc"></el-input>
         <el-form-item label="标签:">
-          <el-tag
-            :key="titem.id"
-            v-for="titem in dynamicTags"
-            closable
-            :disable-transitions="false"
-            @close="handleCloseTag(titem)"
-          >
+          <el-tag :key="titem.id" v-for="titem in dynamicTags" closable :disable-transitions="false"
+            @close="handleCloseTag(titem)">
             {{ titem.tagName }}
           </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-          >
+          <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small"
+            @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
           </el-input>
-          <el-button
-            v-else
-            class="button-new-tag"
-            size="small"
-            @click="showInput"
-            >+ New Tag</el-button
-          >
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
         </el-form-item>
       </el-form>
       <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="6"
-          ><el-button type="primary" @click="onSubmit">保存</el-button></el-col
-        >
-        <el-col :span="2"
-          ><div class="grid-content bg-purple-light"></div
-        ></el-col>
+        <el-col :span="6"><el-button type="primary" @click="onSubmit">保存</el-button></el-col>
+        <el-col :span="2">
+          <div class="grid-content bg-purple-light"></div>
+        </el-col>
         <el-col :span="6">
           <el-popconfirm @confirm="confirmDel" title="确定删除吗？">
             <el-button slot="reference" type="danger">删除</el-button>
-          </el-popconfirm></el-col
-        >
+          </el-popconfirm></el-col>
       </el-row>
     </el-drawer>
 
@@ -87,60 +41,30 @@
         <div style="height: 20%">
           <div v-if="noteHisList.length > 0" style="margin: 18px 31px">
             历史版本: {{ noteHisList.length }}个
-            <el-slider
-              v-model="sliderValue"
-              :step="sliderStep"
-              :max="sliderMax"
-              :format-tooltip="formatTooltip"
-              show-stops
-            >
+            <el-slider v-model="sliderValue" :step="sliderStep" :max="sliderMax" :format-tooltip="formatTooltip"
+              show-stops>
             </el-slider>
           </div>
 
           <div style="margin: 30px 14px 13px; display: flex">
-            <el-color-picker
-              @change="onPickColorChange"
-              v-model="pickColor"
-              show-alpha
-            >
+            <el-color-picker @change="onPickColorChange" v-model="pickColor" show-alpha>
             </el-color-picker>
-            <el-button
-              @click="onExecCommand('foreColor', pickColor)"
-              size="mini"
-              plain
-              >设置文字颜色</el-button
-            >
-            <el-button @click="onExecCommand('bold', null)" size="mini" plain
-              >加粗</el-button
-            >
-            <el-input-number
-              v-model="fontSize"
-              :min="1"
-              :max="7"
-              label="描述文字"
-            ></el-input-number>
+            <el-button @click="onExecCommand('foreColor', pickColor)" size="mini" plain>设置文字颜色</el-button>
+            <el-button @click="onExecCommand('bold', null)" size="mini" plain>加粗</el-button>
+            <el-button @click="onExecCommand('underline', null)" size="mini" plain>下划线</el-button>
+            <el-input-number v-model="fontSize" :min="1" :max="7" label="描述文字"></el-input-number>
 
-            <el-button
-              @click="onExecCommand('fontSize', fontSize)"
-              size="mini"
-              plain
-              >字号</el-button
-            >
+            <el-button @click="onExecCommand('fontSize', fontSize)" size="mini" plain>字号</el-button>
           </div>
         </div>
-        <div
-          id="contentLinePreview"
-          class="contentLinePreview"
-          @keydown.9.prevent="onExecCommand('indent', null)"
-          contenteditable
-          v-html="divContent"
-        ></div>
+        <div id="contentLinePreview" class="contentLinePreview" @keydown.9.prevent="onExecCommand('indent', null)"
+          contenteditable v-html="divContent"></div>
       </div>
     </transition>
   </div>
 </template>
 
- <script>
+<script>
 export default {
   data() {
     return {
@@ -176,7 +100,7 @@ export default {
       },
     },
     divContent: {
-      handler(nVal) {},
+      handler(nVal) { },
     },
     "editRow.sayContent": {
       handler(nVal, oVal) {
@@ -626,26 +550,32 @@ export default {
 .el-color-picker__panel {
   z-index: 9999 !important;
 }
+
 #myinput {
   background: black;
   color: white;
 }
+
 .el-message-box__wrapper {
   z-index: 9999 !important;
 }
+
 /* 可以设置不同的进入和离开动画 */
 /* 设置持续时间和动画函数 */
 .slide-fade-enter-active {
   transition: all 0.3s linear;
 }
+
 .slide-fade-leave-active {
   transition: all 0.3s cubic-bezier(1, 1, 1, 2);
 }
+
 .slide-fade-enter,
 .slide-fade-leave-to {
   transform: translateX(-100%);
   opacity: 0;
 }
+
 .contentLinePreview {
   padding: 7px 34px;
   border: 1px solid #d5d5d5;
@@ -653,6 +583,7 @@ export default {
   line-height: 26px;
   height: 70%;
 }
+
 .el-message,
 .el-tooltip__popper {
   z-index: 9999 !important;
@@ -668,12 +599,15 @@ export default {
 
   z-index: 9990;
 }
+
 .leftPreview img {
   width: 50%;
 }
-.el-tag + .el-tag {
+
+.el-tag+.el-tag {
   margin-left: 10px;
 }
+
 .button-new-tag {
   margin-left: 10px;
   height: 32px;
@@ -681,11 +615,13 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
 }
+
 .input-new-tag {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
 }
+
 .drawerStyle {
   /* padding:0 1px; */
 

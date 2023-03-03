@@ -291,7 +291,7 @@ export default {
     //搜索
     onSearch() {
       //清除搜索内容
-      this.pageInfo.searchKeyValues[1].value = "";
+      // this.pageInfo.searchKeyValues[1].value = "";
       //页数
       this.pageInfo.pageNumber = 1;
       //搜索
