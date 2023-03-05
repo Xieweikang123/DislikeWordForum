@@ -29,13 +29,9 @@
       </div>
     </div>
     <div class="margin60Auto">
-
       <calendar-heatmap v-if="!isRecycleBin && timeValue.length > 0" @day-click="onDayClick" :locale="locale"
         tooltip-unit="条笔记" :end-date="endDate" :values="timeValue" />
-
-
       <div class="topTagContainer">
-
         <div>当前标签:</div>
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
         <el-input style="width: 200px" placeholder="" v-model="pageInfo.searchKeyValues[0].value">
@@ -69,6 +65,7 @@
           </div>
           <div style="text-align: center; font-size: 13px">
             <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
+            <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑2</el-link>
             <el-link @click="onShare(item)" type="primary" style="font-size: 12px; margin-right: 5px">分享</el-link>
           </div>
           <div>
@@ -105,13 +102,15 @@
     </div>
   </div>
 </template>
+<!-- <style src="@wangeditor/editor/dist/css/style.css"></style> -->
+<!-- <link href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css" rel="stylesheet"> -->
+
 <script>
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
 import ShareCard from "../note/shareCard";
 // import { CalendarHeatmap } from "vue-calendar-heatmap";
 import CalendarHeatmap from "@/components/CalendarHeatmap/CalendarHeatmap.vue"
-
 
 export default {
   components: {
@@ -488,6 +487,16 @@ export default {
           // that.getNoteList();
         }
       });
+    },
+    onEditTag2(item) {
+      console.log('tag2', item)
+      // 在Vue中将方法挂载到Vue原型上
+      // Vue.prototype.parentMethod = this.getNoteList
+      // window.parentMethod = this.getNoteList
+      var that = this
+      window.pGetNoteList = this.getNoteList
+      
+      window.open('/note2?id=' + item.id, '_blank');
     },
     // 编辑笔记
     onEditTag(item) {

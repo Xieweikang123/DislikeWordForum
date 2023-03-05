@@ -135,6 +135,13 @@
             <returns></returns>
             <exception cref="T:System.Exception"></exception>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.GetNoteById(BackendAPI.Core.Entities.NoteDTO)">
+            <summary>
+            获取指定笔记
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.GetTodayRanking(BackendAPI.Core.PageInfo)">
             <summary>
             今日背单词排行  

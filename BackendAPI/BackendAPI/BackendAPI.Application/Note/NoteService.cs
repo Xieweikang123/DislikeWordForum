@@ -186,16 +186,20 @@ namespace BackendAPI.Application
                 var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
                 //新增
                 var addTags = dto.noteTags;
-                addTags.ForEach(x =>
+                if (addTags != null)
                 {
-                    x.id = IDGen.GetStrId();
-                    x.createTime = nowTime;
-                    x.status = 0;
-                    x.userId = userId;
-                    x.noteId = dto.id;
-                });
+                    addTags.ForEach(x =>
+                    {
+                        x.id = IDGen.GetStrId();
+                        x.createTime = nowTime;
+                        x.status = 0;
+                        x.userId = userId;
+                        x.noteId = dto.id;
+                    });
 
-                await db.Insertable(addTags).ExecuteCommandAsync();
+                    await db.Insertable(addTags).ExecuteCommandAsync();
+                }
+
                 db.CommitTran();
             }
             catch (Exception ex)
@@ -359,6 +363,25 @@ namespace BackendAPI.Application
                 db.RollbackTran();
             }
             return "删除成功";
+        }
+        /// <summary>
+        /// 获取指定笔记
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> GetNoteById(NoteDTO dto)
+        {
+            var db = DbContextStatic.Instance;
+            var userId = CurrentUserInfo.UserId;
+
+            var findItem = await db.Queryable<Note>().FirstAsync(x => x.id == dto.id);
+            if (findItem.userId != userId)
+            {
+                throw new Exception("没有权限查看");
+            }
+
+            return findItem;
         }
 
 
