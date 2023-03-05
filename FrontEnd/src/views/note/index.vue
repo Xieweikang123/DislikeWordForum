@@ -2,7 +2,6 @@
   <div>
     <div class="leftTagContainer">
       <div>
-
         <div style="margin-bottom:15px">
           <el-checkbox-group v-model="isRecycleBin">
             <el-checkbox-button v-for="item in ['回收站']" :label="item" :key="item">{{ item }}</el-checkbox-button>
@@ -65,7 +64,7 @@
           </div>
           <div style="text-align: center; font-size: 13px">
             <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
-            <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑2</el-link>
+            <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑内容</el-link>
             <el-link @click="onShare(item)" type="primary" style="font-size: 12px; margin-right: 5px">分享</el-link>
           </div>
           <div>
@@ -109,8 +108,13 @@
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
 import ShareCard from "../note/shareCard";
-// import { CalendarHeatmap } from "vue-calendar-heatmap";
 import CalendarHeatmap from "@/components/CalendarHeatmap/CalendarHeatmap.vue"
+import Prism from "prismjs";
+import 'prismjs/themes/prism.css'; // 引入样式文件
+import 'prismjs/components/prism-csharp';
+import 'prismjs/plugins/autoloader/prism-autoloader';
+
+
 
 export default {
   components: {
@@ -173,6 +177,10 @@ export default {
     dataList: {
       handler(nVal) {
         var that = this;
+        that.$nextTick(() => {
+
+          Prism.highlightAll()
+        })
 
         if (nVal && nVal.length > 0) {
           this.$nextTick(() => {
@@ -215,9 +223,6 @@ export default {
     'pageInfo.searchKeyValues.0.value':
     {
       handler(nVal) {
-        // this.getNoteList();
-
-
         //搜索
         this.onSearch()
       },
@@ -236,6 +241,9 @@ export default {
   },
   mounted() {
     var that = this;
+    // Prism.highlightAll()
+
+
     // 注册 visibilitychange 事件的监听器
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     that.getNoteList();
@@ -495,7 +503,7 @@ export default {
       // window.parentMethod = this.getNoteList
       var that = this
       window.pGetNoteList = this.getNoteList
-      
+
       window.open('/note2?id=' + item.id, '_blank');
     },
     // 编辑笔记
@@ -524,6 +532,13 @@ export default {
 </script>
   
 <style >
+/* .contentLine code{
+  font-family: monospace;
+    background-color: #eee;
+    padding: 3px;
+    border-radius: 3px;
+    display: block;
+} */
 .openMore {
   width: 100%;
   text-align: center;
