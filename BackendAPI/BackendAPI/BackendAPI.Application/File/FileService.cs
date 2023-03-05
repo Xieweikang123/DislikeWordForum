@@ -31,7 +31,7 @@ namespace BackendAPI.Application.File
             return fileDir + "/" + fileName;
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<object> UploadImg(IFormFile file)
         {

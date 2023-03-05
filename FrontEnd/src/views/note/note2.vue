@@ -18,6 +18,8 @@
 
 <script>
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+// import { IEditorConfig } from '@wangeditor/editor'
+
 export default {
   components: {
     Editor, Toolbar
@@ -29,7 +31,7 @@ export default {
       editor: null,
       // html: '<p>hello</p>',
       toolbarConfig: {},
-      editorConfig: { placeholder: '请输入内容...' },
+      editorConfig: { placeholder: '请输入内容...', MENU_CONF: {} },
       mode: 'default', // or 'simple'
 
     };
@@ -46,6 +48,34 @@ export default {
     console.log('n2', this.$route.query)
     var curNoteId = this.$route.query.id
 
+    that.editorConfig.MENU_CONF['uploadImage'] = {
+      // server: process.env.VUE_APP_BASE_API + 'api/File/UploadImg',
+      fieldName: 'file',
+
+      customUpload(file, insertFn) {
+        console.log('customUpload', file)
+        let formData = new FormData();
+        formData.append("file", file);
+        that.$http.post("/api/File/UploadImg", formData).then((res) => {
+          if (res.succeeded) {
+            // var insertImgSrc = `<img src="${process.env.VUE_APP_BASE_API}${res.data.url}" alt="">`;
+            var src = `${process.env.VUE_APP_BASE_API}${res.data.url}`
+            insertFn(src, 'img', src)
+          }
+        });
+        // return new Promise((resolve) => {
+        //   // Simulate async insert image
+        //   setTimeout(() => {
+        //     const src = `https://www.baidu.com/img/flexible/logo/pc/result@2.png?r=${Math.random()}`
+        //     insertFn(src, 'baidu logo', src)
+        //     resolve('ok')
+        //   }, 500)
+        // })
+      },
+      // onSuccess(file, res) {
+      //   console.log('onSuccess', file, res)
+      // },
+    }
     that.$http
       .post("/api/Note/GetNoteById", { id: curNoteId })
       .then((res) => {
