@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Google.Api;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Reflection;
 
 class MyClass
@@ -9,86 +14,33 @@ class MyClass
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        //MyClass obj = new MyClass { MyProperty = "hello world" };
-        //string propertyName = "MyProperty";
+
+        var builder = WebApplication.CreateBuilder(args);
+        var app = builder.Build();
 
 
-        //var ss1 = obj.GetPropertyValue(propertyName);
-        //var propertyAccessor = new PropertyAccessor(obj);
+        
 
-        //var name = propertyAccessor[propertyName];
-
+        app.UseRouting();
 
 
-        var res = -8 % 7;
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapHealthChecks("/healthz").RequireAuthorization();
+        app.MapGet("/", () => "Hello World!");
+
+
+        app.Run();
+
+
+
 
         Console.WriteLine("ok");
-        //// 使用反射获取对象的属性值
-        //PropertyInfo propertyInfo = obj.GetType().GetProperty(propertyName);
-        //if (propertyInfo != null)
-        //{
-        //    object propertyValue = propertyInfo.GetValue(obj);
-        //    Console.WriteLine(propertyValue);
-        //}
     }
 
-
-
-    static void Method1()
-    {
-        throw new Exception("我错了1");
-    }
-    static Task Method2()
-    {
-        Console.WriteLine("m2 执行");
-        return Task.Run(() =>
-          {
-              Console.WriteLine("m2 task");
-               
-              throw new Exception("我错了2");
-
-          });
-
-    }
-
-
-
-}
-
-static class PropertyAccessor
-{
-    //private object obj;
-
-    public static object GetPropertyValue(this object obj, string propertyName)
-    {
-        var propertyInfo = obj.GetType().GetProperty(propertyName);
-        if (propertyInfo != null)
-        {
-            return propertyInfo.GetValue(obj);
-        }
-        return null;
-    }
-
-
-    //public PropertyAccessor(object obj)
-    //{
-    //    this.obj = obj;
-    //}
-
-    //public object this[string key]
-    //{
-    //    get
-    //    {
-    //        var propertyInfo = obj.GetType().GetProperty(key);
-    //        if (propertyInfo != null)
-    //        {
-    //            return propertyInfo.GetValue(obj);
-    //        }
-    //        return null;
-    //    }
-    //}
 
 
 }
