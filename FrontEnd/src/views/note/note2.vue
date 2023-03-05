@@ -44,51 +44,9 @@ export default {
   },
   mounted() {
     var that = this;
-    // const searchParams = new URLSearchParams(window.location.search);
-    console.log('n2', this.$route.query)
-    var curNoteId = this.$route.query.id
-
-    that.editorConfig.MENU_CONF['uploadImage'] = {
-      // server: process.env.VUE_APP_BASE_API + 'api/File/UploadImg',
-      fieldName: 'file',
-
-      customUpload(file, insertFn) {
-        console.log('customUpload', file)
-        let formData = new FormData();
-        formData.append("file", file);
-        that.$http.post("/api/File/UploadImg", formData).then((res) => {
-          if (res.succeeded) {
-            // var insertImgSrc = `<img src="${process.env.VUE_APP_BASE_API}${res.data.url}" alt="">`;
-            var src = `${process.env.VUE_APP_BASE_API}${res.data.url}`
-            insertFn(src, 'img', src)
-          }
-        });
-        // return new Promise((resolve) => {
-        //   // Simulate async insert image
-        //   setTimeout(() => {
-        //     const src = `https://www.baidu.com/img/flexible/logo/pc/result@2.png?r=${Math.random()}`
-        //     insertFn(src, 'baidu logo', src)
-        //     resolve('ok')
-        //   }, 500)
-        // })
-      },
-      // onSuccess(file, res) {
-      //   console.log('onSuccess', file, res)
-      // },
-    }
-    that.$http
-      .post("/api/Note/GetNoteById", { id: curNoteId })
-      .then((res) => {
-        console.log("GetNoteById", res);
-        // that.noteHisList = res.data;
-        if (res.succeeded) {
-          that.isDataLoad = true
-          that.curItem = res.data
-        } else {
-          that.$message.error("数据加载失败");
-        }
-      });
-
+    that.registerHotKey()
+    that.imgConfig()
+    that.getCurData()
   },
   beforeDestroy() {
     const editor = this.editor
@@ -96,6 +54,57 @@ export default {
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    // 注册热键
+    registerHotKey() {
+      var that = this;
+      //保存
+      document.onkeydown = (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
+          that.onSubmit();
+          // 阻止默认事件
+          e.preventDefault();
+        }
+      };
+    },
+    //获取当前笔记
+    getCurData() {
+      var that = this
+      var curNoteId = this.$route.query.id
+
+      that.$http
+        .post("/api/Note/GetNoteById", { id: curNoteId })
+        .then((res) => {
+          console.log("GetNoteById", res);
+          // that.noteHisList = res.data;
+          if (res.succeeded) {
+            that.isDataLoad = true
+            that.curItem = res.data
+            // document.title = "笔记-回收站"
+          } else {
+            that.$message.error("数据加载失败");
+          }
+        });
+
+
+    },
+    //配置图片上传
+    imgConfig() {
+      var that = this;
+      that.editorConfig.MENU_CONF['uploadImage'] = {
+        fieldName: 'file',
+        customUpload(file, insertFn) {
+          console.log('customUpload', file)
+          let formData = new FormData();
+          formData.append("file", file);
+          that.$http.post("/api/File/UploadImg", formData).then((res) => {
+            if (res.succeeded) {
+              var src = `${process.env.VUE_APP_BASE_API}${res.data.url}`
+              insertFn(src, 'img', src)
+            }
+          });
+        },
+      }
+    },
     // 保存
     onSubmit() {
       console.log('submit', this.curItem)

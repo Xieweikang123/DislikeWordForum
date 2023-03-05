@@ -70,10 +70,10 @@ export default {
           name: "笔记",
           url: "/note",
         },
-        {
-          name: "笔记2",
-          url: "/note2",
-        },
+        // {
+        //   name: "笔记-编辑",
+        //   url: "/note2",
+        // },
       ],
       isLogin: false,
     };

@@ -49,7 +49,7 @@ const routes = [
     path: '/note2',
     meta: {
       // 页面标题title
-      title: '笔记2'
+      title: '笔记2-编辑'
     },
     component: () => import('@/views/note/note2')
   },
