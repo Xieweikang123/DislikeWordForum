@@ -2,14 +2,9 @@
   <el-header>
     <el-row :gutter="20">
       <el-col :span="16" class="disFlex">
-        <div
-          v-for="item in menuList"
-          @click="jumpTo(item.url)"
-          :key="item.name"
-        >
+        <div v-for="item in menuList" @click="jumpTo(item.url)" :key="item.name">
           <span :class="item.url == activeUrl ? 'menuActive' : ''">
-            {{ item.name }}</span
-          >
+            {{ item.name }}</span>
         </div>
       </el-col>
 
@@ -17,11 +12,7 @@
         <el-dropdown>
           <span class="el-dropdown-link disFlexSingle">
             <div class="divFlexAlignCenter marginright15">
-              <el-avatar
-                v-if="AvatorUrl.length > 0"
-                shape="square"
-                :src="AvatorUrl"
-              ></el-avatar>
+              <el-avatar v-if="AvatorUrl.length > 0" shape="square" :src="AvatorUrl"></el-avatar>
               <el-avatar v-else shape="square">{{
                 userInfo.userName
               }}</el-avatar>
@@ -32,19 +23,13 @@
             </div>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="jumpTo('/selfInfo')"
-              >个人信息</el-dropdown-item
-            >
-            <el-dropdown-item divided @click.native="onLogout"
-              >退出</el-dropdown-item
-            >
+            <el-dropdown-item @click.native="jumpTo('/selfInfo')">个人信息</el-dropdown-item>
+            <el-dropdown-item divided @click.native="onLogout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
       <el-col v-else :span="8">
-        <span @click="onLogin" class="hand" style="margin-right: 10px"
-          >登录</span
-        >
+        <span @click="onLogin" class="hand" style="margin-right: 10px">登录</span>
         <span @click="onRegister" class="hand">注册 </span>
       </el-col>
     </el-row>
@@ -55,7 +40,7 @@
 </template>
    
    
-   <script>
+<script>
 import Login from "@/views/user/login.vue";
 import Register from "@/views/user/register.vue";
 
@@ -84,6 +69,10 @@ export default {
         {
           name: "笔记",
           url: "/note",
+        },
+        {
+          name: "笔记2",
+          url: "/note2",
         },
       ],
       isLogin: false,
@@ -131,7 +120,7 @@ export default {
     jumpTo(url) {
       console.log("jump url", url);
       //链接一样，不跳转
-      if(this.activeUrl==url){
+      if (this.activeUrl == url) {
         return
       }
       this.activeUrl = url;
@@ -167,47 +156,58 @@ export default {
 };
 </script>
   
-  <style>
+<style>
 .menuActive {
   color: #409eff;
 }
+
 .disFlexSingle,
 .divFlexAlignCenter {
   display: flex;
 }
+
 .divFlexAlignCenter {
   align-items: center;
 }
+
 .marginright15 {
   margin-right: 10px;
 }
+
 .disFlex {
   display: flex;
   justify-content: center;
 }
+
 .disFlex div {
   margin-left: 30px;
   cursor: pointer;
 }
+
 .disFlex div:hover {
   color: blue;
 }
+
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
 }
+
 /* .el-popper {
   top: 45px !important;
 } */
 .hand {
   cursor: pointer;
 }
+
 .hand:hover {
   color: blue;
 }
-.el-header{
+
+.el-header {
   box-shadow: 3px 3px 17px 6px #f9f9f999;
 }
+
 .el-header,
 .el-footer {
   /* background-color: #b3c0d1; */
@@ -215,8 +215,8 @@ export default {
   text-align: center;
   line-height: 60px;
 }
- 
-body > .el-container {
+
+body>.el-container {
   margin-bottom: 40px;
 }
 
@@ -228,6 +228,7 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
+
 .el-header,
 .el-footer {
   /* background-color: #b3c0d1; */
@@ -237,7 +238,7 @@ body > .el-container {
 }
 
 
-body > .el-container {
+body>.el-container {
   margin-bottom: 40px;
 }
 

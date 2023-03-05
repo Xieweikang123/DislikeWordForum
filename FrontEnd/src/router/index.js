@@ -46,6 +46,14 @@ const routes = [
     component: () => import('@/views/note/index')
   },
   {
+    path: '/note2',
+    meta: {
+      // 页面标题title
+      title: '笔记2'
+    },
+    component: () => import('@/views/note/note2')
+  },
+  {
     path: '/test',
     meta: {
       // 页面标题title
