@@ -47,6 +47,11 @@ export default {
     that.registerHotKey()
     that.imgConfig()
     that.getCurData()
+
+    window.onbeforeunload = function () {
+      return '您有未保存的更改，确定要离开吗？';
+    };
+
   },
   beforeDestroy() {
     const editor = this.editor

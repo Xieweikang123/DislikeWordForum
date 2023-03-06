@@ -375,7 +375,7 @@ namespace BackendAPI.Application
             var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
-            var findItem = await db.Queryable<Note>().FirstAsync(x => x.id == dto.id);
+            var findItem = await db.Queryable<Note>().Includes(x => x.noteTags).FirstAsync(x => x.id == dto.id);
             if (findItem.userId != userId)
             {
                 throw new Exception("没有权限查看");
