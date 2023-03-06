@@ -101,9 +101,6 @@
     </div>
   </div>
 </template>
-<!-- <style src="@wangeditor/editor/dist/css/style.css"></style> -->
-<!-- <link href="https://unpkg.com/@wangeditor/editor@latest/dist/css/style.css" rel="stylesheet"> -->
-
 <script>
 import NoteEditForm from "../note/noteEditForm";
 import TagEditPop from "../note/tagEditPop";
@@ -112,7 +109,6 @@ import CalendarHeatmap from "@/components/CalendarHeatmap/CalendarHeatmap.vue"
 import Prism from "prismjs";
 import 'prismjs/themes/prism.css'; // 引入样式文件
 import 'prismjs/components/prism-csharp';
-import 'prismjs/plugins/autoloader/prism-autoloader';
 
 
 
@@ -343,6 +339,7 @@ export default {
     },
     onShare(item) {
       console.log("onShare", item);
+
       this.beforeImgScaleScrollTop = document.documentElement.scrollTop;
       this.$refs.shareCard.show(item);
     },
