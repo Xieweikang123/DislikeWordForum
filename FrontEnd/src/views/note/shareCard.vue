@@ -152,13 +152,11 @@ body {
   font-family: Georgia, serif;
   content: "”";
   position: absolute;
-  /* bottom: -110px;
-  line-height: 100px; */
   bottom: -10px;
   line-height: 0px;
-  right: -32px;
-  font-size: 25em;
-  color: rgba(238, 238, 238, 0.8);
+  right: 4px;
+  font-size: 13em;
+  color: rgb(238 238 238 / 47%);
   font-weight: normal;
 }
 
