@@ -170,7 +170,12 @@ namespace BackendAPI.Application
             try
             {
                 db.BeginTran();
-                RecordOldNote(findNote);
+                //内容一致，不记录日志
+                if (findNote.sayContent != dto.sayContent)
+                {
+                    RecordOldNote(findNote);
+                }
+
 
                 var nowTime = DateTime.Now;
                 var userId = CurrentUserInfo.UserId;

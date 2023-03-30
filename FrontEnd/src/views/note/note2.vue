@@ -86,7 +86,7 @@ export default {
             that.isDataLoad = true
             that.curItem = res.data
             that.initContent = that.curItem.sayContent
-            // document.title = "笔记-回收站"
+            document.title = that.curItem.sayContent.replace(/(<([^>]+)>)/gi, "").substr(0, 20)
           } else {
             that.$message.error("数据加载失败");
           }
