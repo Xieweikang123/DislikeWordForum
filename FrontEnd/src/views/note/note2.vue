@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div v-if="noteHisList.length > 0" style="margin: 18px 31px">
+      历史版本: {{ noteHisList.length }}个
+      <el-slider v-model="sliderValue" :step="sliderStep" :max="sliderMax" :format-tooltip="formatTooltip" show-stops>
+      </el-slider>
+    </div>
     <div v-if="isDataLoad" style="border: 1px solid #ccc;">
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
       <Editor style="height: 500px; overflow-y: hidden;" v-model="curItem.sayContent" :defaultConfig="editorConfig"
@@ -24,6 +29,11 @@ export default {
   },
   data() {
     return {
+      sliderMax: 1,
+      sliderStep: 1,
+      noteHisList: [],
+      lastSliderValue: -1,
+      sliderValue: 100,
       initContent: '',
       isDataLoad: false,
       curItem: {},
@@ -41,11 +51,24 @@ export default {
       return this.pageInfo.searchKeyValues[0].value;
     },
   },
+  watch: {
+    noteHisList: {
+      handler(nVal) {
+
+        // this.sliderStep = 1;
+        this.sliderMax = nVal.length;
+        this.sliderValue = this.sliderMax;
+      },
+    },
+  },
   mounted() {
     var that = this;
     that.registerHotKey()
     that.imgConfig()
     that.getCurData()
+
+    //获取笔记历史
+    that.getCurNoteHis();
     window.onbeforeunload = function () {
       //如果内容变了，询问是否关闭，如果内容没变，返回null
       if (that.initContent == that.curItem.sayContent) {
@@ -60,6 +83,44 @@ export default {
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    //获取当前笔记对应的所有历史笔记
+    getCurNoteHis() {
+
+      var that = this;
+      that.$http
+        .post("/api/Note/GetCurNoteHisList", { id: this.$route.query.id })
+        .then((res) => {
+
+          that.noteHisList = res.data;
+        });
+    },
+    //历史版本滑动条文本格式化显示
+    formatTooltip(value) {
+      //value 没变的话，也不往下
+
+      // 如果本次value和上次一样，不往下进行
+      if (value == null || value == this.lastSliderValue) {
+        return;
+      }
+      this.lastSliderValue = value;
+      this.curItem.sayContent = "";
+      console.log('format')
+      if (value == this.noteHisList.length) {
+        //切换内容到当前内容
+        this.setTwoContent(this.initContent);
+        return "当前版本";
+      }
+      var slideItem = this.noteHisList[value];
+      var time = slideItem.createTime.replace("T", " ");
+      this.setTwoContent(slideItem.sayContent);
+      return time;
+    },
+    //设置两个控件的值
+    setTwoContent(content) {
+      // this.editRow.sayContent = content;
+      // this.divContent = content;
+      this.curItem.sayContent = content
+    },
     // 注册热键
     registerHotKey() {
       var that = this;
@@ -80,7 +141,7 @@ export default {
       that.$http
         .post("/api/Note/GetNoteById", { id: curNoteId })
         .then((res) => {
-          console.log("GetNoteById", res);
+
           // that.noteHisList = res.data;
           if (res.succeeded) {
             that.isDataLoad = true
@@ -100,7 +161,7 @@ export default {
       that.editorConfig.MENU_CONF['uploadImage'] = {
         fieldName: 'file',
         customUpload(file, insertFn) {
-          console.log('customUpload', file)
+
           let formData = new FormData();
           formData.append("file", file);
           that.$http.post("/api/File/UploadImg", formData).then((res) => {
@@ -114,17 +175,14 @@ export default {
     },
     // 保存
     onSubmit() {
-      console.log('submit', this.curItem)
       var that = this;
-      console.log(' window.opener', window.opener)
-
       that.$http.post("/api/Note/SaveNoteWithTag", that.curItem).then((res) => {
         // //关闭面板
         if (res.succeeded) {
-          // that.isShowDrawer = false;
           that.$message.success("保存成功");
-          console.log('inter', window.opener)
-          console.log('inter aa', window.opener.pGetNoteList)
+          that.initContent = that.curItem.sayContent
+          //保存之后重新获取历史笔记
+          that.getCurNoteHis();
           window.opener.pGetNoteList()
           // window.opener.parentMethod()
         } else {
