@@ -1,46 +1,21 @@
-﻿using Google.Api;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Reflection;
-
-class MyClass
+﻿class Program
 {
+    // 定义一个方法，它将作为 WaitCallback 委托的参数
+    private static void MyTask(object state)
+    {
+        // 从 state 参数中获取需要的数据
+        int num = (int)state;
 
-    public string MyProperty { get; set; }
-}
+        // 执行一些工作，例如打印信息
+        Console.WriteLine("Hello from MyTask! Parameter = {0}", num);
+    }
 
-class Program
-{
     static void Main(string[] args)
     {
 
-        var builder = WebApplication.CreateBuilder(args);
-        var app = builder.Build();
-
-
-        
-
-        app.UseRouting();
-
-
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.MapHealthChecks("/healthz").RequireAuthorization();
-        app.MapGet("/", () => "Hello World!");
-
-
-        app.Run();
-
-
+        ThreadPool.QueueUserWorkItem(new WaitCallback(MyTask), 42);
 
 
         Console.WriteLine("ok");
     }
-
-
-
 }

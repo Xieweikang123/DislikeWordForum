@@ -4,8 +4,6 @@
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
       <Editor style="height: 500px; overflow-y: hidden;" v-model="curItem.sayContent" :defaultConfig="editorConfig"
         :mode="mode" @onCreated="onCreated" />
-
-
       <el-button type="primary" @click="onSubmit">保存</el-button>
     </div>
     <div v-else>
@@ -26,6 +24,7 @@ export default {
   },
   data() {
     return {
+      initContent: '',
       isDataLoad: false,
       curItem: {},
       editor: null,
@@ -47,11 +46,13 @@ export default {
     that.registerHotKey()
     that.imgConfig()
     that.getCurData()
-
     window.onbeforeunload = function () {
+      //如果内容变了，询问是否关闭，如果内容没变，返回null
+      if (that.initContent == that.curItem.sayContent) {
+        return null
+      }
       return '您有未保存的更改，确定要离开吗？';
     };
-
   },
   beforeDestroy() {
     const editor = this.editor
@@ -84,6 +85,7 @@ export default {
           if (res.succeeded) {
             that.isDataLoad = true
             that.curItem = res.data
+            that.initContent = that.curItem.sayContent
             // document.title = "笔记-回收站"
           } else {
             that.$message.error("数据加载失败");
