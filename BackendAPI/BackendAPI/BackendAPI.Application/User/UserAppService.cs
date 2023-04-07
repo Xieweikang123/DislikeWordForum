@@ -78,7 +78,7 @@ namespace BackendAPI.Application
             {
                 { "UserId", queryUser.Id },  // 存储Id
                 { "Account",queryUser.UserName }, // 存储用户名
-            });
+            }, 999);
             queryUser.LastLoginTime = DateTime.Now;
 
             await db.Updateable(queryUser).ExecuteCommandAsync();

@@ -1,21 +1,39 @@
-﻿class Program
+﻿namespace GenericDelegateExample
 {
-    // 定义一个方法，它将作为 WaitCallback 委托的参数
-    private static void MyTask(object state)
+    // 定义一个泛型委托类型
+    public delegate TResult MyDelegate<T, TResult>(T arg);
+
+    class Program
     {
-        // 从 state 参数中获取需要的数据
-        int num = (int)state;
+        static void Main(string[] args)
+        {
+            // 声明一个将字符串转换为大写的委托
+            MyDelegate<string, string> toUpper = s => s.ToUpper();
 
-        // 执行一些工作，例如打印信息
-        Console.WriteLine("Hello from MyTask! Parameter = {0}", num);
-    }
+            // 声明一个将字符串转换为小写的委托
+            MyDelegate<string, string> toLower = s => s.ToLower();
 
-    static void Main(string[] args)
-    {
+            // 使用委托将字符串列表中的所有元素转换为大写形式
+            List<string> strings = new List<string> { "Hello", "World", "!" };
+            List<string> upperCaseStrings = Map(strings, toUpper);
+            Console.WriteLine(string.Join(" ", upperCaseStrings));
 
-        ThreadPool.QueueUserWorkItem(new WaitCallback(MyTask), 42);
+            // 使用委托将字符串列表中的所有元素转换为小写形式
+            List<string> lowerCaseStrings = Map(strings, toLower);
+            Console.WriteLine(string.Join(" ", lowerCaseStrings));
+        }
 
+        // 定义一个通用的映射方法，使用泛型委托允许动态指定转换逻辑
+        public static List<TResult> Map<T, TResult>(IList<T> source, MyDelegate<T, TResult> selector)
+        {
+            var result = new List<TResult>();
 
-        Console.WriteLine("ok");
+            foreach (var item in source)
+            {
+                result.Add(selector(item));
+            }
+
+            return result;
+        }
     }
 }

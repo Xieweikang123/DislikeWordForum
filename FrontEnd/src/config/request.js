@@ -53,7 +53,7 @@ http.interceptors.response.use(
           Message({
             message: "请重新登录",
             type: 'error',
-            duration: 1.5 * 1000
+            duration: 1000
           })
           window.localStorage.setItem("userInfo", null);
           setTimeout(() => {

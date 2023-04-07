@@ -58,14 +58,16 @@
       <div v-if="isMaskShow" @click="clickMask" class="medium-zoom-overlay"></div>
       <div id="noteContainer">
         <div v-for="item in dataList" :key="item.id" class="noteItemCls">
-          <div class="disAlignCenter userHead" style="">
-            <el-tag style="margin-right: 5px; cursor: pointer" @click="setTag(tagItem.tagName)"
-              v-for="tagItem in item.noteTags" :key="tagItem.id">{{ tagItem.tagName }}</el-tag>
-          </div>
-          <div style="text-align: center; font-size: 13px">
-            <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
-            <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑内容</el-link>
-            <el-link @click="onShare(item)" type="primary" style="font-size: 12px; margin-right: 5px">分享</el-link>
+          <div style="    overflow: auto;    display: flex;    align-items: center;">
+            <div class="disAlignCenter userHead">
+              <el-tag style="margin-right: 5px; cursor: pointer" @click="setTag(tagItem.tagName)"
+                v-for="tagItem in item.noteTags" :key="tagItem.id">{{ tagItem.tagName }}</el-tag>
+            </div>
+            <div style="    font-size: 13px;    margin: 0 auto;">
+              <el-link @click="onEditTag(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑</el-link>
+              <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑内容</el-link>
+              <el-link @click="onShare(item)" type="primary" style="font-size: 12px; margin-right: 5px">分享</el-link>
+            </div>
           </div>
           <div>
             <div :ref="'noteItem' + item.id" class="contentLine" v-html="item.sayContent"></div>
@@ -649,6 +651,8 @@ img {
 
 .userHead {
   opacity: 90%;
+  float: left;
+  position: absolute;
   /* margin-top: 12px; */
   transition: opacity 0.7s;
 }
