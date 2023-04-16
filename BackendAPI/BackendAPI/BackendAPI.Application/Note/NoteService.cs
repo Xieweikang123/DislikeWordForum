@@ -176,7 +176,6 @@ namespace BackendAPI.Application
                     RecordOldNote(findNote);
                 }
 
-
                 var nowTime = DateTime.Now;
                 var userId = CurrentUserInfo.UserId;
                 //更新笔记内容

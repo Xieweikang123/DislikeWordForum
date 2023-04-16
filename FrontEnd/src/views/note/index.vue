@@ -7,11 +7,9 @@
             <el-checkbox-button v-for="item in ['回收站']" :label="item" :key="item">{{ item }}</el-checkbox-button>
           </el-checkbox-group>
         </div>
-
       </div>
       <div v-if="!isRecycleBin">
         <el-divider content-position="center">标签</el-divider>
-
         <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
         <br>
         <el-tag @click="setTag('')" :class="pageInfo.searchKeyValues[0].value == '' ? 'tagAllStyle' : ''"
@@ -530,7 +528,7 @@ export default {
 };
 </script>
   
-<style >
+<style  scoped>
 /* .contentLine code{
   font-family: monospace;
     background-color: #eee;

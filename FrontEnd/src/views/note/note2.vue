@@ -197,7 +197,7 @@ export default {
 };
 </script>
   
-<style >
+<style scoped>
 .openMore {
   width: 100%;
   text-align: center;

@@ -1,30 +1,18 @@
 <template>
   <div class="margin60Auto">
-    <el-input
-      type="textarea"
-      :rows="3"
-      placeholder="请输入内容"
-      v-model="sendContent"
-    >
+
+   
+    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="sendContent">
     </el-input>
     <div style="text-align: right">
-      <el-button @click="sendFun" style="margin-top: 10px" type="primary"
-        >发表</el-button
-      >
+      <el-button @click="sendFun" style="margin-top: 10px" type="primary">发表</el-button>
     </div>
     <el-skeleton :rows="10" animated :loading="isLoading" />
 
     <div>
-      <div
-        v-for="item in dataList"
-        :key="item.id"
-        style="border-bottom: 1px solid #e8e6e6; padding: 13px 0px"
-      >
+      <div v-for="item in dataList" :key="item.id" style="border-bottom: 1px solid #e8e6e6; padding: 13px 0px">
         <div class="disAlignCenter userHead" style="">
-          <el-avatar
-            style="margin-right: 10px"
-            :src="$Global.user.getAvatorUrl(item.avatar)"
-          ></el-avatar>
+          <el-avatar style="margin-right: 10px" :src="$Global.user.getAvatorUrl(item.avatar)"></el-avatar>
           {{ item.nickName }}:
         </div>
 
@@ -37,14 +25,8 @@
 
           <div>
             <span style="float: right; font-size: 13px">
-              <el-popconfirm
-                v-if="userInfo && userInfo.id == item.userId"
-                title="确定删除吗?"
-                @confirm="confirmDel(item)"
-              >
-                <el-link slot="reference" type="danger" style="font-size: 12px"
-                  >删除</el-link
-                >
+              <el-popconfirm v-if="userInfo && userInfo.id == item.userId" title="确定删除吗?" @confirm="confirmDel(item)">
+                <el-link slot="reference" type="danger" style="font-size: 12px">删除</el-link>
               </el-popconfirm>
               <span>
                 {{ $Global.Common.formatTTime(item.createTime) }}
@@ -54,19 +36,15 @@
         </div>
       </div>
 
-      <el-pagination
-        layout="prev, pager, next"
-        :page-size="pageInfo.pageSize"
-        @current-change="changePageNumber"
-        :total="pageInfo.totalCount"
-      >
+      <el-pagination layout="prev, pager, next" :page-size="pageInfo.pageSize" @current-change="changePageNumber"
+        :total="pageInfo.totalCount">
       </el-pagination>
     </div>
   </div>
 </template>
  
  
- <script>
+<script>
 export default {
   data() {
     return {
@@ -175,9 +153,11 @@ export default {
 .contentLine {
   line-height: 26px;
 }
+
 .userHead:hover {
   opacity: 1;
 }
+
 .userHead {
   opacity: 40%;
   /* margin-top: 12px; */
