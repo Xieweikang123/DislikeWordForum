@@ -225,7 +225,7 @@ namespace BackendAPI.Application
         public async Task<object> GetMyNoteTagList(NoteDTO dto)
         {
             var db = DbContextStatic.Instance;
-            var tagList = await db.Queryable<NoteTag>().GroupBy(x => new { x.tagName, x.userId }).Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateCount(x.tagName) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.count).ToListAsync();
+            var tagList = await db.Queryable<NoteTag>().GroupBy(x => new { x.tagName, x.userId }).Select(x => new { x.tagName, x.userId, count = SqlFunc.AggregateCount(x.tagName), createTime = SqlFunc.AggregateMax(x.createTime) }).Where(x => x.userId == CurrentUserInfo.UserId).OrderByDescending(x => x.createTime).OrderByDescending(x => x.count).ToListAsync();
 
             return tagList;
         }
