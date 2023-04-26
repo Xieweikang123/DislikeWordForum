@@ -2,6 +2,8 @@
 using BackendAPI.Application.User;
 using BackendAPI.Core;
 using Furion.DistributedIDGenerator;
+using System;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 
 namespace BackendAPI.Application
@@ -52,6 +54,42 @@ namespace BackendAPI.Application
             }
 
             return oriContent;
+        }
+
+        /// <summary>
+        /// 将 <img 
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public object GetBase64ImgContent(NoteDTO dto)
+        {
+            // 匹配 img 标签的正则表达式
+            string regexPattern = @"<img\s+[^>]*src\s*=\s*[""']?([^'"" >]+?)[ '""][^>]*>";
+
+            // 查找所有匹配的 img 标签
+            MatchCollection matches = Regex.Matches(dto.sayContent, regexPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            //http://localhost:..
+            var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
+
+            // 匹配 /Files/... 部分的正则表达式
+            string filePatern = @"/Files/.*";
+
+
+
+            // 遍历所有匹配的 img 标签，并将其 src 属性的值替换为 Base64 编码
+            foreach (Match match in matches)
+            {
+                string imgSrc = match.Groups[1].Value;
+                // 查找第一个匹配的结果
+                Match matchfile = Regex.Match(imgSrc, filePatern);
+                var filePath = App.WebHostEnvironment.WebRootPath + matchfile.Value;
+
+                string base64String = ImageHelper.ImageToBase64(filePath);
+                dto.sayContent = dto.sayContent.Replace(imgSrc, "data:image/png;base64," + base64String);
+            }
+
+            return dto;
         }
 
         /// <summary>

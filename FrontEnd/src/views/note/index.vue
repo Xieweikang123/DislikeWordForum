@@ -19,8 +19,8 @@
         <el-tag v-for="(item, index) in allTags"
           :class="pageInfo.searchKeyValues[0].value == item.tagName ? 'tagAllStyle' : ''" :key="item.tagName"
           @click="setTag(item.tagName)" class="tagItemStyle" :style="{
-            'background-color': tagColorArray[index % tagColorArray.length],
-          }">
+              'background-color': tagColorArray[index % tagColorArray.length],
+            }">
           <span class="mixMode">{{ item.tagName }}({{ item.count }})</span>
         </el-tag>
       </div>
@@ -528,14 +528,7 @@ export default {
 };
 </script>
   
-<style  scoped>
-/* .contentLine code{
-  font-family: monospace;
-    background-color: #eee;
-    padding: 3px;
-    border-radius: 3px;
-    display: block;
-} */
+<style scoped>
 .openMore {
   width: 100%;
   text-align: center;
@@ -552,8 +545,9 @@ export default {
   line-height: 26px;
 }
 
-.contentLine img {
+::v-deep .contentLine img {
   width: 50%;
+  cursor: cell;
 }
 
 /* .noteMask::after {
@@ -578,9 +572,6 @@ export default {
   padding: 24px 0px;
 }
 
-.contentLine img {
-  cursor: cell;
-}
 
 .medium-zoom-overlay {
   position: fixed;
@@ -595,16 +586,13 @@ export default {
   z-index: 2;
 }
 
-.imgScale {
+::v-deep .imgScale {
   position: absolute;
   transform: scale(1.5);
   z-index: 3;
 }
 
-/* .imgScale>div{
-  width:200px
-} */
-img {
+::v-deep img {
   transition: all 500ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 

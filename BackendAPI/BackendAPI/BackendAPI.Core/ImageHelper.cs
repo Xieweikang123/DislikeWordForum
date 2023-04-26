@@ -11,6 +11,19 @@ namespace BackendAPI.Core
     public class ImageHelper
     {
 
+        /// <summary>
+        /// img 转 base64
+        /// </summary>
+        /// <param name="imagePath"></param>
+        /// <returns></returns>
+        public static string ImageToBase64(string imagePath)
+        {
+            // 读取图片文件
+            byte[] imageBytes = File.ReadAllBytes(imagePath);
+            // 将图片字节流转换为 Base64 编码的字符串
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
+        }
 
         //base64编码的字符串转为图片 
         public static Image Base64StringToImage(string strbase64)

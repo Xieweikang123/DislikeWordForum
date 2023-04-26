@@ -801,6 +801,13 @@
             <param name="desc"></param>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Core.ImageHelper.ImageToBase64(System.String)">
+            <summary>
+            img 转 base64
+            </summary>
+            <param name="imagePath"></param>
+            <returns></returns>
+        </member>
         <member name="P:BackendAPI.Core.PageInfo.searchKeyWord">
             <summary>
             搜索关键字

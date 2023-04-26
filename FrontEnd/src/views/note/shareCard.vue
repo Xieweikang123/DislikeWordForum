@@ -36,27 +36,81 @@ export default {
         this.downloadLink = document.createElement("a");
         document.body.appendChild(this.downloadLink);
       }
+      console.log('this.imageDataUrl', this.imageDataUrl)
       this.downloadLink.href = this.imageDataUrl;
       this.downloadLink.download = "image.png";
       this.downloadLink.click();
     },
+    getBase64Image(img) {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+      var dataURL = canvas.toDataURL("image/" + ext);
+      return dataURL;
+    },
+    //将img svg 转canvas
+    changeToCanvas(element) {
+      const imgElems = element.querySelectorAll('img');
+      //es6语法
+      let elems = [...imgElems]
+      elems.forEach(node => {
+        let parentNode = node.parentNode;
+        let canvas = document.createElement("canvas");
+        canvas.style.zIndex = 9
+        //处理svg转换canvas需要使用canvg组件
+        // if (node.tagName == 'svg') {
+        //   let svg = node.outerHTML.trim();
+        //   canvg(canvas, svg);
+        //   if (node.style.position) {
+        //     canvas.style.position += node.style.position;
+        //     canvas.style.left += node.style.left;
+        //     canvas.style.top += node.style.top;
+        //   }
+        // }
+        //处理img转换canvas
+        if (node.tagName == 'IMG') {
+          console.log('imgss', this.getBase64Image(node))
+          // canvas.width = node.width;
+          // canvas.height = node.height;
+          // canvas.getContext("2d").drawImage(node, 0, 0)
+        }
+        // var dataURL = canvas.toDataURL();
+        // console.log('dataURL', dataURL)
+        // parentNode.removeChild(node);
+        // parentNode.appendChild(canvas);
+      });
+    },
     //生成图片
     onGeneratePic() {
-      console.log("onGeneratePic");
-
+      console.log("onGeneratePic", this.$refs.container);
+      // this.changeToCanvas(this.$refs.container)
       html2canvas(this.$refs.container).then((canvas) => {
-        // var imageDataUrl = canvas.toDataURL("image/png");
-        // console.log("imageDataUrl", imageDataUrl);
-        // window.open(imageDataUrl, "_blank");
+        console.log('canval', canvas)
+        console.dir('canval', canvas)
+        // 创建一个新的 Image 对象，并将 Canvas 转换为图像
+        const img = new Image();
+        img.src = canvas.toDataURL();
 
-        this.imageDataUrl = canvas.toDataURL("image/png");
-        this.downloadUrl = URL.createObjectURL(
-          this.dataURLtoBlob(this.imageDataUrl)
-        );
+        // 创建一个链接元素，并将图像数据赋值给 href 属性
+        const link = document.createElement('a');
+        link.download = 'my-image.png';
+        link.href = img.src;
 
-        this.downloadImage();
-        // console.log("imageDataUrl", this.imageDataUrl);
-        // console.log("downloadUrl", this.downloadUrl);
+        // 将链接元素添加到页面，并触发点击事件进行下载
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+        // this.imageDataUrl = canvas.toDataURL("image/png");
+        // this.downloadUrl = URL.createObjectURL(
+        //   this.dataURLtoBlob(this.imageDataUrl)
+        // );
+        // this.downloadImage();
       });
     },
     dataURLtoBlob(dataURL) {
@@ -72,14 +126,24 @@ export default {
     },
     show(item) {
       this.dialogVisible = true;
-      this.curItem = item;
-      console.log('show')
-      this.$nextTick(() => {
-        Prism.highlightAll()
+      var that = this
+      that.$http.post("/api/Note/GetBase64ImgContent", item).then((res) => {
+        console.log('GetBase64ImgContent', res)
 
+        if (!res.succeeded) {
+          that.$message.error(res.errors)
+          return
+        }
+        that.curItem = res.data;
+        console.log('show', item)
+        that.$nextTick(() => {
+          Prism.highlightAll()
+        })
+        that.imageDataUrl = "";
+        that.downloadUrl = "";
       })
-      this.imageDataUrl = "";
-      this.downloadUrl = "";
+
+
     },
     handleClose(done) {
       done();

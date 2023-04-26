@@ -66,6 +66,7 @@
             <param name="oriContent"></param>
             <returns></returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:BackendAPI.Application.NoteService.GetBase64ImgContent(BackendAPI.Core.Entities.NoteDTO)" -->
         <member name="M:BackendAPI.Application.NoteService.SendAContent(BackendAPI.Core.Entities.NoteDTO)">
             <summary>
             发表内容
