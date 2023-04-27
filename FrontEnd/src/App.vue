@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header> <Header></Header></el-header>
+      <el-header>
+        <Header></Header>
+      </el-header>
       <el-main>
         <!-- 组件占位符 -->
-        <router-view
-      /></el-main>
+        <router-view /></el-main>
     </el-container>
   </div>
 </template>
@@ -25,10 +26,12 @@ export default {
   width: 60%;
   margin: 0 auto;
 }
+
 .disAlignCenter {
   display: flex;
   align-items: center;
 }
+
 body {
   // 设置最小宽度, 以免出现布局混乱
   // min-width: 1800px;
@@ -36,6 +39,7 @@ body {
   padding: 0;
   border: 0;
 }
+
 #app {
   // 设置字体
   // font-family: Avenir, Helvetica, Arial, sans-serif;

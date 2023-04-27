@@ -546,7 +546,7 @@ export default {
 }
 
 ::v-deep .contentLine img {
-  width: 50%;
+  /* width: 50%; */
   cursor: cell;
 }
 
