@@ -73,12 +73,13 @@ namespace BackendAPI.Application
                 throw new Exception("用户不存在或者密码错误");
 
             }
-            // 生成 token
+            // 生成 token 7*24*60 分钟 
             queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
             {
                 { "UserId", queryUser.Id },  // 存储Id
                 { "Account",queryUser.UserName }, // 存储用户名
-            }, 999);
+
+            }, 10080);
             queryUser.LastLoginTime = DateTime.Now;
 
             await db.Updateable(queryUser).ExecuteCommandAsync();
