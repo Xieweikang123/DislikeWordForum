@@ -1,51 +1,35 @@
 <template>
   <div>
-    <el-drawer
-      :title="dynamicTitle"
-      custom-class="drawerStyle"
-      :visible.sync="isShowDrawer"
-      direction="rtl"
-      :before-close="handleClose"
-    >
+    <el-drawer :title="dynamicTitle" custom-class="drawerStyle" :visible.sync="isShowDrawer" direction="rtl"
+      :before-close="handleClose">
       <el-form ref="form" :model="editRow" label-width="80px">
         <el-form-item label="单词:">
           <el-input v-model="editRow.word"></el-input>
         </el-form-item>
         <el-form-item label="翻译:">
-          <el-input
-            type="textarea"
-            :rows="2"
-            v-model="editRow.translate"
-          ></el-input>
+          <el-input type="textarea" :rows="2" v-model="editRow.translate"></el-input>
         </el-form-item>
         <el-form-item label="记录次数:">
           <!-- <el-input v-model="editRow.recordTimes"></el-input> -->
-          <el-input-number
-            v-model="editRow.recordTimes"
-            :min="0"
-            :step="1"
-            label="次数"
-          ></el-input-number>
+          <el-input-number v-model="editRow.recordTimes" :min="0" :step="1" label="次数"></el-input-number>
         </el-form-item>
       </el-form>
       <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="6"
-          ><el-button type="primary" @click="onSubmit">保存</el-button></el-col
-        >
-        <el-col :span="2"
-          ><div class="grid-content bg-purple-light"></div
-        ></el-col>
+        <el-col :span="6"><el-button type="primary" @click="onSubmit">保存</el-button></el-col>
+        <el-col :span="2">
+          <div class="grid-content bg-purple-light"></div>
+        </el-col>
         <el-col :span="6">
           <el-popconfirm @confirm="confirmDel" title="确定删除吗？">
             <el-button slot="reference" type="danger">删除</el-button>
-          </el-popconfirm></el-col
-        >
+          </el-popconfirm></el-col>
       </el-row>
     </el-drawer>
   </div>
 </template>
 
- <script>
+<script>
+import WordJS from '@/utils/word'
 export default {
   data() {
     return {
@@ -76,10 +60,9 @@ export default {
         });
     },
     onSubmit() {
-      console.log("submit!", this.editRow);
-
+      console.log("submit! wordJS", WordJS);
       var that = this;
-      that.$http.post("/api/Word/OnSaveWord", that.editRow).then((res) => {
+      WordJS.SaveWord(that, that.editRow).then(res => {
         console.log("OnSaveWord", res);
         // //关闭面板
         if (res.succeeded) {
@@ -87,7 +70,8 @@ export default {
           that.$message.success("保存成功");
           that.$emit("RefreshData");
         }
-      });
+
+      })
     },
     show(row) {
       this.isShowDrawer = true;

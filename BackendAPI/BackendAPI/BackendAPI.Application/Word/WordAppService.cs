@@ -3,6 +3,7 @@ using BackendAPI.Core;
 using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 using Furion.LinqBuilder;
+using Furion.RemoteRequest.Extensions;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using System.Linq.Expressions;
@@ -69,6 +70,13 @@ namespace BackendAPI.Application
             var wordlist = GetCacheEnglishWords();
             var list = wordlist.Where(x => x.BelongUserId == userId && x.RecordTimes >= recordTimes).ToList();
             return list;
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<object> Translate(string word)
+        {
+            var obj= await $"http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i={word}".GetAsStringAsync();
+            return obj;
         }
 
         [HttpPost]
