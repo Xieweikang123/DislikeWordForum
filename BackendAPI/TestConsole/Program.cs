@@ -1,36 +1,43 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+
+// Define a class with some data annotations
+public class Person
+{
+    [Required]
+    [StringLength(10)]
+    public string Name { get; set; }
+
+    [Range(0, 120)]
+    public int Age { get; set; }
+}
+
+
 
 class Program
 {
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
-        using var cts = new CancellationTokenSource();
-        var token = cts.Token;
 
-        // 启动一个异步任务
-        var task = Task.Run(async () =>
-        {
-            while (!token.IsCancellationRequested)
-            {
-                Console.WriteLine("Task is running...");
-                await Task.Delay(1000);
-            }
-            token.ThrowIfCancellationRequested();
-        }, token);
 
-        // 等待一段时间后取消任务
-        await Task.Delay(5000);
-        cts.Cancel();
-        Console.WriteLine("Canceled task.");
+        // Create an instance of the class
+        Person p = new Person();
+        p.Name = "Alice";
+        p.Age = 125;
 
-        // 等待任务完成
-        try
+        // Create a validation context and a list of validation results
+        ValidationContext context = new ValidationContext(p);
+        List<ValidationResult> results = new List<ValidationResult>();
+
+        // Call TryValidateObject to validate the object
+        bool isValid = Validator.TryValidateObject(p, context, results, true);
+
+        // Print the validation result
+        Console.WriteLine($"Is valid: {isValid}");
+        foreach (var result in results)
         {
-            await task;
-        }
-        catch (OperationCanceledException)
-        {
-            Console.WriteLine("Task canceled.");
+            Console.WriteLine(result.ErrorMessage);
         }
 
 
