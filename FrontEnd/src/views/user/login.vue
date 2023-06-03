@@ -1,33 +1,12 @@
 <template>
-  <el-dialog
-    title="登录"
-    :visible.sync="dialogFormVisible"
-    :close-on-click-modal="false"
-    width="30%"
-  >
-    <el-form
-      ref="elForm"
-      :model="formData"
-      :rules="rules"
-      size="medium"
-      label-width="80px"
-    >
+  <el-dialog title="登录" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="30%">
+    <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="80px">
       <el-form-item label="账号" prop="UserName">
-        <el-input
-          v-model="formData.UserName"
-          placeholder="请输入账号"
-          clearable
-          :style="{ width: '100%' }"
-        ></el-input>
+        <el-input v-model="formData.UserName" placeholder="请输入账号" clearable :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="Password">
-        <el-input
-          v-model="formData.Password"
-          placeholder="请输入密码"
-          clearable
-          show-password
-          :style="{ width: '100%' }"
-        ></el-input>
+        <el-input v-model="formData.Password" @keyup.enter.native="submitForm" placeholder="请输入密码" clearable show-password
+          :style="{ width: '100%' }"></el-input>
       </el-form-item>
       <el-form-item label-width="0">
         <el-button type="primary" @click="submitForm">登录</el-button>

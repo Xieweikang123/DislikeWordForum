@@ -1,16 +1,53 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 
-// Define a class with some data annotations
-public class Person
+// Define a service interface
+public interface IMyService
 {
-    [Required]
-    [StringLength(10)]
-    public string Name { get; set; }
+    void DoSomething();
+}
 
-    [Range(0, 120)]
-    public int Age { get; set; }
+// Define a class that implements the service interface
+public class MyService : IMyService
+{
+    public void DoSomething()
+    {
+        Console.WriteLine("MyService is doing something.");
+    }
+}
+
+public class MyService2 : IMyService
+{
+
+    private int num = 0;
+    public void DoSomething()
+    {
+
+        Console.WriteLine($"num: {num++}");
+    }
+}
+
+
+
+// Define a class that uses the service
+public class MyClass
+{
+    private readonly IMyService? _myService;
+
+    public MyClass(IServiceProvider serviceProvider)
+    {
+        var tpf = typeof(IMyService);
+        // Request an instance of the service from the service provider
+        _myService = serviceProvider.GetService(typeof(IMyService)) as IMyService;
+    }
+
+    public void DoSomethingWithService()
+    {
+        // Use the service object
+        _myService?.DoSomething();
+    }
 }
 
 
@@ -19,30 +56,23 @@ class Program
 {
     static void Main(string[] args)
     {
+        var serviceProvider = new ServiceCollection()
+         .AddTransient<IMyService, MyService2>()
+         .BuildServiceProvider();
 
 
-        // Create an instance of the class
-        Person p = new Person();
-        p.Name = "Alice";
-        p.Age = 125;
 
-        // Create a validation context and a list of validation results
-        ValidationContext context = new ValidationContext(p);
-        List<ValidationResult> results = new List<ValidationResult>();
+        //serviceProvider.
+        // Create an instance of the class that uses the service
+        var myClass = new MyClass(serviceProvider);
 
-        // Call TryValidateObject to validate the object
-        bool isValid = Validator.TryValidateObject(p, context, results, true);
-
-        // Print the validation result
-        Console.WriteLine($"Is valid: {isValid}");
-        foreach (var result in results)
-        {
-            Console.WriteLine(result.ErrorMessage);
-        }
+        // Use the service object
+        myClass.DoSomethingWithService();
+        myClass.DoSomethingWithService();
 
 
         // Wait for user input
         Console.Write("Press any key to exit...");
-        Console.ReadKey();
+        //Console.ReadKey();
     }
 }

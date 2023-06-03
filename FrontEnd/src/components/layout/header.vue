@@ -12,7 +12,7 @@
         <el-dropdown>
           <span class="el-dropdown-link disFlexSingle">
             <div class="divFlexAlignCenter marginright15">
-              <el-avatar v-if="AvatorUrl.length > 0" shape="square" :src="AvatorUrl"></el-avatar>
+              <el-avatar v-if="AvatorUrl.length > 0" :key="AvatorUrl" shape="square" :src="AvatorUrl"></el-avatar>
               <el-avatar v-else shape="square">{{
                 userInfo.userName
               }}</el-avatar>
@@ -51,7 +51,9 @@ export default {
   },
   data() {
     return {
-      userInfo: {},
+      userInfo: {
+        avatar: ''
+      },
       activeUrl: "/",
       menuList: [
         {
@@ -77,6 +79,7 @@ export default {
 
   computed: {
     AvatorUrl() {
+      console.log('computed avatorurl')
       if (
         !this.userInfo ||
         !this.userInfo.avatar ||
@@ -84,6 +87,8 @@ export default {
       ) {
         return "";
       }
+      var s1 = process.env.VUE_APP_BASE_API + this.userInfo.avatar
+      console.log('s1', s1)
       return process.env.VUE_APP_BASE_API + this.userInfo.avatar;
     },
   },
@@ -110,6 +115,7 @@ export default {
         that.userInfo = {
           ...data,
         };
+        that.$set(that.userInfo, 'avatar', data.avatar)
       });
     },
     //跳转
