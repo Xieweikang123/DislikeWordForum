@@ -72,6 +72,10 @@ export default {
           name: "笔记",
           url: "/note",
         },
+        {
+          name: "图片管理",
+          url: "/pictureManager",
+        },
       ],
       isLogin: false,
     };

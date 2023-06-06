@@ -9,6 +9,12 @@
             文件上传服务
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.File.FileService.GetwwwrootFiles">
+            <summary>
+            获取wwwroot所有文件
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.File.FileService.GetCurrentFilePathName(System.String,System.String@)">
             <summary>
             获取文件名

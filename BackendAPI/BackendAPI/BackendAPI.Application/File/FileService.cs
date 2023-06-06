@@ -14,13 +14,44 @@ namespace BackendAPI.Application.File
     public class FileService : IDynamicApiController
     {
 
+
+
+
+        /// <summary>
+        /// 获取wwwroot所有文件
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public object GetwwwrootFiles()
+        {
+            //var fileDir = App.WebHostEnvironment.WebRootPath + "/Files";
+            //// Get all files in the folder
+            //var files = Directory.GetFiles(fileDir);
+            //// Loop through each file and do something with it
+            //var relativePaths=new List<string>();
+            //foreach (string file in files)
+            //{
+            //    Console.WriteLine(file);
+            //    string relativePath = Path.GetRelativePath(App.WebHostEnvironment.WebRootPath, file);
+            //    relativePaths.Add(relativePath);
+            //}
+
+            var fileDir = Path.Combine(App.WebHostEnvironment.WebRootPath, "Files");
+            var relativePaths = Directory.GetFiles(fileDir)
+                .Select(file => Path.GetRelativePath(App.WebHostEnvironment.WebRootPath, file))
+                .ToList();
+
+            return relativePaths;
+        }
+
+
         /// <summary>
         /// 获取文件名
         /// </summary>
         /// <param name="suffix"></param>
         /// <param name="relativePath">相对路径</param>
         /// <returns></returns>
-        public static string GetCurrentFilePathName(string suffix,out string relativePath)
+        public static string GetCurrentFilePathName(string suffix, out string relativePath)
         {
             var fileDir = App.WebHostEnvironment.WebRootPath + "/Files";
             //string suffix = Path.GetExtension(file.FileName);

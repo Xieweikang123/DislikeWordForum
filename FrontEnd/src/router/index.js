@@ -54,6 +54,14 @@ const routes = [
     component: () => import('@/views/note/note2')
   },
   {
+    path: '/pictureManager',
+    meta: {
+      // 页面标题title
+      title: 'pic图片管理tureManager'
+    },
+    component: () => import('@/views/pictureManager/index')
+  },
+  {
     path: '/test',
     meta: {
       // 页面标题title
