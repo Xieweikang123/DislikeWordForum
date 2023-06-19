@@ -75,6 +75,9 @@ export default {
         {
           name: "图片管理",
           url: "/pictureManager",
+        }, {
+          name: "数据库",
+          url: "/databaseManager",
         },
       ],
       isLogin: false,

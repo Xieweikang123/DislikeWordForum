@@ -12,7 +12,6 @@ namespace BackendAPI.Application
     /// <summary>
     /// 闪念服务接口
     /// </summary>
-    /// 
     public class FlashContentService : IDynamicApiController
     {
 

@@ -57,9 +57,17 @@ const routes = [
     path: '/pictureManager',
     meta: {
       // 页面标题title
-      title: 'pic图片管理tureManager'
+      title: '图片管理tureManager'
     },
     component: () => import('@/views/pictureManager/index')
+  },
+  {
+    path: '/databaseManager',
+    meta: {
+      // 页面标题title
+      title: '数据库管理'
+    },
+    component: () => import('@/views/databaseManager/index')
   },
   {
     path: '/test',

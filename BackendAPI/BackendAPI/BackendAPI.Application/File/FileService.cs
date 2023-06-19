@@ -34,7 +34,7 @@ namespace BackendAPI.Application.File
             //    Console.WriteLine(file);
             //    string relativePath = Path.GetRelativePath(App.WebHostEnvironment.WebRootPath, file);
             //    relativePaths.Add(relativePath);
-            //}
+            //}c
 
             var fileDir = Path.Combine(App.WebHostEnvironment.WebRootPath, "Files");
             var relativePaths = Directory.GetFiles(fileDir)

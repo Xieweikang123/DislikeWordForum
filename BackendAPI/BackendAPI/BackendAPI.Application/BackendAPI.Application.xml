@@ -4,6 +4,19 @@
         <name>BackendAPI.Application</name>
     </assembly>
     <members>
+        <member name="T:BackendAPI.Application.DbManagerService">
+            <summary>
+            数据库服务接口
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.TestConnectDb(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            测试数据库连接
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
         <member name="T:BackendAPI.Application.File.FileService">
             <summary>
             文件上传服务
@@ -27,7 +40,6 @@
             <summary>
             闪念服务接口
             </summary>
-            
         </member>
         <member name="M:BackendAPI.Application.FlashContentService.GetContentList(BackendAPI.Core.PageInfo)">
             <summary>
