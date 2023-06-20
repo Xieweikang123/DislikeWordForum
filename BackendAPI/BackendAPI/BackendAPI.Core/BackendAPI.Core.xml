@@ -151,6 +151,11 @@
              数据库名字 
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.DBConfig.connectName">
+            <summary>
+            连接名
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.EnglishWord">
             <summary>
             ??

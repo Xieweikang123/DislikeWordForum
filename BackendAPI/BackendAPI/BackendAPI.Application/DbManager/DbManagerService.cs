@@ -15,6 +15,47 @@ namespace BackendAPI.Application
     public class DbManagerService : IDynamicApiController
     {
 
+
+        /// <summary>
+        /// 获取我的数据库配置
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<object> GetMyDbConfigs()
+        {
+            var db = DbContextStatic.Instance;
+            var list = await db.Queryable<DBConfig>().Where(x => x.Status == 0 && x.UserId == CurrentUserInfo.UserId).ToListAsync();
+            return list;
+        }
+
+        /// <summary>
+        /// 保存一条数据库配置
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> Save(DBConfig dto)
+        {
+            var db = DbContextStatic.Instance;
+            dto.UserId = CurrentUserInfo.UserId;
+            var nowTime = DateTime.Now;
+            //新增
+            if (string.IsNullOrEmpty(dto.Id))
+            {
+                dto.CreateTime = nowTime;
+                dto.Id = IDGen.GetStrId();
+                await db.Insertable(dto).ExecuteCommandAsync();
+                return "新增成功";
+            }
+            else
+            {
+                //修改
+                dto.UpdateTime = nowTime;
+                await db.Updateable(dto).ExecuteCommandAsync();
+                return "修改成功";
+            }
+        }
+
         /// <summary>
         /// 测试数据库连接
         /// </summary>

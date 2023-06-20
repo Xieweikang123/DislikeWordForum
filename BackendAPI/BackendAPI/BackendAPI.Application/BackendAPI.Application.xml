@@ -9,6 +9,19 @@
             数据库服务接口
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetMyDbConfigs">
+            <summary>
+            获取我的数据库配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.Save(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            保存一条数据库配置
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.DbManagerService.TestConnectDb(BackendAPI.Core.Entities.DBConfig)">
             <summary>
             测试数据库连接

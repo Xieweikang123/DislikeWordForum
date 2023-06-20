@@ -11,7 +11,8 @@ namespace BackendAPI.Core.Entities
         /// <summary>
         ///  
         ///</summary>
-        public int Id { get; set; }
+        [SugarColumn(IsPrimaryKey = true)]
+        public string Id { get; set; }
         /// <summary>
         /// 用户id 
         ///</summary>
@@ -20,7 +21,7 @@ namespace BackendAPI.Core.Entities
         /// 创建时间 
         /// 默认值: (getdate())
         ///</summary>
-        public string CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
         /// <summary>
         /// 0正常  1删除  
         /// 默认值: ((0))
@@ -29,7 +30,7 @@ namespace BackendAPI.Core.Entities
         /// <summary>
         /// 更新时间 
         ///</summary>
-        public string UpdateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
         /// <summary>
         /// 数据库类型 mssql、mysql 
         ///</summary>
@@ -50,5 +51,9 @@ namespace BackendAPI.Core.Entities
         /// 数据库名字 
         ///</summary>
         public string DbName { get; set; }
+        /// <summary>
+        /// 连接名
+        /// </summary>
+        public string connectName { get; set; }
     }
 }

@@ -2,7 +2,7 @@
   <div>
     <div style="text-align: center;">
       当前数据库:
-      <el-select v-model="value" placeholder="请选择">
+      <el-select v-model="curSelect" placeholder="请选择">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
@@ -10,53 +10,49 @@
     </div>
 
     <el-dialog title="数据库配置" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
-      <el-tabs tab-position="left" style="height: auto;">
-        <el-tab-pane label="用户管理">
-          <el-form :model="dbForm" ref="dbForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="类型" prop="dbtype" :rules="[
-              { required: true, message: '请选择数据库类型' },
-            ]">
-              <el-select v-model="dbForm.dbtype" placeholder="请选择">
-                <el-option v-for="item in ['mssql', 'mysql']" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="连接名" prop="connectionName" :rules="[
-              { required: true, message: '连接名不能为空' },
-            ]">
-              <el-input v-model="dbForm.connectionName" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="主机Server" prop="DbServer" :rules="[
-              { required: true, message: '主机名不能为空' },
-            ]">
-              <el-input v-model="dbForm.DbServer" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="数据库名" prop="DbName" :rules="[
-              { required: true, message: '不能为空' },
-            ]">
-              <el-input v-model="dbForm.DbName" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="用户名" prop="DbUserId" :rules="[
-              { required: true, message: '用户名不能为空' },
-            ]">
-              <el-input v-model="dbForm.DbUserId" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="DbPwd" :rules="[
-              { required: true, message: '密码不能为空' },
-            ]">
-              <el-input type="password" v-model="dbForm.DbPwd" autocomplete="off"></el-input>
-            </el-form-item>
-
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('dbForm')">保存</el-button>
-              <el-button type="primary" @click="testDb">测试连接</el-button>
-              <!-- <el-button @click="resetForm('dbForm')">重置</el-button> -->
-            </el-form-item>
-          </el-form>
+      <el-tabs v-model="activeTab" @tab-click="handleTabClick" tab-position="left" style="height: auto;">
+        <el-tab-pane v-for="item in options" :label="item.label">
         </el-tab-pane>
-        <!-- <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-        <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane> -->
+        <el-form :model="dbForm" ref="dbForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="类型" prop="dbType" :rules="[
+            { required: true, message: '请选择数据库类型' },
+          ]">
+            <el-select v-model="dbForm.dbType" placeholder="请选择">
+              <el-option v-for="item in ['mssql', 'mysql']" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="连接名" prop="connectName" :rules="[
+            { required: true, message: '连接名不能为空' },
+          ]">
+            <el-input v-model="dbForm.connectName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="主机Server" prop="dbServer" :rules="[
+            { required: true, message: '主机名不能为空' },
+          ]">
+            <el-input v-model="dbForm.dbServer" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="数据库名" prop="dbName" :rules="[
+            { required: true, message: '不能为空' },
+          ]">
+            <el-input v-model="dbForm.dbName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="用户名" prop="dbUserId" :rules="[
+            { required: true, message: '用户名不能为空' },
+          ]">
+            <el-input v-model="dbForm.dbUserId" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="dbPwd" :rules="[
+            { required: true, message: '密码不能为空' },
+          ]">
+            <el-input type="password" v-model="dbForm.dbPwd" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('dbForm')">保存</el-button>
+            <el-button type="primary" @click="testDb">测试连接</el-button>
+          </el-form-item>
+        </el-form>
       </el-tabs>
 
       <span slot="footer" class="dialog-footer">
@@ -72,37 +68,62 @@
 export default {
   data() {
     return {
+      activeTab: '0',
       dbForm: {
-        dbtype: 'mssql',
-        DbName:'master'
+        dbType: 'mssql',
+        dbName: 'master'
       },
+      dbConfigData: [],
       dialogVisible: false,
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: ''
+      options: [],
+      curSelect: ''
     };
   },
+  watch: {
+    //当前选择
+    curSelect() {
+      console.log('watch curselect', this.curSelect)
+      localStorage.setItem('curSelect', this.curSelect)
+      this.resetActiveTab();
+    },
+    options() {
+      this.resetActiveTab();
 
-  computed: {},
+    }
+  },
   mounted() {
-
+    console.log('local storage', localStorage.getItem('curSelect'))
+    this.curSelect = localStorage.getItem('curSelect')
+    this.loadMyDbs()
   },
 
   methods: {
+    resetActiveTab() {
+      this.activeTab = String(this.options.findIndex(x => x.value == this.curSelect))
+    },
+    handleTabClick(tab) {
+      // tag.index "0"
+      console.log("切换到选项卡：", tab);
+      var curConfig = this.dbConfigData[tab.index]
+      console.log("curConfig", curConfig);
+      this.dbForm = { ...curConfig }
+    },
+
+    //加载我的数据
+    loadMyDbs() {
+      this.$http
+        .get("/api/DbManager/GetMyDbConfigs")
+        .then((res) => {
+          console.log('get GetMyDbConfigs', res)
+          this.dbConfigData = res.data
+          this.options = res.data.map(x => {
+            return {
+              value: x.id, label: x.connectName + `💦${x.dbName}`
+            }
+          })
+        })
+    },
+
     //测试连接
     testDb() {
       var that = this
@@ -127,10 +148,25 @@ export default {
     },
     submitForm(formName) {
       var that = this
+      console.log('sss', this)
+
+      var aa = this.$refs[formName]
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
           console.log('submit', that.dbForm)
+          that.$http
+            .post("/api/DbManager/Save", that.dbForm)
+            .then((res) => {
+              console.log('Save', res)
+              if (res.succeeded) {
+                that.$message.success(res.data);
+                that.loadMyDbs()
+              } else {
+                that.$message.error("失败:" + res.errors);
+              }
+            });
+
           // alert('submit!');
         } else {
           console.log('error submit!!');
@@ -143,11 +179,12 @@ export default {
     }
     ,
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => { });
+      done();
+      // this.$confirm('确认关闭？')
+      //   .then(_ => {
+      //     done();
+      //   })
+      //   .catch(_ => { });
     }
 
   },
