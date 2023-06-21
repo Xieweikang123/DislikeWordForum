@@ -17,6 +17,16 @@ namespace BackendAPI.Application
 
 
         /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<object> DelById(DBConfig dto)
+        {
+            var db = DbContextStatic.Instance;
+            await db.Updateable<DBConfig>().SetColumns(x => new DBConfig() { UpdateTime = DateTime.Now, Status = 1 }).Where(x => x.Id == dto.Id).ExecuteCommandAsync();
+            return "ok";
+        }
+        /// <summary>
         /// 获取我的数据库配置
         /// </summary>
         /// <returns></returns>

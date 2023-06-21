@@ -86,7 +86,6 @@ export default {
 
   computed: {
     AvatorUrl() {
-      console.log('computed avatorurl')
       if (
         !this.userInfo ||
         !this.userInfo.avatar ||

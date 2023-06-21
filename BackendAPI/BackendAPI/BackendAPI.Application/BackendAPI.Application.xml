@@ -9,6 +9,12 @@
             数据库服务接口
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.DbManagerService.DelById(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            删除一条数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.DbManagerService.GetMyDbConfigs">
             <summary>
             获取我的数据库配置

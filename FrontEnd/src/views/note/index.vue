@@ -110,8 +110,6 @@ import Prism from "prismjs";
 import 'prismjs/themes/prism.css'; // 引入样式文件
 import 'prismjs/components/prism-csharp';
 
-
-
 export default {
   components: {
     NoteEditForm,
