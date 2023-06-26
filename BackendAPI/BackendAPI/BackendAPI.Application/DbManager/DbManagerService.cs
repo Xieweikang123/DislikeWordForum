@@ -4,9 +4,13 @@ using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 using Furion.LinqBuilder;
 using Microsoft.Extensions.Caching.Memory;
+using SqlSugar;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
+
 namespace BackendAPI.Application
 {
     /// <summary>
@@ -17,15 +21,68 @@ namespace BackendAPI.Application
 
 
         /// <summary>
+        /// 获取数据库对应表
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> GetCurTables(DBConfig dto)
+        {
+            var configDb = GetSqlSugarClient(dto.Id, dto.DbName);
+            //获取所有数据库名称
+            var list1 = configDb.DbMaintenance.GetTableInfoList(false);
+            return list1;
+        }
+
+        /// <summary>
+        /// 获取对应数据库
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public object GetCurDbs(DBConfig dto)
+        {
+            var configDb = GetSqlSugarClient(dto.Id);
+            //获取所有数据库名称
+            var list1 = configDb.DbMaintenance.GetDataBaseList().Where(x => !DBCommon.SysDbNameList.Contains(x));
+            return list1;
+        }
+
+        /// <summary>
+        /// 获取配置db
+        /// </summary>
+        /// <param name="dbConfigId"></param>
+        /// <param name="dbName">指定数据库名字</param>
+        /// <returns></returns>
+        private SqlSugarClient GetSqlSugarClient(string dbConfigId, string dbName = "")
+        {
+            var db = DbContextStatic.Instance;
+            var curDbConfig = db.Queryable<DBConfig>().First(x => x.Id == dbConfigId);
+            if (!string.IsNullOrEmpty(dbName))
+            {
+                curDbConfig.DbName = dbName;
+            }
+            ConnectionConfig connectionConfig = new ConnectionConfig()
+            {
+                ConnectionString = DBCommon.GetDBConnStr(curDbConfig),
+                DbType = DBCommon.GetDbType(curDbConfig.DbType)
+
+            };
+            return new SqlSugarClient(connectionConfig);
+        }
+
+        /// <summary>
         /// 删除一条数据
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public async Task<object> DelById(DBConfig dto)
         {
             var db = DbContextStatic.Instance;
             await db.Updateable<DBConfig>().SetColumns(x => new DBConfig() { UpdateTime = DateTime.Now, Status = 1 }).Where(x => x.Id == dto.Id).ExecuteCommandAsync();
             return "ok";
         }
+
         /// <summary>
         /// 获取我的数据库配置
         /// </summary>
@@ -78,18 +135,8 @@ namespace BackendAPI.Application
             //var db = DbContextStatic.Instance;
             var userId = CurrentUserInfo.UserId;
 
-            var connectStr = string.Empty;
-            var dbType = DbType.SqlServer;
-            switch (dto.DbType)
-            {
-                case "mssql":
-                    connectStr = $"Server={dto.DbServer};Database={dto.DbName};User ID={dto.DbUserId};Password={dto.DbPwd};Trusted_Connection=False;Connection Timeout=3";
-                    dbType = DbType.SqlServer;
-                    break;
-                default:
-                    throw new Exception($"暂未支持数据库类型 {dto.DbType}");
-            }
-
+            var dbType = DBCommon.GetDbType(dto.DbType);
+            var connectStr = DBCommon.GetDBConnStr(dto, dbType);
             var curDb = new SqlSugarScope(new ConnectionConfig()
             {
                 ConnectionString = connectStr,//连接符字串

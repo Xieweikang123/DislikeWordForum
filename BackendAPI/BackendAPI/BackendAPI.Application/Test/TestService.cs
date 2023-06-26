@@ -2,18 +2,8 @@
 using BackendAPI.Application.User;
 using BackendAPI.Core;
 using Furion.DistributedIDGenerator;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc;
-
-
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Text;
-using Ubiety.Dns.Core;
+using System.Text.RegularExpressions;
 
 namespace BackendAPI.Application
 {

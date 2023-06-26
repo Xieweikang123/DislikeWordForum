@@ -4,6 +4,28 @@
         <name>BackendAPI.Core</name>
     </assembly>
     <members>
+        <member name="T:BackendAPI.Core.DBCommon">
+            <summary>
+            数据库公共类
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Core.DBCommon.GetDbType(System.String)">
+            <summary>
+            获取数据库类型
+            </summary>
+            <param name="dbTypeStr"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:BackendAPI.Core.DBCommon.GetDBConnStr(BackendAPI.Core.Entities.DBConfig,SqlSugar.DbType)">
+            <summary>
+            获取数据库连接字符串
+            </summary>
+            <param name="dto"></param>
+            <param name="dbType">数据库类型</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
         <member name="T:BackendAPI.Core.DbContextStatic">
             <summary>
             数据库上下文对象

@@ -9,6 +9,28 @@
             数据库服务接口
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetCurTables(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            获取数据库对应表
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetCurDbs(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            获取对应数据库
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetSqlSugarClient(System.String,System.String)">
+            <summary>
+            获取配置db
+            </summary>
+            <param name="dbConfigId"></param>
+            <param name="dbName">指定数据库名字</param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.DbManagerService.DelById(BackendAPI.Core.Entities.DBConfig)">
             <summary>
             删除一条数据

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="text-align: center;">
-      当前数据库:
+      当前连接:
       <el-select v-model="curSelect" placeholder="请选择">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
@@ -9,6 +9,21 @@
       <el-button type="primary" @click="opOpenDbConfig()">配置</el-button>
     </div>
 
+    <el-button type="primary" @click="getAllDbs()">查数据库</el-button>
+    <div class="dbContainer">
+      <!-- <el-button v-for="item in dbList">{{ item }}</el-button> -->
+      <div class="dbdiv" :class="{ 'fontRed': itemDbName == curDbName }" @click="dbNameClick(itemDbName)"
+        v-for="itemDbName in dbList">{{
+          itemDbName }}
+        <div style="    padding: 5px 11px;    color: black;    font-weight: normal;" v-if="itemDbName == curDbName">
+          <div class="tbNameItem" v-for="item in tableList" @click.stop="tableNameClick(item)">
+            {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
     <dbConfigForm @loadMyDbs="loadMyDbs" :dbConfigData="dbConfigData" ref="dbConfigForm"></dbConfigForm>
   </div>
 </template>
@@ -20,6 +35,9 @@ export default {
   },
   data() {
     return {
+      curDbName: '',
+      tableList: [],
+      dbList: [],
       activeTab: '0',
       dbForm: {
         dbType: 'mssql',
@@ -41,6 +59,10 @@ export default {
     //当前选择
     curSelect() {
       localStorage.setItem('curSelect', this.curSelect)
+      console.log('watch select', this.curSelect)
+      this.clearDb();
+      //查所有数据库
+      this.getAllDbs()
     },
   },
   mounted() {
@@ -50,6 +72,39 @@ export default {
   },
 
   methods: {
+    //清除已有数据库
+    clearDb() {
+      this.curDbName = ''
+      this.tableList = []
+    },
+    tableNameClick(item) {
+      console.log('tableNameClick', item)
+    },
+    //点击某一数据库
+    dbNameClick(item) {
+      console.log('dbNameClick', item)
+      //如果是重复点击，关闭数据库
+      if (item == this.curDbName) {
+        this.clearDb();
+        return
+      }
+      this.curDbName = item
+      this.$http
+        .post("/api/DbManager/GetCurTables", { id: this.curSelect, DbName: this.curDbName })
+        .then((res) => {
+          console.log('GetCurTables', res)
+          this.tableList = res.data
+        })
+    },
+    //查所有数据库
+    getAllDbs() {
+      this.$http
+        .post("/api/DbManager/GetCurDbs", { id: this.curSelect })
+        .then((res) => {
+          console.log('GetCurDbs', res)
+          this.dbList = res.data
+        })
+    },
     //打开
     opOpenDbConfig() {
       this.dialogVisible = true
@@ -74,6 +129,25 @@ export default {
 </script>
   
 <style scoped>
+.tbNameItem {
+  padding: 5px 0px;
+  border-bottom: 1px dashed #bce2e1;
+}
+
+.fontRed {
+  color: red;
+  font-weight: 700;
+}
+
+.dbdiv {
+  margin: 18px 7px;
+  cursor: pointer;
+}
+
+.dbContainer {
+  width: fit-content;
+}
+
 .tagAllStyle {
   background-color: #447154;
   border-color: #e1f3d8;
