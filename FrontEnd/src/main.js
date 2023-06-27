@@ -1,21 +1,37 @@
 import Vue from 'vue'
+import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import App from './App.vue'
 import axios from 'axios'
 import Global from '@/utils/global'
 import moment from 'moment'
 
+// 全局引入vue-codemirror
+// import {codemirror} from 'vue-codemirror';
+// 引入主题 可以从 codemirror/theme/ 下引入多个
+// import 'codemirror/theme/idea.css'
+// // 引入语言模式 可以从 codemirror/mode/ 下引入多个
+// import 'codemirror/mode/sql/sql.js';
+
+
 //请求配置
 import request from '@/config/request';
 Vue.use(request);
+
+
+// // 配置模板编译器
+// Vue.compile = function (template) {
+//   const { render, staticRenderFns } = compiler.compile(template)
+//   return { render, staticRenderFns }
+// }
 
 // 注册全局组件
 Vue.use(ElementUI)
 // 将提醒关掉
 Vue.config.productionTip = false
 
+// Vue.component('vue-ace', VueAce)
 
 Vue.prototype.$Global = Global
 Vue.prototype.$moment = moment

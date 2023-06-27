@@ -2,7 +2,7 @@
   <div>
     <div style="text-align: center;">
       当前连接:
-      <el-select v-model="curSelect" placeholder="请选择">
+      <el-select v-model="curConfig.curSelect" placeholder="请选择">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
@@ -10,31 +10,29 @@
     </div>
 
     <el-button type="primary" @click="getAllDbs()">查数据库</el-button>
+
+
     <div class="dbContainer">
       <!-- <el-button v-for="item in dbList">{{ item }}</el-button> -->
-      <div class="dbdiv" :class="{ 'fontRed': itemDbName == curDbName }" v-for=" itemDbName in dbList">
-        <span @click="dbNameClick(itemDbName)"> {{
-          itemDbName
-        }}
-        </span>
-
-        <div v-if="itemDbName == curDbName" style="display: flex;">
+      <div class="dbdiv" :class="{ 'fontRed': itemDbName == curConfig.curDbName }" v-for=" itemDbName in dbList">
+        <span @click="dbNameClick(itemDbName)"> {{ itemDbName }} </span>
+        <div v-if="itemDbName == curConfig.curDbName" style="display: flex;">
           <div style="    padding: 5px 11px;     width: 20%;   color: black;    font-weight: normal;">
             <div class="tbNameItem" :class="{ 'fontRed': curTableName == item.name }" v-for="item in tableList"
               @click.stop="tableNameClick(item)">
               {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
             </div>
           </div>
+          <CommonEditor :value="curConfig.code" language="sql" style="height: 30vh"></CommonEditor>
+
+
+
           <!-- {{ curTableName }} -->
           <el-table row-class-name="table-row" :row-style="{ height: '80px' }" v-if="curTableName" :data="tableData"
             style="width: 100%">
             <el-table-column v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
               :label="item.dbColumnName" width="180">
             </el-table-column>
-            <!-- <el-table-column prop="name" label="姓名" width="180">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column> -->
           </el-table>
         </div>
       </div>
@@ -46,9 +44,12 @@
   </div>
 </template>
 <script>
-import dbConfigForm from "./dbConfigForm";
+import dbConfigForm from "./dbConfigForm"
+import CommonEditor from '@/components/CommonEditor.vue'
+
 export default {
   components: {
+    CommonEditor,
     dbConfigForm
   },
   data() {
@@ -72,7 +73,6 @@ export default {
       }],
       tableColumns: [],
       curTableName: '',
-      curDbName: '',
       tableList: [],
       dbList: [],
       activeTab: '0',
@@ -83,13 +83,18 @@ export default {
       dbConfigData: [],
       dialogVisible: false,
       options: [],
-      curSelect: ''
+      curConfig: {
+        code: '',
+        curDbName: '',
+        curSelect: ''
+      }
+
     };
   },
   computed: {
     //数据库选项下标
     currentSelectDbIndex() {
-      return this.options.findIndex(x => x.value == this.curSelect)
+      return this.options.findIndex(x => x.value == this.curConfig.curSelect)
     }
   },
   watch: {
@@ -97,25 +102,41 @@ export default {
     curTableName() {
 
     },
+    curConfig: {
+      handler: function (newVal, oldVal) {
+        console.log('watch curConfig', newVal);
+        localStorage.setItem('curConfig', JSON.stringify(this.curConfig))
+      },
+      deep: true
+    },
+    //数据库改变
+    'curConfig.curDbName'() {
+      //获取表
+      this.getTables()
+    },
     //当前选择
-    curSelect() {
-      localStorage.setItem('curSelect', this.curSelect)
-      console.log('watch select', this.curSelect)
-      this.clearDb();
+    'curConfig.curSelect'() {
+      // localStorage.setItem('curSelect', this.curConfig.curSelect)
+      console.log('watch select', this.curConfig.curSelect)
+      // this.clearDb();
       //查所有数据库
       this.getAllDbs()
     },
   },
   mounted() {
-    console.log('local storage', localStorage.getItem('curSelect'))
-    this.curSelect = localStorage.getItem('curSelect')
+    // console.log('Ace editor instance:', this.$refs.aceEditor.editor);
+
+    var configCache = localStorage.getItem('curConfig')
+    if (configCache && configCache != 'null') {
+      this.curConfig = JSON.parse(configCache)
+    }
     this.loadMyDbs()
   },
 
   methods: {
     //清除已有数据库
     clearDb() {
-      this.curDbName = ''
+      this.curConfig.curDbName = ''
       this.tableList = []
     },
     tableNameClick(item) {
@@ -123,10 +144,10 @@ export default {
       this.curTableName = item.name
       this.$http
         .post("/api/DbManager/GetTableDataList", {
-          pageNumber: 1, pageSize: 30,
+          pageNumber: 1, pageSize: 15,
           searchKeyValues: [{ key: 'tableName', value: this.curTableName },
-          { key: 'dbConfigId', value: this.curSelect },
-          { key: 'dbName', value: this.curDbName },
+          { key: 'dbConfigId', value: this.curConfig.curSelect },
+          { key: 'dbName', value: this.curConfig.curDbName },
           ]
         })
         .then((res) => {
@@ -142,13 +163,17 @@ export default {
     dbNameClick(item) {
       console.log('dbNameClick', item)
       //如果是重复点击，关闭数据库
-      if (item == this.curDbName) {
+      if (item == this.curConfig.curDbName) {
         this.clearDb();
         return
       }
-      this.curDbName = item
+      this.curConfig.curDbName = item
+      this.getTables()
+    },
+    //获取数据库对应表
+    getTables() {
       this.$http
-        .post("/api/DbManager/GetCurTables", { id: this.curSelect, DbName: this.curDbName })
+        .post("/api/DbManager/GetCurTables", { id: this.curConfig.curSelect, DbName: this.curConfig.curDbName })
         .then((res) => {
           console.log('GetCurTables', res)
           this.tableList = res.data
@@ -157,9 +182,8 @@ export default {
     //查所有数据库
     getAllDbs() {
       this.$http
-        .post("/api/DbManager/GetCurDbs", { id: this.curSelect })
+        .post("/api/DbManager/GetCurDbs", { id: this.curConfig.curSelect })
         .then((res) => {
-          console.log('GetCurDbs', res)
           this.dbList = res.data
         })
     },
