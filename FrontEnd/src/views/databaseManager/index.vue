@@ -23,17 +23,23 @@
               {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
             </div>
           </div>
-          <CommonEditor :value="curConfig.code" language="sql" style="height: 30vh"></CommonEditor>
+          <div style="width:100%;">
+            <el-button :loading="loading" style="margin-bottom: 5px;" @click="getSelected()">▶️执行</el-button>
 
-
-
-          <!-- {{ curTableName }} -->
-          <el-table row-class-name="table-row" :row-style="{ height: '80px' }" v-if="curTableName" :data="tableData"
-            style="width: 100%">
-            <el-table-column v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
-              :label="item.dbColumnName" width="180">
-            </el-table-column>
-          </el-table>
+            <CommonEditor ref="editor" :value="curConfig.code" language="sql" @change="editorChange"
+              style=" width: 83%;height: 200px">
+            </CommonEditor>
+            <span v-if="isExecuted">共 {{ tableData.length }}</span>
+            <!-- {{ curTableName }} -->
+            <el-table row-class-name="table-row" v-loading="loading" :row-style="{ height: '80px' }" :data="tableData"
+              style="width: 100%">
+              <!-- <el-table-column show-overflow-tooltip prop="id" label="id" width="180">
+              </el-table-column> -->
+              <el-table-column v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
+                :label="item.dbColumnName" width="180">
+              </el-table-column>
+            </el-table>
+          </div>
         </div>
       </div>
 
@@ -54,23 +60,9 @@ export default {
   },
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      isExecuted:false,
+      loading: false,
+      tableData: [],
       tableColumns: [],
       curTableName: '',
       tableList: [],
@@ -134,6 +126,43 @@ export default {
   },
 
   methods: {
+    getSelected() {
+      this.isExecuted=true
+      console.log('sss', this.$refs.editor)
+      var curSelectionSql = this.$refs.editor[0].coder.getSelection()
+      console.log('curSelectionSql', curSelectionSql)
+      console.log('curSelectionSql', curSelectionSql.length)
+      this.loading = true
+      this.tableData = []
+      //没有选择sql，执行全部
+      if (curSelectionSql.length == 0) {
+        curSelectionSql = this.curConfig.code
+      }
+      this.tableColumns = []
+      this.$http
+        .post("/api/DbManager/ExecuteSql", { id: this.curConfig.curSelect, DbName: this.curConfig.curDbName, sql: curSelectionSql })
+        .then((res) => {
+          this.loading = false
+          console.log('ExecuteSql', res)
+          if (!res.succeeded) {
+            this.$message.error(res.errors)
+          }
+          this.tableData = JSON.parse(res.data.json)
+          console.log('ExecuteSql tableData', this.tableData)
+          var columnsData = JSON.parse(res.data.columns)
+          this.tableColumns = columnsData.map(x => ({ dbColumnName: x.ColumnName }))
+
+          console.log('ExecuteSql tableColumns', this.tableColumns)
+
+          // this.tableList = res.data
+        })
+
+    },
+    editorChange(val) {
+      console.log('editorChange', val)
+      this.$set(this.curConfig, 'code', val)
+      // .code = val
+    },
     //清除已有数据库
     clearDb() {
       this.curConfig.curDbName = ''
@@ -154,8 +183,8 @@ export default {
           console.log('GetTableDataList', res)
           this.tableData = res.data.list
           this.tableColumns = res.data.allColumns
-          // res.data.totalNumber
-          // this.tableList = res.data
+
+
         })
 
     },

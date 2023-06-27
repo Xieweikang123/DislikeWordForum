@@ -116,11 +116,13 @@ export default {
             } else {
                 this.coder.setValue('')
             }
+            var that=this
             // 支持双向绑定
             this.coder.on('change', (coder) => {
                 this.code = coder.getValue()
-                if (this.$emit) {
-                    this.$emit('input', this.code)
+                console.log('change')
+                if (that.$emit) {
+                    that.$emit('change', this.code)
                 }
             })
         },

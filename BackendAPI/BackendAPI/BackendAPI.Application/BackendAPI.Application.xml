@@ -4,10 +4,22 @@
         <name>BackendAPI.Application</name>
     </assembly>
     <members>
+        <member name="P:BackendAPI.Application.DbManager.DbConfigDTO.sql">
+            <summary>
+            要执行的sql
+            </summary>
+        </member>
         <member name="T:BackendAPI.Application.DbManagerService">
             <summary>
             数据库服务接口
             </summary>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.ExecuteSql(BackendAPI.Application.DbManager.DbConfigDTO)">
+            <summary>
+            执行sql
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
         </member>
         <member name="M:BackendAPI.Application.DbManagerService.GetTableDataList(BackendAPI.Core.PageInfo)">
             <summary>

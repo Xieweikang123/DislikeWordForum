@@ -1,10 +1,14 @@
-﻿using BackendAPI.Application.User;
+﻿using BackendAPI.Application.DbManager;
+using BackendAPI.Application.User;
 using BackendAPI.Core;
 using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
+using Furion.JsonSerialization;
 using Furion.LinqBuilder;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using SqlSugar;
+using StackExchange.Profiling.Internal;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -20,6 +24,23 @@ namespace BackendAPI.Application
     {
 
         /// <summary>
+        /// 执行sql
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> ExecuteSql(DbConfigDTO dto)
+        {
+            var configDb = GetSqlSugarClient(dto.Id, dto.DbName);
+            var dt = configDb.Ado.GetDataTable(dto.sql); //上面列表中 SqlQuery 等方法都可以不一定是GetDataTable
+            var json = JsonConvert.SerializeObject(dt); // this is the line causing issue
+            var columns = JsonConvert.SerializeObject(dt.Columns);
+
+
+            return new { json, columns };
+        }
+
+        /// <summary>
         /// 获取表分页数据
         /// </summary>
         /// <param name="pageInfo"></param>
@@ -27,7 +48,6 @@ namespace BackendAPI.Application
         /// <param name="tableName"></param>
         /// <returns></returns>
         [HttpPost]
-        //public async Task<object> GetTableDataList(PageInfo pageInfo, DBConfig dbConfig)
         public async Task<object> GetTableDataList(PageInfo pageInfo)
         {
             var dbConfig = new DBConfig();
