@@ -9,6 +9,15 @@
             数据库服务接口
             </summary>
         </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetTableDataList(BackendAPI.Core.PageInfo)">
+            <summary>
+            获取表分页数据
+            </summary>
+            <param name="pageInfo"></param>
+            <param name="dbConfig"></param>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.DbManagerService.GetCurTables(BackendAPI.Core.Entities.DBConfig)">
             <summary>
             获取数据库对应表

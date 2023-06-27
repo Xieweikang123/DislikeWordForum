@@ -12,15 +12,33 @@
     <el-button type="primary" @click="getAllDbs()">查数据库</el-button>
     <div class="dbContainer">
       <!-- <el-button v-for="item in dbList">{{ item }}</el-button> -->
-      <div class="dbdiv" :class="{ 'fontRed': itemDbName == curDbName }" @click="dbNameClick(itemDbName)"
-        v-for="itemDbName in dbList">{{
-          itemDbName }}
-        <div style="    padding: 5px 11px;    color: black;    font-weight: normal;" v-if="itemDbName == curDbName">
-          <div class="tbNameItem" v-for="item in tableList" @click.stop="tableNameClick(item)">
-            {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
+      <div class="dbdiv" :class="{ 'fontRed': itemDbName == curDbName }" v-for=" itemDbName in dbList">
+        <span @click="dbNameClick(itemDbName)"> {{
+          itemDbName
+        }}
+        </span>
+
+        <div v-if="itemDbName == curDbName" style="display: flex;">
+          <div style="    padding: 5px 11px;     width: 20%;   color: black;    font-weight: normal;">
+            <div class="tbNameItem" :class="{ 'fontRed': curTableName == item.name }" v-for="item in tableList"
+              @click.stop="tableNameClick(item)">
+              {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
+            </div>
           </div>
+          <!-- {{ curTableName }} -->
+          <el-table row-class-name="table-row" :row-style="{ height: '80px' }" v-if="curTableName" :data="tableData"
+            style="width: 100%">
+            <el-table-column v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
+              :label="item.dbColumnName" width="180">
+            </el-table-column>
+            <!-- <el-table-column prop="name" label="姓名" width="180">
+            </el-table-column>
+            <el-table-column prop="address" label="地址">
+            </el-table-column> -->
+          </el-table>
         </div>
       </div>
+
 
 
     </div>
@@ -35,6 +53,25 @@ export default {
   },
   data() {
     return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
+      tableColumns: [],
+      curTableName: '',
       curDbName: '',
       tableList: [],
       dbList: [],
@@ -56,6 +93,10 @@ export default {
     }
   },
   watch: {
+    //表切换
+    curTableName() {
+
+    },
     //当前选择
     curSelect() {
       localStorage.setItem('curSelect', this.curSelect)
@@ -79,6 +120,23 @@ export default {
     },
     tableNameClick(item) {
       console.log('tableNameClick', item)
+      this.curTableName = item.name
+      this.$http
+        .post("/api/DbManager/GetTableDataList", {
+          pageNumber: 1, pageSize: 30,
+          searchKeyValues: [{ key: 'tableName', value: this.curTableName },
+          { key: 'dbConfigId', value: this.curSelect },
+          { key: 'dbName', value: this.curDbName },
+          ]
+        })
+        .then((res) => {
+          console.log('GetTableDataList', res)
+          this.tableData = res.data.list
+          this.tableColumns = res.data.allColumns
+          // res.data.totalNumber
+          // this.tableList = res.data
+        })
+
     },
     //点击某一数据库
     dbNameClick(item) {
@@ -129,6 +187,13 @@ export default {
 </script>
   
 <style scoped>
+.table-row {
+  height: 40px;
+  /* 设置行高为 40px */
+  white-space: nowrap;
+  /* 禁止换行 */
+}
+
 .tbNameItem {
   padding: 5px 0px;
   border-bottom: 1px dashed #bce2e1;
@@ -145,7 +210,7 @@ export default {
 }
 
 .dbContainer {
-  width: fit-content;
+  /* width: fit-content; */
 }
 
 .tagAllStyle {

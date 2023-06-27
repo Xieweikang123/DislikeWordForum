@@ -9,8 +9,7 @@
       class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
-    <el-table v-loading="loading" @row-dblclick="rowDbClick" @sort-change="sortChange" :data="tableData"
-      style="width: 100%" stripe>
+    <el-table v-loading="loading" @sort-change="sortChange" :data="tableData" style="width: 100%" stripe>
       <el-table-column prop="word" sortable="custom" label="单词" width="180">
         <template slot-scope="scope">
           <el-tag @click="wordCellClick(scope.row)" class="handPointer" size="medium">{{ scope.row.word }}</el-tag>

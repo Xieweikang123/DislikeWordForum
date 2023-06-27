@@ -19,6 +19,47 @@ namespace BackendAPI.Application
     public class DbManagerService : IDynamicApiController
     {
 
+        /// <summary>
+        /// 获取表分页数据
+        /// </summary>
+        /// <param name="pageInfo"></param>
+        /// <param name="dbConfig"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        [HttpPost]
+        //public async Task<object> GetTableDataList(PageInfo pageInfo, DBConfig dbConfig)
+        public async Task<object> GetTableDataList(PageInfo pageInfo)
+        {
+            var dbConfig = new DBConfig();
+            RefAsync<int> totalNumber = 0;
+            //动态表名 ，动态条件 
+            //var list = await configDb.Queryable<dynamic>().AS(tableName).Where("id=@id", new { id = 1 }).ToPageListAsync(pageInfo.pageNumber, pageInfo.pageSize, totalNumber);//没实体一样用
+            var tableName = string.Empty;
+            var dbConfigId = string.Empty;
+            var dbName = string.Empty;
+            pageInfo.searchKeyValues.ForEach(item =>
+            {
+                switch (item.key)
+                {
+                    case "tableName":
+                        tableName = item.value;
+                        break;
+                    case "dbConfigId":
+                        dbConfigId = item.value;
+                        break;
+                    case "dbName":
+                        dbName = item.value;
+                        break;
+                }
+            });
+            var configDb = GetSqlSugarClient(dbConfigId, dbName);
+            var list = await configDb.Queryable<dynamic>().AS(tableName).ToPageListAsync(pageInfo.pageNumber, pageInfo.pageSize, totalNumber);//没实体一样用
+
+            var allColumns = configDb.DbMaintenance.GetColumnInfosByTableName(tableName);
+
+            return new { list, totalNumber, allColumns };
+        }
+
 
         /// <summary>
         /// 获取数据库对应表
