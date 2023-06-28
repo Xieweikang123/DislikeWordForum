@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BackendAPI.Core.Entities.Base;
+using SqlSugar;
 
-namespace BackendAPI.Application.DbManager
+
+namespace BackendAPI.Core.Entities
 {
-    public class DbConfigDTO : DBConfig
+    public class DBSql: BaseEntity
     {
-
         /// <summary>
-        /// sql名字
+        /// sql命名
         /// </summary>
         public string sqlName { get; set; }
-
         /// <summary>
-        /// 要执行的sql
+        /// sql内容
         /// </summary>
         public string sql { get; set; }
     }

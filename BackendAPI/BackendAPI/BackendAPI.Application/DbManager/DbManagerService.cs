@@ -24,6 +24,43 @@ namespace BackendAPI.Application
     {
 
         /// <summary>
+        /// 获取我的sql配置
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<object> GetMyDbSql()
+        {
+            var db = DbContextStatic.Instance;
+            var list = await db.Queryable<DBSql>().Where(x => x.Status == 0 && x.UserId == CurrentUserInfo.UserId).OrderByDescending(t => t.UpdateTime).ToListAsync();
+
+            return list;
+        }
+
+        /// <summary>
+        /// 保存sql
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task<object> SaveSql(DBSql dto)
+        {
+            var db = DbContextStatic.Instance;
+            dto.UserId = CurrentUserInfo.UserId;
+            return await db.SaveAsync(dto);
+        }
+        /// <summary>
+        /// 保存一条数据库配置
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> Save(DBConfig dto)
+        {
+
+            var db = DbContextStatic.Instance;
+            dto.UserId = CurrentUserInfo.UserId;
+            return await db.SaveAsync(dto);
+        }
+        /// <summary>
         /// 执行sql
         /// </summary>
         /// <param name="dto"></param>
@@ -35,7 +72,6 @@ namespace BackendAPI.Application
             var dt = configDb.Ado.GetDataTable(dto.sql); //上面列表中 SqlQuery 等方法都可以不一定是GetDataTable
             var json = JsonConvert.SerializeObject(dt); // this is the line causing issue
             var columns = JsonConvert.SerializeObject(dt.Columns);
-
 
             return new { json, columns };
         }
@@ -156,33 +192,7 @@ namespace BackendAPI.Application
             return list;
         }
 
-        /// <summary>
-        /// 保存一条数据库配置
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<object> Save(DBConfig dto)
-        {
-            var db = DbContextStatic.Instance;
-            dto.UserId = CurrentUserInfo.UserId;
-            var nowTime = DateTime.Now;
-            //新增
-            if (string.IsNullOrEmpty(dto.Id))
-            {
-                dto.CreateTime = nowTime;
-                dto.Id = IDGen.GetStrId();
-                await db.Insertable(dto).ExecuteCommandAsync();
-                return "新增成功";
-            }
-            else
-            {
-                //修改
-                dto.UpdateTime = nowTime;
-                await db.Updateable(dto).ExecuteCommandAsync();
-                return "修改成功";
-            }
-        }
+
 
         /// <summary>
         /// 测试数据库连接

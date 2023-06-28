@@ -1,36 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BackendAPI.Core.Entities.Base;
 using SqlSugar;
 
 
 namespace BackendAPI.Core.Entities
 {
-    public class DBConfig
+    public class DBConfig: BaseEntity
     {
-        /// <summary>
-        ///  
-        ///</summary>
-        [SugarColumn(IsPrimaryKey = true)]
-        public string Id { get; set; }
-        /// <summary>
-        /// 用户id 
-        ///</summary>
-        public string UserId { get; set; }
-        /// <summary>
-        /// 创建时间 
-        /// 默认值: (getdate())
-        ///</summary>
-        public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// 0正常  1删除  
-        /// 默认值: ((0))
-        ///</summary>
-        public int Status { get; set; }
-        /// <summary>
-        /// 更新时间 
-        ///</summary>
-        public DateTime? UpdateTime { get; set; }
         /// <summary>
         /// 数据库类型 mssql、mysql 
         ///</summary>

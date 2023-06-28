@@ -133,7 +133,7 @@ export default {
                 } else {
                     this.coder.setValue(val)
                 }
-            }, 300)
+            }, 100)
         },
         getCoder() {
             const that = this

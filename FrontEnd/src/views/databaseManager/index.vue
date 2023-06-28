@@ -17,13 +17,24 @@
       <div class="dbdiv" :class="{ 'fontRed': itemDbName == curConfig.curDbName }" v-for=" itemDbName in dbList">
         <span @click="dbNameClick(itemDbName)"> {{ itemDbName }} </span>
         <div v-if="itemDbName == curConfig.curDbName" style="display: flex;">
-          <div style="    padding: 5px 11px;     width: 20%;   color: black;    font-weight: normal;">
+          <div class="tableSty">
             <div class="tbNameItem" :class="{ 'fontRed': curTableName == item.name }" v-for="item in tableList"
               @click.stop="tableNameClick(item)">
               {{ item.name }}<span v-if="item.description"> ({{ item.description }})</span>
             </div>
           </div>
-          <div style="width:100%;">
+          <div style="width:70%;">
+            <div style="    margin-top: -37px;margin-bottom: 16px;">
+              <el-button @click="clickNameSql(item)" v-for="item in myNameSqls" type="primary"
+                :plain="item.sqlName != curConfig.sqlName">{{ item.sqlName
+                }}</el-button>
+            </div>
+            <!-- <div>myNameSqls</div> -->
+            <div style="display: flex;">
+              <el-input v-model="curConfig.sqlName" style="    width: 266px;    margin-right: 17px;"></el-input>
+              <el-button :loading="loading" style="margin-bottom: 5px;" @click="saveSql()">保存</el-button>
+
+            </div>
             <el-button :loading="loading" style="margin-bottom: 5px;" @click="getSelected()">▶️执行</el-button>
 
             <CommonEditor ref="editor" :value="curConfig.code" language="sql" @change="editorChange"
@@ -31,11 +42,11 @@
             </CommonEditor>
             <span v-if="isExecuted">共 {{ tableData.length }}</span>
             <!-- {{ curTableName }} -->
-            <el-table row-class-name="table-row" v-loading="loading" :row-style="{ height: '80px' }" :data="tableData"
-              style="width: 100%">
+            <el-table row-class-name="table-row" stripe v-loading="loading" :row-style="{ height: '80px' }"
+              :data="tableData" style="width: 100%">
               <!-- <el-table-column show-overflow-tooltip prop="id" label="id" width="180">
               </el-table-column> -->
-              <el-table-column v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
+              <el-table-column sortable v-for="item in tableColumns" show-overflow-tooltip :prop="item.dbColumnName"
                 :label="item.dbColumnName" width="180">
               </el-table-column>
             </el-table>
@@ -60,7 +71,7 @@ export default {
   },
   data() {
     return {
-      isExecuted:false,
+      isExecuted: false,
       loading: false,
       tableData: [],
       tableColumns: [],
@@ -75,7 +86,10 @@ export default {
       dbConfigData: [],
       dialogVisible: false,
       options: [],
+      myNameSqls: [],
       curConfig: {
+        dbSqlId: '',
+        sqlName: '',
         code: '',
         curDbName: '',
         curSelect: ''
@@ -123,11 +137,42 @@ export default {
       this.curConfig = JSON.parse(configCache)
     }
     this.loadMyDbs()
+    this.getMyNameSql()
   },
 
   methods: {
+    //点击sql配置
+    clickNameSql(item) {
+      this.curConfig.dbSqlId = item.id
+      this.curConfig.sqlName = item.sqlName
+      this.curConfig.code = item.sql
+      console.log('cliccc')
+      // this.$refs.editor[0].code=item.sql
+      this.$refs.editor[0].setCodeContent(item.sql)
+      // this.$set(this.$refs.editor[0], 'code', item.sql)
+    },
+    //获取我的sql储存
+    getMyNameSql() {
+      this.$http.get('/api/DbManager/GetMyDbSql').then(res => {
+        console.log('GetMyDbSql', res)
+        this.myNameSqls = res.data
+      })
+    },
+    saveSql() {
+      console.log('savesql', this.curConfig)
+      this.$http
+        .post("/api/DbManager/SaveSql", { id: this.curConfig.dbSqlId, sqlName: this.curConfig.sqlName, sql: this.curConfig.code })
+        .then((res) => {
+          console.log('SaveSql', res)
+          if (res.succeeded) {
+            this.curConfig.dbSqlId = res.data.id
+            this.$message.success(res.data.msg)
+            this.getMyNameSql()
+          }
+        });
+    },
     getSelected() {
-      this.isExecuted=true
+      this.isExecuted = true
       console.log('sss', this.$refs.editor)
       var curSelectionSql = this.$refs.editor[0].coder.getSelection()
       console.log('curSelectionSql', curSelectionSql)
@@ -240,6 +285,23 @@ export default {
 </script>
   
 <style scoped>
+::v-deep ::-webkit-scrollbar {
+  background-color: #efefef;
+  width: 5px;
+}
+
+::v-deep ::-webkit-scrollbar-thumb {
+  background-color: #0a0a0a66;
+  outline: 1px solid slategrey;
+  border-radius: 10px;
+
+}
+
+::v-deep ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+}
+
+
 .table-row {
   height: 40px;
   /* 设置行高为 40px */
@@ -258,12 +320,8 @@ export default {
 }
 
 .dbdiv {
-  margin: 18px 7px;
+  margin: 9px 7px;
   cursor: pointer;
-}
-
-.dbContainer {
-  /* width: fit-content; */
 }
 
 .tagAllStyle {
@@ -286,6 +344,17 @@ export default {
 
 .contentInput img {
   width: 100px;
+}
+
+.tableSty {
+  padding: 5px 11px;
+  margin-right: 17px;
+  width: 20%;
+  height: 400px;
+  overflow-y: auto;
+  overflow-x: clip;
+  color: black;
+  font-weight: normal;
 }
 
 .contentInput {

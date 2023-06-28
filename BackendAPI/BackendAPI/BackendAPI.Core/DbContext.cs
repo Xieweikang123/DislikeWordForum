@@ -1,9 +1,12 @@
-﻿using Furion;
+﻿using BackendAPI.Core.Entities.Base;
+using Furion;
+using Furion.DistributedIDGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BackendAPI.Core
 {
@@ -35,6 +38,34 @@ namespace BackendAPI.Core
     /// </summary>
     public static class DbContextStatic
     {
+
+        /// <summary>
+        /// 扩展保存方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async static Task<object> SaveAsync<T>(this ISqlSugarClient db, T dto) where T : BaseEntity, new()
+        {
+            var nowTime = DateTime.Now;
+            //新增
+            if (string.IsNullOrEmpty(dto.Id))
+            {
+                dto.CreateTime = nowTime;
+                dto.Id = IDGen.GetStrId();
+                db.Insertable(dto).ExecuteCommand();
+                return new { msg = "新增成功", id = dto.Id };
+            }
+            else
+            {
+                //修改
+                dto.UpdateTime = nowTime;
+                await db.Updateable(dto).ExecuteCommandAsync();
+                return new { msg = "修改成功", id = dto.Id };
+                //return "修改成功";
+            }
+        }
         /// <summary>
         /// SqlSugar 数据库实例
         /// </summary>

@@ -31,6 +31,15 @@
             数据库上下文对象
             </summary>
         </member>
+        <member name="M:BackendAPI.Core.DbContextStatic.SaveAsync``1(SqlSugar.ISqlSugarClient,``0)">
+            <summary>
+            扩展保存方法
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="db"></param>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="F:BackendAPI.Core.DbContextStatic.Instance">
             <summary>
             SqlSugar 数据库实例
@@ -44,6 +53,33 @@
         <member name="P:BackendAPI.Core.Entities.NoteTagDTO.newTagName">
             <summary>
             新标签名
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Base.BaseEntity.Id">
+             <summary>
+              
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Base.BaseEntity.UserId">
+             <summary>
+             用户id 
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Base.BaseEntity.CreateTime">
+             <summary>
+             创建时间 
+             默认值: (getdate())
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Base.BaseEntity.Status">
+             <summary>
+             0正常  1删除  
+             默认值: ((0))
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.Base.BaseEntity.UpdateTime">
+             <summary>
+             更新时间 
             </summary>
         </member>
         <member name="P:BackendAPI.Core.Entities.CoreUser.Id">
@@ -121,33 +157,6 @@
             个性签名
             </summary>
         </member>
-        <member name="P:BackendAPI.Core.Entities.DBConfig.Id">
-             <summary>
-              
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.DBConfig.UserId">
-             <summary>
-             用户id 
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.DBConfig.CreateTime">
-             <summary>
-             创建时间 
-             默认值: (getdate())
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.DBConfig.Status">
-             <summary>
-             0正常  1删除  
-             默认值: ((0))
-            </summary>
-        </member>
-        <member name="P:BackendAPI.Core.Entities.DBConfig.UpdateTime">
-             <summary>
-             更新时间 
-            </summary>
-        </member>
         <member name="P:BackendAPI.Core.Entities.DBConfig.DbType">
              <summary>
              数据库类型 mssql、mysql 
@@ -176,6 +185,16 @@
         <member name="P:BackendAPI.Core.Entities.DBConfig.connectName">
             <summary>
             连接名
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.DBSql.sqlName">
+            <summary>
+            sql命名
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.DBSql.sql">
+            <summary>
+            sql内容
             </summary>
         </member>
         <member name="T:BackendAPI.Core.Entities.EnglishWord">

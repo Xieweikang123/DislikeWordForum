@@ -4,6 +4,11 @@
         <name>BackendAPI.Application</name>
     </assembly>
     <members>
+        <member name="P:BackendAPI.Application.DbManager.DbConfigDTO.sqlName">
+            <summary>
+            sql名字
+            </summary>
+        </member>
         <member name="P:BackendAPI.Application.DbManager.DbConfigDTO.sql">
             <summary>
             要执行的sql
@@ -13,6 +18,26 @@
             <summary>
             数据库服务接口
             </summary>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.GetMyDbSql">
+            <summary>
+            获取我的sql配置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.SaveSql(BackendAPI.Core.Entities.DBSql)">
+            <summary>
+            保存sql
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.DbManagerService.Save(BackendAPI.Core.Entities.DBConfig)">
+            <summary>
+            保存一条数据库配置
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
         </member>
         <member name="M:BackendAPI.Application.DbManagerService.ExecuteSql(BackendAPI.Application.DbManager.DbConfigDTO)">
             <summary>
@@ -62,13 +87,6 @@
             <summary>
             获取我的数据库配置
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:BackendAPI.Application.DbManagerService.Save(BackendAPI.Core.Entities.DBConfig)">
-            <summary>
-            保存一条数据库配置
-            </summary>
-            <param name="dto"></param>
             <returns></returns>
         </member>
         <member name="M:BackendAPI.Application.DbManagerService.TestConnectDb(BackendAPI.Core.Entities.DBConfig)">
