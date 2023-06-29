@@ -42,8 +42,8 @@
             </div>
             <el-button :loading="loading" style="margin-bottom: 5px;" @click="getSelected()">▶️执行</el-button>
 
-            <CommonEditor ref="editor" @keydown.ctrl.83.prevent="handleSave" :value="curConfig.code" language="sql"
-              @change="editorChange" style=" width: 83%;height: 200px">
+            <CommonEditor ref="editor" :value="curConfig.code" language="sql"
+              @change="editorChange" :tableNames="tableList" style=" width: 83%;height: 200px">
             </CommonEditor>
             <span v-if="isExecuted">共 {{ tableData.length }}</span>
             <!-- {{ curTableName }} -->
@@ -337,8 +337,6 @@ export default {
         .post("/api/DbManager/GetCurDbs", { id: this.curConfig.curSelect })
         .then((res) => {
           this.dbList = res.data
-
-
         })
     },
     //打开

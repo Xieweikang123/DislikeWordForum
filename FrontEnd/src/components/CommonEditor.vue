@@ -30,6 +30,10 @@ export default {
             type: String,
             default: ''
         },
+        tableNames: {
+            type: [],
+            default: []
+        },
         language: {
             type: String,
             default: null
@@ -43,13 +47,17 @@ export default {
             mode: 'javascript',
             theme: 'default',
             modes: [
-                { value: 'javascript', label: 'Javascript' },
-                { value: 'x-java', label: 'Java' },
-                { value: 'x-python', label: 'Python' },
-                { value: 'x-sql', label: 'SQL' },
-                { value: 'x-shell', label: 'Shell' },
-                { value: 'x-powershell', label: 'PowerShell' },
-                { value: 'x-php', label: 'PHP' }
+                {
+                    value: 'x-sql',
+                    label: 'SQL'
+                },
+                // { value: 'javascript', label: 'Javascript' },
+                // { value: 'x-java', label: 'Java' },
+                // { value: 'x-python', label: 'Python' },
+                // { value: 'x-sql', label: 'SQL' },
+                // { value: 'x-shell', label: 'Shell' },
+                // { value: 'x-powershell', label: 'PowerShell' },
+                // { value: 'x-php', label: 'PHP' }
             ]
         }
     },
@@ -73,6 +81,11 @@ export default {
         }
     },
     computed: {
+        keyWords() {
+            var list = ["SELECT","select * from ", "FROM", "WHERE", "GROUP BY", "ORDER BY", "JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "ON", "AS", "DISTINCT", "COUNT", "SUM", "MAX", "MIN", "AVG", "HAVING"]
+            var newList = list.concat(this.tableNames.map(x => x.name))
+            return newList
+        },
         coderOptions() {
             return {
                 line: true,
@@ -86,16 +99,36 @@ export default {
                 lineWrapping: 'wrap', // 文字过长时，是换行(wrap)还是滚动(scroll),默认是滚动
                 showCursorWhenSelecting: true, // 文本选中时显示光标
                 smartIndent: true, // 智能缩进
+
                 // 提示配置
                 hintOptions: {
                     // 自动匹配唯一值
                     completeSingle: false,
+                    hint: function (editor, options) {
+                        var cur = editor.getCursor();
+                        var token = editor.getTokenAt(cur);
+                        // var list = ["SELECT", "FROM", "WHERE", "GROUP BY", "ORDER BY", "JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "ON", "AS", "DISTINCT", "COUNT", "SUM", "MAX", "MIN", "AVG", "HAVING"]
+                        var that = window.vueInstance
+                        console.log('tableNames', that.keyWords)
+
+                        // list = list.concat(that.tableNames.map(x => x.name))
+
+                        var upperStr = token.string.toUpperCase();
+                        var filterList = that.keyWords.filter(item => item.toUpperCase().indexOf(upperStr) > -1)
+
+                        return {
+                            list: filterList,
+                            from: CodeMirror.Pos(cur.line, token.start),
+                            to: CodeMirror.Pos(cur.line, token.end)
+                        };
+                    }
                 },
-                // completeSingle: false // 当匹配只有一项的时候是否自动补全
             }
         }
     },
     mounted() {
+        window.vueInstance = this;
+
         // 初始化
         this.initialize()
     },
@@ -108,6 +141,7 @@ export default {
                 this.$refs.textarea,
                 this.coderOptions
             )
+
             this.coder.on('inputRead', () => {
                 this.coder.showHint()
             })
