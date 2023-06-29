@@ -100,6 +100,7 @@ export default {
         this.initialize()
     },
     methods: {
+
         // 初始化
         initialize() {
             // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
@@ -116,7 +117,7 @@ export default {
             } else {
                 this.coder.setValue('')
             }
-            var that=this
+            var that = this
             // 支持双向绑定
             this.coder.on('change', (coder) => {
                 this.code = coder.getValue()
