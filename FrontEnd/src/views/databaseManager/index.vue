@@ -38,6 +38,7 @@
             <div style="display: flex;">
               <el-input v-model="curConfig.sqlName" style="    width: 266px;    margin-right: 17px;"></el-input>
               <el-button :loading="loading" style="margin-bottom: 5px;" @click="saveSql()">保存</el-button>
+              <el-button :loading="loading" style="margin-bottom: 5px;" @click="saveNewSql()">新增</el-button>
 
             </div>
             <el-button :loading="loading" style="margin-bottom: 5px;" @click="getSelected()">▶️执行</el-button>
@@ -232,8 +233,12 @@ export default {
         this.myNameSqls = res.data
       })
     },
+    //新增sql
+    saveNewSql(){
+      this.curConfig.dbSqlId=''
+      this.saveSql()
+    },
     saveSql() {
-
       this.$http
         .post("/api/DbManager/SaveSql", { id: this.curConfig.dbSqlId, sqlName: this.curConfig.sqlName, sql: this.curConfig.code })
         .then((res) => {
@@ -407,7 +412,7 @@ export default {
 ::v-deep ::-webkit-scrollbar {
   background-color: #efefef;
   width: 5px;
-  height: 5px;
+  height: 15px;
 }
 
 ::v-deep ::-webkit-scrollbar-thumb {

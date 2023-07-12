@@ -12,15 +12,13 @@
         <el-divider content-position="center">标签</el-divider>
         <el-button @click="onTagEditClick" type="primary" plain>标签更名</el-button>
         <br>
-        <el-tag @click="setTag('')" :class="pageInfo.searchKeyValues[0].value == '' ? 'tagAllStyle' : ''"
-          class="tagItemStyle">
+        <el-tag @click="setTag('')" :class="currentTagName == '' ? 'tagAllStyle' : ''" class="tagItemStyle">
           全部
         </el-tag>
-        <el-tag v-for="(item, index) in allTags"
-          :class="pageInfo.searchKeyValues[0].value == item.tagName ? 'tagAllStyle' : ''" :key="item.tagName"
-          @click="setTag(item.tagName)" class="tagItemStyle" :style="{
-              'background-color': tagColorArray[index % tagColorArray.length],
-            }">
+        <el-tag v-for="(item, index) in allTags" :class="currentTagName == item.tagName ? 'tagAllStyle' : ''"
+          :key="item.tagName" @click="setTag(item.tagName)" class="tagItemStyle" :style="{
+            'background-color': tagColorArray[index % tagColorArray.length],
+          }">
           <span class="mixMode">{{ item.tagName }}({{ item.count }})</span>
         </el-tag>
       </div>
@@ -31,21 +29,25 @@
       <div class="topTagContainer">
         <div>当前标签:</div>
         <!-- <span style="color: #7b5505"> {{ currentTagName }}</span> -->
-        <el-input style="width: 200px" placeholder="" v-model="pageInfo.searchKeyValues[0].value">
+        <el-input style="width: 200px" placeholder="" v-model="currentTagName">
         </el-input>
         <el-tag v-if="pageInfo.searchKeyValues[3].value" style="margin-left:15px" closable @close="handleTagClose()">
           {{ pageInfo.searchKeyValues[3].value }}
         </el-tag>
       </div>
 
-      <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容">
-      </div>
+      <!-- <div id="contentInput" class="contentInput" contenteditable @keydown.9.prevent="tabFunc1" placeholder="请输入内容">
+      </div> -->
       <!-- <div id="preview">
         <span>将图片按Ctrl+V 粘贴至此处</span>
       </div> -->
-      <div style="text-align: right">
+      <!-- <div style="text-align: right">
         <el-button @click="sendFun" style="margin-top: 10px" type="primary">发表</el-button>
-      </div>
+      </div> -->
+
+
+      <el-button @click="onEditTag2({ id: '' })" style="margin-top: 10px" type="primary">新增笔记</el-button>
+      <!-- <el-link @click="onEditTag2(item)" type="primary" style="font-size: 12px; margin-right: 5px">编辑内容</el-link> -->
       <el-row :gutter="20" style="margin-top: 13px">
         <el-col :span="22"><el-input v-model="pageInfo.searchKeyValues[1].value" @keyup.enter.native="onSearch"
             placeholder="搜索"></el-input></el-col>
@@ -102,9 +104,9 @@
   </div>
 </template>
 <script>
-import NoteEditForm from "../note/noteEditForm";
-import TagEditPop from "../note/tagEditPop";
-import ShareCard from "../note/shareCard";
+import NoteEditForm from "./noteEditForm";
+import TagEditPop from "./tagEditPop";
+import ShareCard from "./shareCard";
 import CalendarHeatmap from "@/components/CalendarHeatmap/CalendarHeatmap.vue"
 import Prism from "prismjs";
 import 'prismjs/themes/prism.css'; // 引入样式文件
@@ -236,8 +238,6 @@ export default {
   mounted() {
     var that = this;
     // Prism.highlightAll()
-
-
     // 注册 visibilitychange 事件的监听器
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     that.getNoteList();
@@ -471,12 +471,6 @@ export default {
     //设置搜索条件的标签
     setTag(tagName) {
       this.pageInfo.searchKeyValues[0].value = tagName;
-      // //清除搜索内容
-      // this.pageInfo.searchKeyValues[1].value = "";
-      // //页数
-      // this.pageInfo.pageNumber = 1;
-      // //搜索
-      // this.getNoteList();
     },
 
 
@@ -493,13 +487,12 @@ export default {
     },
     onEditTag2(item) {
       console.log('tag2', item)
-      // 在Vue中将方法挂载到Vue原型上
-      // Vue.prototype.parentMethod = this.getNoteList
-      // window.parentMethod = this.getNoteList
-      var that = this
       window.pGetNoteList = this.getNoteList
-
-      window.open('/note2?id=' + item.id, '_blank');
+      if (this.currentTagName) {
+        window.open('/note2?id=' + item.id + '&tagName=' + this.currentTagName, '_blank');
+      } else {
+        window.open('/note2?id=' + item.id, '_blank');
+      }
     },
     // 编辑笔记
     onEditTag(item) {

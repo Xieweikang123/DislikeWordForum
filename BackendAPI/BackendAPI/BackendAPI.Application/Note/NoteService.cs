@@ -98,6 +98,7 @@ namespace BackendAPI.Application
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
+        [Obsolete]
         public async Task<object> SendAContent(NoteDTO dto)
         {
             var db = DbContextStatic.Instance;
@@ -111,33 +112,7 @@ namespace BackendAPI.Application
             {
                 db.BeginTran();
                 var nowTime = DateTime.Now;
-                //var imgSrcRegex = "(?<=src=\").*?(?=\")";
-
-                //var matches = Regex.Matches(dto.sayContent, imgSrcRegex);
-                ////将base64加密转为图片并且替换
-                //if (matches.Any())
-                //{
-                //    foreach (var matItem in matches)
-                //    {
-                //        var imgStr = matItem.ToString();
-                //        //不是base64图片不处理
-                //        if (!imgStr.Contains("data:image/png;base64"))
-                //        {
-                //            continue;
-                //        }
-                //        var image = ImageHelper.Base64StringToImage(imgStr);
-                //        var filePathName = FileService.GetCurrentFilePathName(".png", out var relativePath);
-
-                //        var urlPrefix = App.Configuration["OssConfig:UrlPrefix"];
-
-                //        image.Save(filePathName);
-                //        //替换图片路径
-                //        dto.sayContent = dto.sayContent.Replace(matItem.ToString(), urlPrefix + relativePath);
-                //    }
-                //}
                 dto.sayContent = ConvertBase64toUrl(dto.sayContent);
-
-
                 var newNote = new Note()
 
                 {
@@ -148,7 +123,6 @@ namespace BackendAPI.Application
                     sayContent = dto.sayContent,
 
                 };
-
                 await db.Insertable(newNote).ExecuteCommandAsync();
                 //如果有标签要插入
                 if (!string.IsNullOrEmpty(dto.tagName))
@@ -195,6 +169,30 @@ namespace BackendAPI.Application
             await _dbContext.Insertable(noteRecord).ExecuteCommandAsync();
         }
         /// <summary>
+        /// 添加标签
+        /// </summary>
+        /// <param name="addTags"></param>
+        /// <param name="noteId"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        private async Task AddTags(List<NoteTag> addTags, string noteId, SqlSugarScope db)
+        {
+
+            if (addTags != null)
+            {
+                addTags.ForEach(x =>
+                {
+                    x.id = IDGen.GetStrId();
+                    x.createTime = DateTime.Now;
+                    x.status = 0;
+                    x.userId = CurrentUserInfo.UserId;
+                    x.noteId = noteId;
+                });
+
+                await db.Insertable(addTags).ExecuteCommandAsync();
+            }
+        }
+        /// <summary>
         /// 编辑保存笔记标签
         /// </summary>
         /// <param name="dto"></param>
@@ -202,56 +200,72 @@ namespace BackendAPI.Application
         [HttpPost]
         public async Task<object> SaveNoteWithTag(Note dto)
         {
-
             var db = DbContextStatic.Instance;
-            var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
-            try
+            var nowTime = DateTime.Now;
+            //新增
+            if (string.IsNullOrEmpty(dto.id))
             {
-                db.BeginTran();
-                //内容一致，不记录日志
-                if (findNote.sayContent != dto.sayContent)
+                dto.id = IDGen.GetStrId();
+                dto.createTime = nowTime;
+                dto.updateTime = nowTime;
+                dto.userId = CurrentUserInfo.UserId;
+                try
                 {
-                    RecordOldNote(findNote);
+                    await db.BeginTranAsync();
+                    await db.Insertable(dto).ExecuteCommandAsync();
+                    //新增标签
+                    await AddTags(dto.noteTags, dto.id, db);
+                    await db.CommitTranAsync();
+                }
+                catch (Exception ex)
+                {
+                    db.RollbackTran();
+                    throw new Exception("新增失败:" + ex.Message);
                 }
 
-                var nowTime = DateTime.Now;
-                var userId = CurrentUserInfo.UserId;
-                //更新笔记内容
-                findNote.updateTime = nowTime;
-                //findNote.sayContent = dto.sayContent;
-                findNote.sayContent = ConvertBase64toUrl(dto.sayContent);
-                //更新
-                await db.Updateable(findNote).ExecuteCommandAsync();
+                return new { dto };
+            }
+            //修改
+            else
+            {
 
-                //标签
-                //先删后加 删除成功数量
-                var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
-                //新增
-                var addTags = dto.noteTags;
-                if (addTags != null)
+                var findNote = await db.Queryable<Note>().SingleAsync(x => x.id == dto.id);
+                try
                 {
-                    addTags.ForEach(x =>
+                    db.BeginTran();
+                    //内容一致，不记录日志
+                    if (findNote.sayContent != dto.sayContent)
                     {
-                        x.id = IDGen.GetStrId();
-                        x.createTime = nowTime;
-                        x.status = 0;
-                        x.userId = userId;
-                        x.noteId = dto.id;
-                    });
+                        RecordOldNote(findNote);
+                    }
 
-                    await db.Insertable(addTags).ExecuteCommandAsync();
+                    //更新笔记内容
+                    findNote.updateTime = nowTime;
+                    //findNote.sayContent = dto.sayContent;
+                    findNote.sayContent = ConvertBase64toUrl(dto.sayContent);
+                    //更新
+                    await db.Updateable(findNote).ExecuteCommandAsync();
+
+                    //标签
+                    //先删后加 删除成功数量
+                    var delCount = await db.Deleteable<NoteTag>().Where(x => x.noteId == dto.id).ExecuteCommandAsync();
+                    //新增标签
+                    await AddTags(dto.noteTags, dto.id, db);
+
+                    db.CommitTran();
+                }
+                catch (Exception ex)
+                {
+                    db.RollbackTran();
+
+                    throw new Exception("更新失败:" + ex.Message);
                 }
 
-                db.CommitTran();
-            }
-            catch (Exception ex)
-            {
-                db.RollbackTran();
+                return new { findNote };
 
-                throw new Exception("更新失败:" + ex.Message);
             }
 
-            return new { findNote };
+
         }
 
 

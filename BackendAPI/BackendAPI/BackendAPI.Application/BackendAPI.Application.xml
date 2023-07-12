@@ -178,6 +178,15 @@
             </summary>
             <param name="dto"></param>
         </member>
+        <member name="M:BackendAPI.Application.NoteService.AddTags(System.Collections.Generic.List{BackendAPI.Core.Entities.NoteTag},System.String,SqlSugar.SqlSugarScope)">
+            <summary>
+            添加标签
+            </summary>
+            <param name="addTags"></param>
+            <param name="noteId"></param>
+            <param name="db"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.NoteService.SaveNoteWithTag(BackendAPI.Core.Entities.Note)">
             <summary>
             编辑保存笔记标签

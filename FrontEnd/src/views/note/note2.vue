@@ -5,7 +5,19 @@
       <el-slider v-model="sliderValue" :step="sliderStep" :max="sliderMax" :format-tooltip="formatTooltip" show-stops>
       </el-slider>
     </div>
-    <div v-if="isDataLoad" style="border: 1px solid #ccc;">
+
+    <div>
+      <el-tag :key="titem.id" v-for="titem in dynamicTags" closable :disable-transitions="false"
+        @close="handleCloseTag(titem)">
+        {{ titem.tagName }}
+        <!-- {{ titem }} -->
+      </el-tag>
+      <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small"
+        @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
+      </el-input>
+      <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+    </div>
+    <div v-if="isDataLoad || isAdd" style="border: 1px solid #ccc;">
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
       <Editor style="height: 500px; overflow-y: hidden;" v-model="curItem.sayContent" :defaultConfig="editorConfig"
         :mode="mode" @onCreated="onCreated" />
@@ -29,14 +41,17 @@ export default {
   },
   data() {
     return {
+      dynamicTags: [{ tagName: '标签1' }],
+      inputVisible: false,
       sliderMax: 1,
       sliderStep: 1,
       noteHisList: [],
+      inputValue: '',
       lastSliderValue: -1,
       sliderValue: 100,
       initContent: '',
       isDataLoad: false,
-      curItem: {},
+      curItem: { id: '' },
       editor: null,
       // html: '<p>hello</p>',
       toolbarConfig: {},
@@ -46,16 +61,14 @@ export default {
     };
   },
   computed: {
-    //当前标签
-    currentTagName() {
-      return this.pageInfo.searchKeyValues[0].value;
+    //是否新增
+    isAdd() {
+      return this.$route.query.id.length == 0
     },
   },
   watch: {
     noteHisList: {
       handler(nVal) {
-
-        // this.sliderStep = 1;
         this.sliderMax = nVal.length;
         this.sliderValue = this.sliderMax;
       },
@@ -65,10 +78,21 @@ export default {
     var that = this;
     that.registerHotKey()
     that.imgConfig()
-    that.getCurData()
+    console.log('ll', this.$route.query.id)
+    //修改
+    if (!this.isAdd) {
+      that.getCurData()
+      //获取笔记历史
+      that.getCurNoteHis();
+    } else {
+      this.dynamicTags = []
+      //新增
+      // dynamicTags: [{ tagName: '标签1' }],
+      if (this.$route.query.tagName) {
+        this.dynamicTags = [{ tagName: this.$route.query.tagName }]
+      }
+    }
 
-    //获取笔记历史
-    that.getCurNoteHis();
     window.onbeforeunload = function () {
       //如果内容变了，询问是否关闭，如果内容没变，返回null
       if (that.initContent == that.curItem.sayContent) {
@@ -83,9 +107,55 @@ export default {
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    // 保存
+    onSubmit() {
+      var that = this;
+      that.curItem.noteTags = this.dynamicTags
+      that.$http.post("/api/Note/SaveNoteWithTag", that.curItem).then((res) => {
+        // //关闭面板
+        if (res.succeeded) {
+          that.$message.success("保存成功");
+          //如果是新增，跳转
+          if (this.isAdd) {
+            //跳转不提示是否保存
+            window.onbeforeunload = null
+            window.location.href = '/note2?id=' + res.data.dto.id
+          }
+          that.initContent = that.curItem.sayContent
+          //保存之后重新获取历史笔记
+          that.getCurNoteHis();
+          window.opener.pGetNoteList()
+        } else {
+          that.$message.error("保存出错");
+        }
+      });
+    },
+    //确认添加标签
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        this.dynamicTags.push({ tagName: inputValue });
+      }
+      this.inputVisible = false;
+      this.inputValue = "";
+    },
+    //关闭标签
+    handleCloseTag(tagItem) {
+      // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      this.dynamicTags.splice(
+        this.dynamicTags.findIndex((x) => x == tagItem),
+        1
+      );
+    },
+
+    showInput() {
+      this.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
     //获取当前笔记对应的所有历史笔记
     getCurNoteHis() {
-
       var that = this;
       that.$http
         .post("/api/Note/GetCurNoteHisList", { id: this.$route.query.id })
@@ -137,16 +207,15 @@ export default {
     getCurData() {
       var that = this
       var curNoteId = this.$route.query.id
-
+      // that.isDataLoad = false
       that.$http
         .post("/api/Note/GetNoteById", { id: curNoteId })
         .then((res) => {
-
-          // that.noteHisList = res.data;
           if (res.succeeded) {
             that.isDataLoad = true
             that.curItem = res.data
             that.initContent = that.curItem.sayContent
+            this.dynamicTags = this.curItem.noteTags;
             document.title = that.curItem.sayContent.replace(/(<([^>]+)>)/gi, "").substr(0, 20)
           } else {
             that.$message.error("数据加载失败");
@@ -173,23 +242,7 @@ export default {
         },
       }
     },
-    // 保存
-    onSubmit() {
-      var that = this;
-      that.$http.post("/api/Note/SaveNoteWithTag", that.curItem).then((res) => {
-        // //关闭面板
-        if (res.succeeded) {
-          that.$message.success("保存成功");
-          that.initContent = that.curItem.sayContent
-          //保存之后重新获取历史笔记
-          that.getCurNoteHis();
-          window.opener.pGetNoteList()
-          // window.opener.parentMethod()
-        } else {
-          that.$message.error("保存出错");
-        }
-      });
-    },
+
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
     },
