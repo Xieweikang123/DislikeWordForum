@@ -1,12 +1,14 @@
 <template>
   <div>
-    <div v-if="noteHisList.length > 0" style="margin: 18px 31px">
-      历史版本: {{ noteHisList.length }}个
-      <el-slider v-model="sliderValue" :step="sliderStep" :max="sliderMax" :format-tooltip="formatTooltip" show-stops>
+    <div v-if="noteHisList.length > 0" style="margin:0;display: flex;    align-items: center;">
+      历史版本: 
+      <!-- {{ noteHisList.length }}个  -->
+      <el-slider style="    width: 82%;" v-model="sliderValue" :step="sliderStep" :max="sliderMax"
+        :format-tooltip="formatTooltip" show-stops>
       </el-slider>
     </div>
 
-    <div>
+    <div style="    margin: 0 0 7px;">
       <el-tag :key="titem.id" v-for="titem in dynamicTags" closable :disable-transitions="false"
         @close="handleCloseTag(titem)">
         {{ titem.tagName }}
@@ -251,6 +253,15 @@ export default {
 </script>
   
 <style scoped>
+.w-e-full-screen-container {
+  z-index: 1002;
+}
+
+/* 
+::v-deep .el-slider__button-wrapper {
+  z-index: 10 !important;
+} */
+
 .openMore {
   width: 100%;
   text-align: center;
