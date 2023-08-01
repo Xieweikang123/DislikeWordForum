@@ -432,6 +432,20 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="M:BackendAPI.Application.WordAppService.AddViews(BackendAPI.Core.Entities.EnglishWord)">
+            <summary>
+            增加单词浏览量
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BackendAPI.Application.WordAppService.GetEachTimesWords">
+            <summary>
+            获取落在各个次数的单词数 0 的多少个，1的多少个，2的多少个...
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.WordAppService.RecordWord(BackendAPI.Core.Entities.EnglishWord)">
             <summary>
             记录单词

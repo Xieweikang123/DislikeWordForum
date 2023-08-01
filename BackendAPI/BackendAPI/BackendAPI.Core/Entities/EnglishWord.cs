@@ -45,6 +45,10 @@ namespace BackendAPI.Core.Entities
         /// Nullable:False
         /// </summary>           
         public int RecordTimes { get; set; }
+        /// <summary>
+        /// 浏览次数
+        /// </summary>
+        public int? Views { get; set; }
 
         /// <summary>
         /// Desc:

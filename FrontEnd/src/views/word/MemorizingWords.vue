@@ -3,59 +3,53 @@
     <div class="rightStyle">
       <el-switch v-model="configEntity.isOpenVoice" active-text="开启朗读声音">
       </el-switch>
+      <div style="margin-top:20px">
+        <div style="margin-top:5px;    display: flex;    justify-content: space-between;"
+          v-for="(item, index) in allData.slice(0, 20)">
+          <!-- <span>{{index+1+'.'+ item.word }}</span> -->
+          <span>{{ item.word }}</span>
+          <span>{{ item.views }}</span>
+        </div>
+      </div>
     </div>
     <div class="margin60Auto memContainer">
+      <div style="    margin-top: -13px;    margin-bottom: 10px;">
+        <span style="margin-left:15px" v-for="item in timesAndWords">
+          <span class="timestyle">{{ item.key }}:</span><span class="timestyleR">{{ item.value.length }}</span>
+        </span>
+      </div>
       单词记录数 ≥
-      <el-input-number
-        v-model="recordTimes"
-        @change="handleChange"
-        :min="1"
-        label="描述文字"
-      ></el-input-number>
+      <el-input-number v-model="recordTimes" @change="handleChange" :min="1" label="描述文字"></el-input-number>
 
       共 {{ allData.length }}个
 
       <div style="margin: 16px 0px">
         记录数:
-        <el-button
-          type="primary"
-          @click="changeRecordTimes(-1)"
-          @keyup.space.native.prevent="fun"
-          plain
-          >-</el-button
-        >
-        <el-button
-          type="primary"
-          @click="changeRecordTimes(1)"
-          @keyup.space.native.prevent="fun"
-          plain
-          >+</el-button
-        >
+        <el-button type="primary" @click="changeRecordTimes(-1)" @keyup.space.native.prevent="fun" plain>-</el-button>
+        <!-- {{ currentItem.recordTimes }} -->
+        <el-button type="primary" @click="changeRecordTimes(1)" @keyup.space.native.prevent="fun" plain>+</el-button>
+      </div>
+      <div>
+        记录:{{ currentItem.recordTimes }} 浏览次数:{{ currentItem.views }}
       </div>
       <div class="wordBall" @click="wordClick()">
         {{ currentItem.word }}
-        <audio
-          controls
-          ref="audio"
-          :src="audioSrc"
-          style="display: none"
-        ></audio>
+        <audio controls ref="audio" :src="audioSrc" style="display: none"></audio>
       </div>
       <div v-show="isShowTranslate">
         {{ currentItem.translate }}
       </div>
-      <el-button style="margin: 19px 61px" @click="setRandomOne" type="primary"
-        >换一个</el-button
-      >
+      <el-button style="margin: 19px 61px" @click="setRandomOne" type="primary">换一个</el-button>
     </div>
   </div>
 </template>
 
-  <script>
+<script>
 export default {
   components: {},
   data() {
     return {
+      timesAndWords: [],
       intervalId: "",
       configEntity: {
         isOpenVoice: false,
@@ -84,7 +78,6 @@ export default {
           this.$refs.audio.load();
           this.audioSrc = `https://dict.youdao.com/dictvoice?audio=${this.currentItem.word}&type=2`;
           this.$refs.audio.addEventListener("canplay", function (res) {
-            console.log("can play", res);
             that.$refs.audio.play();
           });
         }
@@ -101,6 +94,7 @@ export default {
     },
     allData() {
       this.setRandomOne();
+      this.GetEachTimesWords();
     },
   },
   mounted() {
@@ -132,25 +126,16 @@ export default {
     };
   },
   methods: {
-    // //请求并播放音频
-    // playAudio() {
-    //   var that = this;
-    //   that.$http
-    //     .get(
-    //       `https://dict.youdao.com/dictvoice?audio=${this.currentItem.word}&type=2`,
-    //       {
-    //         headers: {
-    //           "Access-Control-Allow-Origin": "*",
-    //         },
-    //       }
-    //     )
-    //     .then((response) => response.blob())
-    //     .then((blob) => {
-    //       this.$refs.audio.srcObject = blob;
-    //       this.$refs.audio.play();
-    //     });
-    // },
-    playAudio() {},
+    //获取各个单词记录次数
+    GetEachTimesWords() {
+      this.$http.get("/api/Word/GetEachTimesWords").then((res) => {
+        console.log("GetEachTimesWords", res);
+        this.timesAndWords = res.data
+        // that.$message.success("更改成功");
+        // that.getList();
+      });
+    },
+    playAudio() { },
     //点击单词
     wordClick() {
       console.log("click");
@@ -161,26 +146,6 @@ export default {
       if (this.configEntity.isOpenVoice) {
         this.$refs.audio.play();
       }
-
-      // var playPromise = this.$refs.audio.play();
-      // if (playPromise !== undefined) {
-      //   playPromise
-      //     .then((_) => {
-      //       // Automatic playback started!
-      //       // Show playing UI.
-      //       // We can now safely pause video...
-      //       // video.pause();
-      //       this.$refs.audio.play();
-      //     })
-      //     .catch((error) => {
-      //       console.log("play error", error);
-      //       // Auto-play was prevented
-      //       // Show paused UI.
-      //     });
-      // }
-    },
-    fun() {
-      console.log("空格");
     },
     //更改单词数
     changeRecordTimes(nums) {
@@ -219,6 +184,17 @@ export default {
       } else {
         this.currentItem = rndItem;
       }
+      this.currentItem.views = (this.currentItem.views ?? 0) + 1;
+      //增加该单词浏览量
+      this.addWordViews()
+    },
+    //增加该单词浏览量
+    addWordViews() {
+      this.$http
+        .post("/api/Word/AddViews", this.currentItem)
+        .then((res) => {
+
+        });
     },
     //单词记录数更改
     handleChange(value) {
@@ -230,15 +206,27 @@ export default {
 };
 </script>
 <style scoped>
+.timestyleR{
+  color: #7c3540;
+    font-size: 22px;
+    font-weight: bold;
+}
+.timestyle {
+  color: #4c6a78;
+    font-size: 14px;
+}
+
 .rightStyle {
   position: absolute;
   right: 7%;
 }
+
 .memContainer {
   position: relative;
   /* left: -12%; */
   text-align: center;
 }
+
 .wordBall {
   margin: 22px auto;
   width: 200px;

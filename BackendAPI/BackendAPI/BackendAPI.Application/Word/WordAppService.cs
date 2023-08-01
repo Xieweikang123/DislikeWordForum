@@ -5,6 +5,7 @@ using Furion.DistributedIDGenerator;
 using Furion.LinqBuilder;
 using Furion.RemoteRequest.Extensions;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -68,14 +69,14 @@ namespace BackendAPI.Application
             var userId = CurrentUserInfo.UserId;
             var db = DbContextStatic.Instance;
             var wordlist = GetCacheEnglishWords();
-            var list = wordlist.Where(x => x.BelongUserId == userId && x.RecordTimes >= recordTimes).ToList();
+            var list = wordlist.Where(x => x.BelongUserId == userId && x.RecordTimes >= recordTimes).OrderByDescending(x => x.Views).ToList();
             return list;
         }
         [AllowAnonymous]
         [HttpGet]
         public async Task<object> Translate(string word)
         {
-            var obj= await $"http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i={word}".GetAsStringAsync();
+            var obj = await $"http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i={word}".GetAsStringAsync();
             return obj;
         }
 
@@ -209,6 +210,43 @@ namespace BackendAPI.Application
         }
 
         /// <summary>
+        /// 增加单词浏览量
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<object> AddViews(EnglishWord dto)
+        {
+            var userId = CurrentUserInfo.UserId;
+            var db = DbContextStatic.Instance;
+
+            await db.Updateable<EnglishWord>().SetColumns(x => x.Views == (x.Views ?? 0) + 1)
+               .Where(x => x.BelongUserId == CurrentUserInfo.UserId && x.id == dto.id).ExecuteCommandAsync();
+            //刷新单词缓存
+            //GetCacheEnglishWords(true);
+            return "ok";
+        }
+        /// <summary>
+        /// 获取落在各个次数的单词数 0 的多少个，1的多少个，2的多少个...
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task<object> GetEachTimesWords()
+        {
+            var allWords = GetCacheEnglishWords();
+
+            var result = await Task.Run(() =>
+            {
+                return allWords.GroupBy(x => x.RecordTimes)
+                               .ToDictionary(g => g.First().RecordTimes, g => g.ToList())
+                               .OrderBy(x=>x.Key)
+                               .ToList();
+            });
+            return result;
+
+        }
+
+        /// <summary>
         /// 记录单词
         /// </summary>
         /// <param name="dto"></param>
@@ -271,7 +309,7 @@ namespace BackendAPI.Application
             var wordlist = _memoryCache.GetOrCreate(curUserWordCache, entry =>
             {
                 Console.WriteLine("查缓存");
-                entry.SlidingExpiration = TimeSpan.FromSeconds(60);
+                entry.SlidingExpiration = TimeSpan.FromSeconds(15);
                 var list = db.Queryable<EnglishWord>().Where(x => x.BelongUserId == userId).ToList();
                 return list;
             });

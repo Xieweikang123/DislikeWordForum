@@ -230,6 +230,11 @@
             Nullable:False
             </summary>           
         </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.Views">
+            <summary>
+            浏览次数
+            </summary>
+        </member>
         <member name="P:BackendAPI.Core.Entities.EnglishWord.Createdate">
             <summary>
             Desc:
