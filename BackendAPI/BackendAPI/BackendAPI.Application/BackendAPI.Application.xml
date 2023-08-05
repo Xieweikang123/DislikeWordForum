@@ -336,6 +336,12 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.TestService.TestMultipleActiveResultSets">
+            <summary>
+            测试数据库 MultipleActiveResultSets 
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:BackendAPI.Application.User.CurrentUserInfo">
             <summary>
             当前用户信息读取

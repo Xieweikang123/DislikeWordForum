@@ -14,6 +14,26 @@ namespace BackendAPI.Application
     public class TestService : IDynamicApiController
     {
 
+
+        /// <summary>
+        /// 测试数据库 MultipleActiveResultSets 
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task TestMultipleActiveResultSets()
+        {
+            var wordAppService = new WordAppService(null);
+
+            var db = DbContextStatic.Instance;
+            //db.Queryable<EnglishWord>().i
+            //db.Updateable
+            //await wordAppService.OnSaveWord(new EnglishWord()
+            //{
+            //    Word = "测试"
+            //});
+            //OnSaveWord
+        }
         [AllowAnonymous]
         [HttpGet("/sse")]
         public async Task<IActionResult> GetSSE()
