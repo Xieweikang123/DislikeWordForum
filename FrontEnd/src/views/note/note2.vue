@@ -41,17 +41,12 @@
 <style src="@wangeditor/editor/dist/css/style.css"></style>
 
 <script>
-var doc = document,
-  body = doc.body,
+var body = document.body,
   win = window;
-// var wangEditor = document.getElementById('wangEditor')
-
-// win = document.getElementById('wangEditor')
-
-var slider = doc.createElement('div'),
-  sliderSize = doc.createElement('div'),
-  controller = doc.createElement('div'),
-  sliderContent = doc.createElement('iframe'),
+var slider = document.createElement('div'),
+  sliderSize = document.createElement('div'),
+  controller = document.createElement('div'),
+  sliderContent = document.createElement('iframe'),
   scale = 0.1,
   realScale = scale;
 var curY; // Variable to store the initial Y position of the mouse
@@ -140,10 +135,6 @@ function pointerDown(e) {
     ((curTransformY)) + 'px)';
 
   document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
-
-
-
-
 }
 
 //处理超框问题
@@ -177,23 +168,14 @@ function wheelSliderScale() {
   return (sliderEditorHeight * realScale) / wheel.scrollHeight
 }
 function pointerMove(e) {
-
-
   if (curY == undefined) {
     return
   }
   e.preventDefault();
-
-
-  // var currentY = e.clientY; // Get the current Y position of the mouse
   var distanceY = e.clientY - curY; // Calculate the distance of downward mouse movement
   curTransformY += distanceY
-
   formatcurTransformY()
-
-
   document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
-
   controller.style.transform = 'translate(' +
     '0px, ' +
     ((curTransformY)) + 'px)';
@@ -262,15 +244,9 @@ export default {
   watch: {
     'curItem.sayContent': {
       handler(nval) {
-
         var regex = /<h\d>.*?<\/h\d>/g
-        // var result = regex.exec(nval);
         this.hList = nval.match(regex)
-
-
         this.reloadIframe()
-        // this.setTimeout(() => {
-        // }, 100);
       },
       deep: true
     },
@@ -521,7 +497,6 @@ export default {
       that.editorConfig.MENU_CONF['uploadImage'] = {
         fieldName: 'file',
         customUpload(file, insertFn) {
-
           let formData = new FormData();
           formData.append("file", file);
           that.$http.post("/api/File/UploadImg", formData).then((res) => {

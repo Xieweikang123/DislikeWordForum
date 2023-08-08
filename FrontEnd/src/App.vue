@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
-        <Header></Header>
+      <el-header v-if="!$route.meta.hideHeader">
+        <Header ></Header>
       </el-header>
       <el-main>
         <!-- 组件占位符 -->
