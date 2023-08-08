@@ -8,7 +8,7 @@
       </el-slider>
     </div>
 
-    <div style="    margin: 0 0 7px;">
+    <div style=" margin: 0 0 7px;">
       <el-tag :key="titem.id" v-for="titem in dynamicTags" closable :disable-transitions="false"
         @close="handleCloseTag(titem)">
         {{ titem.tagName }}
@@ -21,9 +21,15 @@
     </div>
     <div v-if="isDataLoad || isAdd" style="border: 1px solid #ccc;">
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
-
-      <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px; overflow-y: hidden;"
-        v-model="curItem.sayContent" :defaultConfig="editorConfig" :mode="mode" @onCreated="onCreated" />
+      <div style="display: flex;">
+        <div class="leftMenu">
+          <ul id="header-container"></ul>
+          <!-- 标题导航 -->
+        </div>
+        <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;width: 100%; overflow-y: hidden;"
+          v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
+          @onCreated="onCreated" />
+      </div>
       <el-button type="primary" @click="onSubmit">保存</el-button>
     </div>
     <div v-else>
@@ -35,14 +41,11 @@
 <style src="@wangeditor/editor/dist/css/style.css"></style>
 
 <script>
-
-
 var doc = document,
-  docEl = document.documentElement,
   body = doc.body,
   win = window;
 // var wangEditor = document.getElementById('wangEditor')
-// console.log('wangEditor', wangEditor)
+
 // win = document.getElementById('wangEditor')
 
 var slider = doc.createElement('div'),
@@ -52,7 +55,7 @@ var slider = doc.createElement('div'),
   scale = 0.1,
   realScale = scale;
 var curY; // Variable to store the initial Y position of the mouse
-
+var sliderEditorHeight = 0;
 
 slider.className = 'slider';
 sliderSize.className = 'slider__size';
@@ -67,6 +70,8 @@ slider.appendChild(sliderContent);
 body.appendChild(slider);
 
 
+// 标题 DOM 容器
+var headerContainer;
 
 ////////////////////////////////////////
 
@@ -79,6 +84,7 @@ function getDimensions() {
   slider.style.height = '500px'
 
   // Calculate the actual scale in case a max-width/min-width is set.
+
   realScale = slider.clientWidth / bodyWidth;
 
   // sliderSize.style.paddingTop = (bodyRatio * 100) + '%';
@@ -99,8 +105,7 @@ win.addEventListener('load', getDimensions);
 
 
 function pointerLeave(e) {
-  e.preventDefault();
-  console.log('pointerLeave 1111111')
+
   // mouseDown = false;
   curY = undefined; // Reset the initial Y position
   // if (e.target === body) { mouseDown = false; }
@@ -124,10 +129,9 @@ var curTransformY = 0
 
 //鼠标点击
 function pointerDown(e) {
-  e.preventDefault();
   curY = e.clientY; // Store the initial Y position of the mouse
 
-  curTransformY = e.offsetY - parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight)/2
+  curTransformY = e.offsetY - parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight) / 2
 
   formatcurTransformY()
 
@@ -135,8 +139,11 @@ function pointerDown(e) {
     '0px, ' +
     ((curTransformY)) + 'px)';
 
-  console.log('pointerDown curY', curY)
-  console.log('pointerDown e.offsetHeight', e.offsetY)
+  document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
+
+
+
+
 }
 
 //处理超框问题
@@ -146,25 +153,37 @@ function formatcurTransformY() {
     curTransformY = 0
   }
   //底部超框
-  console.log('curTransformY', curTransformY)
   var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
+  //选框 高度
   var sliderControllerHeight = parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight)
-  var maxHeight = sliderHeight - sliderControllerHeight
+  var maxHeight = sliderEditorHeight * realScale - sliderControllerHeight / 2
+  // var maxHeight = sliderEditorHeight * realScale
+  console.log('maxHeight', maxHeight)
+
   if (curTransformY > maxHeight) {
     curTransformY = maxHeight
   }
-
 }
 
-
+//编辑器应该移动的距离
+function geteditorScrollYDis() {
+  //编辑器滚动距离=滚动条top/(滚动条高度/编辑器高度)
+  var editorScrollYDis = curTransformY / wheelSliderScale()
+  return editorScrollYDis
+}
+//slider和编辑器高度比例
+function wheelSliderScale() {
+  var wheel = document.getElementsByClassName('w-e-scroll')[0]
+  return (sliderEditorHeight * realScale) / wheel.scrollHeight
+}
 function pointerMove(e) {
-  // console.log('pointerMove11', e)
-  // console.log('pointerMove', e)
+
+
   if (curY == undefined) {
     return
   }
   e.preventDefault();
-  // console.log('slider.scrollTop', slider)
+
 
   // var currentY = e.clientY; // Get the current Y position of the mouse
   var distanceY = e.clientY - curY; // Calculate the distance of downward mouse movement
@@ -173,25 +192,12 @@ function pointerMove(e) {
   formatcurTransformY()
 
 
+  document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
+
   controller.style.transform = 'translate(' +
     '0px, ' +
     ((curTransformY)) + 'px)';
   curY = e.clientY
-  // curTransformY = distanceY
-  // // curY=curTransformY
-  // console.log('curTransformY:', curTransformY);
-
-  // controller.style.transform = 'translate(' +
-  //   '0px, ' +
-  //   ((curTransformY)) + 'px)';
-
-  // var wheel = document.getElementsByClassName('w-e-scroll')[0]
-  // wheel.scrollTo(0, curTransformY)
-
-  // controller.style.transform = 'translate(' +
-  //   ((1 * realScale)) + 'px, ' +
-  //   ((wheel.scrollTop * realScale)) + 'px)';
-
 }
 
 
@@ -205,6 +211,7 @@ export default {
   },
   data() {
     return {
+      hList: [],
       editorHeight: 0,
       editorScrollHeight: 0,
       minimapHeight: 0,
@@ -224,7 +231,10 @@ export default {
       editor: null,
       // html: '<p>hello</p>',
       toolbarConfig: {},
-      editorConfig: { placeholder: '请输入内容...', MENU_CONF: {} },
+      editorConfig: {
+        placeholder: '请输入内容...', MENU_CONF: {},
+
+      },
       mode: 'default', // or 'simple'
 
     };
@@ -250,40 +260,39 @@ export default {
     },
   },
   watch: {
+    'curItem.sayContent': {
+      handler(nval) {
+
+        var regex = /<h\d>.*?<\/h\d>/g
+        // var result = regex.exec(nval);
+        this.hList = nval.match(regex)
+
+
+        this.reloadIframe()
+        // this.setTimeout(() => {
+        // }, 100);
+      },
+      deep: true
+    },
     isDataLoad(val) {
       if (val) {
         this.$nextTick(() => {
-          var wangEditor = document.getElementById('wangEditor')
+          this.reloadIframe()
 
-          console.log('mm', wangEditor)
-          console.dir(wangEditor)
-          // console.log('mm11', this.$refs.wangEditor)
-          var html = wangEditor.outerHTML
-            .replace(/<script([\s\S]*?)>([\s\S]*?)<\/script>/gim, '');// Remove all scripts
-          // var script = '<script>var slider=document.querySelector(".slider"); slider.parentNode.removeChild(slider);<' + '/script>';
-          var script = '<script>document.addEventListener("mouseup", function(event) { event.preventDefault(); });>' + '/script>';
-          html = html.replace('</body>', script + '</body>');
-          // console.log('html',html)
+          this.getsliderEditorHeight()
 
-          // style="height: 500px; overflow-y: hidden;"
-          html = html.replace('style="height: 500px; overflow-y: hidden;"', '')
-          // Must be appended to body to work.
-          var iframeDoc = sliderContent.contentWindow.document;
+          headerContainer = document.getElementById('header-container')
+          headerContainer.addEventListener('mousedown', event => {
+            if (event.target.tagName !== 'LI') return
+            event.preventDefault()
+            const id = event.target.id.slice(0, -1)
+            this.editor.scrollToElem(id) // 滚动到标题
+          })
 
-          // iframeDoc.addEventListener("mouseup", () => { console.log('111') })
-          iframeDoc.open();
-          iframeDoc.write(html);
-          iframeDoc.close();
 
           sliderContent.contentWindow.document.addEventListener('mouseup', pointerLeave);
           sliderContent.contentWindow.document.addEventListener('mousedown', pointerDown);
           sliderContent.contentWindow.document.addEventListener('mousemove', pointerMove);
-          // sliderContent.contentEditable = false;
-          // sliderContent.contentWindow.document.contentEditable=false
-          // wangEditor.addEventListener('scroll', this.trackScroll)
-          // this.$refs.wangEditor.addEventListener('scroll', this.trackScroll);
-
-          console.log('this.editor', this.editor)
         })
 
       }
@@ -330,12 +339,60 @@ export default {
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    onChange(editor) {
+
+      var that = this
+      const headers = editor.getElemsByTypePrefix('header')
+
+      headerContainer.innerHTML = headers.map(header => {
+        // const text = E.SlateNode.string(header)
+        // const text = that.editor.SlateNode.string(header)
+        const text = header.children[0].text
+        const { id, type } = header
+        return `<li id="${id}x" type="${type}">${text}</li>`
+      }).join('')
+    },
+    getsliderEditorHeight() {
+      sliderEditorHeight = 0
+      var wangEditorElement = sliderContent.contentDocument.querySelector('#wangEditor');
+
+      if (wangEditorElement) {
+
+
+        // wangEditorElement.style = {}
+
+        sliderEditorHeight = wangEditorElement.offsetHeight
+      }
+
+    },
+    //重新渲染iframe内容
+    reloadIframe() {
+      // return
+      var wangEditor = document.getElementById('wangEditor')
+      this.getsliderEditorHeight()
+      if (!wangEditor) {
+        return
+      }
+      var html = wangEditor.outerHTML
+        .replace(/<script([\s\S]*?)>([\s\S]*?)<\/script>/gim, '');// Remove all scripts
+      var script = '<script>document.addEventListener("mouseup", function(event) { event.preventDefault(); });>' + '/script>';
+      html = html.replace('</body>', script + '</body>');
+
+
+      html = html.replace('style="height: 500px; width: 100%; overflow-y: hidden;"', '')
+      // Must be appended to body to work.
+      var iframeDoc = sliderContent.contentWindow.document;
+
+      iframeDoc.open();
+      iframeDoc.write(html);
+      iframeDoc.close();
+    },
     trackScroll(e) {
       var wheel = document.getElementsByClassName('w-e-scroll')[0]
-      var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
+      // var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
       controller.style.transform = 'translate(' +
         0 + 'px, ' +
-        ((wheel.scrollTop * (sliderHeight / wheel.scrollHeight))) + 'px)';
+        ((wheel.scrollTop * wheelSliderScale())) + 'px)';
     },
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
@@ -408,7 +465,7 @@ export default {
       }
       this.lastSliderValue = value;
       this.curItem.sayContent = "";
-      console.log('format')
+
       if (value == this.noteHisList.length) {
         //切换内容到当前内容
         this.setTwoContent(this.initContent);
@@ -421,9 +478,8 @@ export default {
     },
     //设置两个控件的值
     setTwoContent(content) {
-      // this.editRow.sayContent = content;
-      // this.divContent = content;
-      this.curItem.sayContent = content
+      this.$set(this.curItem, 'sayContent', content)
+      // this.curItem.sayContent = content
     },
     // 注册热键
     registerHotKey() {
@@ -482,6 +538,93 @@ export default {
 };
 </script>
 <style>
+:root {
+  --editorHeight: 600px;
+}
+
+.leftMenu {
+  border-right: 1px dashed rgb(180, 180, 180);
+  height: var(--editorHeight);
+  overflow-y: auto;
+  min-width: 150px;
+  max-width: 20%;
+}
+
+#wangEditor {
+  border-bottom: 1px solid #c8c8c8;
+  height: var(--editorHeight) !important;
+}
+
+#header-container {
+  list-style-type: none;
+  padding-left: 0px;
+  /* width: max-content; */
+}
+
+#header-container li {
+  color: #333;
+  margin: 10px 0;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#header-container li:hover {
+  text-decoration: underline;
+}
+
+#header-container li[type="header1"] {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#header-container li[type="header2"] {
+  font-size: 16px;
+  padding-left: 15px;
+  font-weight: bold;
+}
+
+#header-container li[type="header3"] {
+  font-size: 14px;
+  padding-left: 30px;
+}
+
+#header-container li[type="header4"] {
+  font-size: 12px;
+  padding-left: 45px;
+}
+
+#header-container li[type="header5"] {
+  font-size: 12px;
+  padding-left: 60px;
+}
+
+/* 滚动条整体样式 */
+::-webkit-scrollbar {
+  width: 10px;
+  /* 滚动条宽度 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  /* 轨道背景色 */
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #939393;
+  border-radius: 3px;
+}
+
+/* 鼠标悬停在滚动条上时的滑块样式 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* 悬停时滑块背景色 */
+}
+
 .slider__controller {
   width: 100%;
   padding-top: 100%;
@@ -492,8 +635,8 @@ export default {
   left: 0;
   transform-origin: 0 0;
   border-radius: 2px;
-  border: solid 1px #737373;
-
+  box-shadow: inset 0 0 19px 5px #4b4b4b54;
+  /* border: solid 1px #737373; */
 }
 
 
