@@ -26,7 +26,6 @@
             </div>
           </div>
           <div class="resize" title="收缩侧边栏">
-
           </div>
           <div class="mid">
             <div style="    margin-top: -37px;margin-bottom: 16px;">

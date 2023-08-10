@@ -21,14 +21,17 @@
     </div>
     <div v-if="isDataLoad || isAdd" style="border: 1px solid #ccc;">
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
-      <div style="display: flex;">
-        <div class="leftMenu">
+      <div class="split-pane-wrapper" @mousemove="mouseMoveTrigger">
+        <div class="leftMenu pane-left" :style="{ width: leftOffset + 'px' }">
           <ul id="header-container"></ul>
           <!-- 标题导航 -->
         </div>
-        <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;width: 100%; overflow-y: hidden;"
-          v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
-          @onCreated="onCreated" />
+        <div class="pane-trigger-con" @mousedown="mouseDownTrigger"></div>
+        <div class="pane-right">
+          <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px; overflow-y: hidden;"
+            v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
+            @onCreated="onCreated" />
+        </div>
       </div>
       <el-button type="primary" @click="onSubmit">保存</el-button>
     </div>
@@ -193,6 +196,8 @@ export default {
   },
   data() {
     return {
+      leftOffset: 200,
+      triggerDragging: false,
       hList: [],
       editorHeight: 0,
       editorScrollHeight: 0,
@@ -280,8 +285,14 @@ export default {
       },
     },
   },
+
   mounted() {
     var that = this;
+    // leftOffset
+    var leftOffset = localStorage.getItem('leftOffset')
+    if (leftOffset) {
+      this.leftOffset = leftOffset
+    }
 
     that.registerHotKey()
     //配置图片上传
@@ -301,6 +312,10 @@ export default {
     }
 
     window.onbeforeunload = function () {
+      console.log('beforeunload')
+      //缓存拖拽距离
+      localStorage.setItem('leftOffset', that.leftOffset)
+
       //如果内容变了，询问是否关闭，如果内容没变，返回null
       if (that.initContent == that.curItem.sayContent) {
         return null
@@ -310,11 +325,31 @@ export default {
 
   },
   beforeDestroy() {
+    console.log('ddd')
+
     const editor = this.editor
     if (editor == null) return
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    mouseMoveTrigger(event) {
+      if (!event.which) {
+        this.triggerDragging = false;
+        document.body.style.cursor = "default";
+      }
+      // console.log('event', event)
+      if (this.triggerDragging) {
+        // 阻止默认的文本选择行为
+        event.preventDefault();
+
+        this.leftOffset = event.clientX - 20;
+      }
+    },
+    mouseDownTrigger(event) {
+      this.triggerDragging = true;
+      document.body.style.cursor = "ew-resize";
+
+    },
     onChange(editor) {
 
       var that = this
@@ -517,12 +552,32 @@ export default {
   --editorHeight: 600px;
 }
 
+.split-pane-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.pane-right {
+  flex: 1;
+  overflow: auto;
+  /* background: chartreuse; */
+}
+
+.pane-trigger-con {
+  width: 15px;
+  background: #f2f2f2;
+  /* background: red; */
+  cursor: ew-resize;
+}
+
 .leftMenu {
   border-right: 1px dashed rgb(180, 180, 180);
   height: var(--editorHeight);
   overflow-y: auto;
-  min-width: 150px;
-  max-width: 20%;
+  /* min-width: 150px;
+  max-width: 20%; */
 }
 
 #wangEditor {
