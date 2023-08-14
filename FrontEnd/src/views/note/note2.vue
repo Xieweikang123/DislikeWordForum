@@ -246,7 +246,7 @@ export default {
             this.editor.scrollToElem(id) // 滚动到标题
           })
 
-          
+
           // var wheel = document.getElementsByClassName('w-e-scroll')[0]
           // this.reloadIframe()
           // getDimensions()
@@ -322,7 +322,7 @@ export default {
     mouseMoveTrigger(event) {
       if (!event.which) {
         this.triggerDragging = false;
-        document.body.style.cursor = "default";
+        document.body.style.cursor = "auto";
       }
       // 
       if (this.triggerDragging) {
@@ -556,8 +556,13 @@ export default {
   /* background: chartreuse; */
 }
 
+.pane-trigger-con:hover {
+  background: #71b8f1;
+}
+
 .pane-trigger-con {
   width: 15px;
+  transition: background-color 0.3s ease-in-out;
   background: #f2f2f2;
   /* background: red; */
   cursor: ew-resize;
