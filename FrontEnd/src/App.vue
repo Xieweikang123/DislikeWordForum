@@ -5,7 +5,7 @@
         <Header ></Header>
       </el-header>
       <el-main>
-        <!-- 组件占位符 -->
+        <!-- 组件占位符-->
         <router-view /></el-main>
     </el-container>
   </div>

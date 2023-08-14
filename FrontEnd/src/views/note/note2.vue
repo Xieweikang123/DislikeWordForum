@@ -28,9 +28,11 @@
         </div>
         <div class="pane-trigger-con" @mousedown="mouseDownTrigger"></div>
         <div class="pane-right">
-          <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px; overflow-y: hidden;"
+          <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;     flex: 1;overflow-y: hidden;"
             v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
             @onCreated="onCreated" />
+
+          <!-- <div id="slider"></div> -->
         </div>
       </div>
       <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -44,58 +46,39 @@
 <style src="@wangeditor/editor/dist/css/style.css"></style>
 
 <script>
-var body = document.body,
-  win = window;
-var slider = document.createElement('div'),
+
+var win = window;
+var slider,
   sliderSize = document.createElement('div'),
   controller = document.createElement('div'),
-  sliderContent = document.createElement('iframe'),
+  sliderContentIframe = document.createElement('iframe'),
   scale = 0.1,
   realScale = scale;
 var curY; // Variable to store the initial Y position of the mouse
 var sliderEditorHeight = 0;
 
-slider.className = 'slider';
-sliderSize.className = 'slider__size';
-controller.className = 'slider__controller';
-
-sliderContent.className += ' slider__content';
-sliderContent.style.transformOrigin = '0 0';
-
-slider.appendChild(sliderSize);
-slider.appendChild(controller);
-slider.appendChild(sliderContent);
-body.appendChild(slider);
-
-
 // 标题 DOM 容器
 var headerContainer;
 
 ////////////////////////////////////////
-
 function getDimensions() {
-  var bodyWidth = body.clientWidth,
-    bodyRatio = body.clientHeight / bodyWidth,
-    winRatio = win.innerHeight / win.innerWidth;
+  // var bodyWidth = body.clientWidth,
+  //   bodyRatio = body.clientHeight / bodyWidth,
+  var winRatio = win.innerHeight / win.innerWidth;
 
-  slider.style.width = (scale * 100) + '%';
-  slider.style.height = '500px'
+  slider.style.width = '60px'
+  // slider.style.height = '500px'
 
   // Calculate the actual scale in case a max-width/min-width is set.
 
-  realScale = slider.clientWidth / bodyWidth;
-
-  // sliderSize.style.paddingTop = (bodyRatio * 100) + '%';
   controller.style.paddingTop = (winRatio * 100) + '%';
 
-  sliderContent.style.transform = 'scale(' + realScale + ')';
-  sliderContent.style.width = (100 / realScale) + '%';
-  sliderContent.style.height = (100 / realScale) + '%';
-}
+  // sliderContentIframe.style.transform = 'scale(' + realScale + ')';
+  // sliderContentIframe.style.width = (100 / realScale) + '%';
 
-getDimensions();
+
+}
 win.addEventListener('resize', getDimensions);
-win.addEventListener('load', getDimensions);
 
 
 ////////////////////////////////////////
@@ -103,34 +86,19 @@ win.addEventListener('load', getDimensions);
 
 
 function pointerLeave(e) {
-
-  // mouseDown = false;
   curY = undefined; // Reset the initial Y position
-  // if (e.target === body) { mouseDown = false; }
 }
 
 
-
-slider.addEventListener('mousedown', pointerDown);
-// slider.addEventListener('touchdown', pointerDown);
-
 document.addEventListener('mousemove', pointerMove);
-// slider.addEventListener('touchmove', pointerMove);
 document.addEventListener('mouseup', pointerLeave);
-slider.addEventListener('mouseup', pointerLeave);
-// slider.addEventListener('touchend', pointerReset);
 
-// 鼠标离开minimap
-// slider.addEventListener('mouseleave', pointerLeave);
-// slider.addEventListener('touchleave', pointerLeave);
 var curTransformY = 0
 
 //鼠标点击
 function pointerDown(e) {
   curY = e.clientY; // Store the initial Y position of the mouse
-
   curTransformY = e.offsetY - parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight) / 2
-
   formatcurTransformY()
 
   controller.style.transform = 'translate(' +
@@ -151,8 +119,6 @@ function formatcurTransformY() {
   //选框 高度
   var sliderControllerHeight = parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight)
   var maxHeight = sliderEditorHeight * realScale - sliderControllerHeight / 2
-  // var maxHeight = sliderEditorHeight * realScale
-  console.log('maxHeight', maxHeight)
 
   if (curTransformY > maxHeight) {
     curTransformY = maxHeight
@@ -251,17 +217,27 @@ export default {
       handler(nval) {
         var regex = /<h\d>.*?<\/h\d>/g
         this.hList = nval.match(regex)
-        this.reloadIframe()
+        // this.reloadIframe()
       },
       deep: true
     },
     isDataLoad(val) {
       if (val) {
         this.$nextTick(() => {
-          this.reloadIframe()
+          // slider = document.getElementById('slider')
+          // slider.addEventListener('mousedown', pointerDown);
+          // slider.addEventListener('mouseup', pointerLeave);
 
-          this.getsliderEditorHeight()
+          // slider.className = 'slider';
+          // sliderSize.className = 'slider__size';
+          // controller.className = 'slider__controller';
 
+          // sliderContentIframe.className += ' slider__content';
+          // sliderContentIframe.style.transformOrigin = '0 0';
+
+          // slider.appendChild(sliderSize);
+          // slider.appendChild(controller);
+          // slider.appendChild(sliderContentIframe);
           headerContainer = document.getElementById('header-container')
           headerContainer.addEventListener('mousedown', event => {
             if (event.target.tagName !== 'LI') return
@@ -270,10 +246,21 @@ export default {
             this.editor.scrollToElem(id) // 滚动到标题
           })
 
+          
+          // var wheel = document.getElementsByClassName('w-e-scroll')[0]
+          // this.reloadIframe()
+          // getDimensions()
+          // realScale = slider.clientWidth / wheel.clientWidth
+          // console.log('aaa realScale', realScale)
+          // console.dir(sliderContentIframe.contentDocument.body)
+          // sliderContentIframe.contentDocument.body.style.transform = 'scale(' + realScale + ')';
+          // sliderContentIframe.style.height = wheel.scrollHeight + 'px'
 
-          sliderContent.contentWindow.document.addEventListener('mouseup', pointerLeave);
-          sliderContent.contentWindow.document.addEventListener('mousedown', pointerDown);
-          sliderContent.contentWindow.document.addEventListener('mousemove', pointerMove);
+          // sliderContentIframe.contentWindow.document.addEventListener('mouseup', pointerLeave);
+          // sliderContentIframe.contentWindow.document.addEventListener('mousedown', pointerDown);
+          // sliderContentIframe.contentWindow.document.addEventListener('mousemove', pointerMove);
+
+
         })
 
       }
@@ -312,7 +299,7 @@ export default {
     }
 
     window.onbeforeunload = function () {
-      console.log('beforeunload')
+
       //缓存拖拽距离
       localStorage.setItem('leftOffset', that.leftOffset)
 
@@ -325,7 +312,7 @@ export default {
 
   },
   beforeDestroy() {
-    console.log('ddd')
+
 
     const editor = this.editor
     if (editor == null) return
@@ -337,7 +324,7 @@ export default {
         this.triggerDragging = false;
         document.body.style.cursor = "default";
       }
-      // console.log('event', event)
+      // 
       if (this.triggerDragging) {
         // 阻止默认的文本选择行为
         event.preventDefault();
@@ -365,16 +352,15 @@ export default {
     },
     getsliderEditorHeight() {
       sliderEditorHeight = 0
-      var wangEditorElement = sliderContent.contentDocument.querySelector('#wangEditor');
-
-      if (wangEditorElement) {
-
-
-        // wangEditorElement.style = {}
-
-        sliderEditorHeight = wangEditorElement.offsetHeight
+      if (!sliderContentIframe.contentDocument) {
+        return
       }
-
+      var wangEditorElement = sliderContentIframe.contentDocument.querySelector('#wangEditor');
+      if (wangEditorElement) {
+        console.dir(wangEditorElement)
+        sliderEditorHeight = wangEditorElement.offsetHeight
+        console.log('sliderEditorHeight', sliderEditorHeight)
+      }
     },
     //重新渲染iframe内容
     reloadIframe() {
@@ -388,11 +374,10 @@ export default {
         .replace(/<script([\s\S]*?)>([\s\S]*?)<\/script>/gim, '');// Remove all scripts
       var script = '<script>document.addEventListener("mouseup", function(event) { event.preventDefault(); });>' + '/script>';
       html = html.replace('</body>', script + '</body>');
-
-
-      html = html.replace('style="height: 500px; width: 100%; overflow-y: hidden;"', '')
+      // html = html.replace('style="height: 500px; width: 100%; overflow-y: hidden;"', '')
+      html = html.replace(/(?<=data-w-e-textarea="true").*?(?=>)/g, '')
       // Must be appended to body to work.
-      var iframeDoc = sliderContent.contentWindow.document;
+      var iframeDoc = sliderContentIframe.contentWindow.document;
 
       iframeDoc.open();
       iframeDoc.write(html);
@@ -401,9 +386,14 @@ export default {
     trackScroll(e) {
       var wheel = document.getElementsByClassName('w-e-scroll')[0]
       // var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
-      controller.style.transform = 'translate(' +
-        0 + 'px, ' +
-        ((wheel.scrollTop * wheelSliderScale())) + 'px)';
+      //iframe 也跟着滚动
+      // console.log('sliderContentIframe', sliderContentIframe)
+      console.dir(sliderContentIframe)
+      sliderContentIframe.style.top = -wheel.scrollTop + 'px'
+
+
+      //编辑器滚动距离顶部的距离* 缩略图与编辑器的比例
+      controller.style.transform = 'translate(' + 0 + 'px, ' + ((wheel.scrollTop * realScale)) + 'px)';
     },
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
@@ -562,6 +552,7 @@ export default {
 .pane-right {
   flex: 1;
   overflow: auto;
+  display: flex;
   /* background: chartreuse; */
 }
 
@@ -673,18 +664,10 @@ export default {
 .slider {
 
   border: 1px solid black;
-  position: fixed;
+  position: relative;
   overflow: hidden;
-
-  right: 40px;
-  /* left: 10px; */
-  top: 164px;
-
-  /*     
-  top: 10px;
-  left: 10px; */
-  min-width: 20px;
-  max-width: 60px;
+  /* min-width: 20px;
+  max-width: 60px; */
   box-shadow: 0 2px 13px rgba(0, 0, 0, 0.3);
   cursor: grab;
   opacity: 0.5;
@@ -698,9 +681,10 @@ export default {
 }
 
 .slider__size {
-  position: relative;
+  /* position: relative; */
+  height: 100%;
   z-index: 3;
-  height: inherit;
+  /* height: inherit; */
 }
 
 .slider__content {
