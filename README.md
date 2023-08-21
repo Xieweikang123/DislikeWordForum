@@ -27,6 +27,7 @@ Gitee:https://gitee.com/walkerXie/DislikeWordForum
 - [x] 显示单词列表
 - [x] 账号注册、登录、展示个人信息
 - [x] 单词保存、修改、删除。
+![image](https://github.com/Xieweikang123/DislikeWordForum/assets/30288645/69a42cd5-4e7e-43d9-9842-8b4fbaf2a003)
 
 ![image](https://user-images.githubusercontent.com/30288645/217815870-120d84ef-81ca-45d3-8916-2d42a8223fda.png)
 ![image](https://user-images.githubusercontent.com/30288645/221100256-9cc388c5-506e-468f-84f8-67cc2c4d3887.png)
