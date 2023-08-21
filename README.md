@@ -2,8 +2,6 @@
 
 
 
-[TOC]
-
 一个背单词的网站 还有笔记
 
 Github: https://github.com/Xieweikang123/DislikeWordForum
