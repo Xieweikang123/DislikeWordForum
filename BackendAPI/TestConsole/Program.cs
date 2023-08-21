@@ -1,78 +1,34 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.ComponentModel.DataAnnotations;
-
-
-// Define a service interface
-public interface IMyService
-{
-    void DoSomething();
-}
-
-// Define a class that implements the service interface
-public class MyService : IMyService
-{
-    public void DoSomething()
-    {
-        Console.WriteLine("MyService is doing something.");
-    }
-}
-
-public class MyService2 : IMyService
-{
-
-    private int num = 0;
-    public void DoSomething()
-    {
-
-        Console.WriteLine($"num: {num++}");
-    }
-}
-
-
-
-// Define a class that uses the service
-public class MyClass
-{
-    private readonly IMyService? _myService;
-
-    public MyClass(IServiceProvider serviceProvider)
-    {
-        var tpf = typeof(IMyService);
-        // Request an instance of the service from the service provider
-        _myService = serviceProvider.GetService(typeof(IMyService)) as IMyService;
-    }
-
-    public void DoSomethingWithService()
-    {
-        // Use the service object
-        _myService?.DoSomething();
-    }
-}
-
-
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 class Program
 {
-    static void Main(string[] args)
+     
+
+    static void Main()
     {
-        var serviceProvider = new ServiceCollection()
-         .AddTransient<IMyService, MyService2>()
-         .BuildServiceProvider();
+        MyDelegate d1 = SayEnglish;
+        string s1 = d1(3);
+        Console.WriteLine(s1);
+        d1 = SayChinese;
+        string s2 = d1(5);
+        Console.WriteLine(s2);
 
-
-
-        //serviceProvider.
-        // Create an instance of the class that uses the service
-        var myClass = new MyClass(serviceProvider);
-
-        // Use the service object
-        myClass.DoSomethingWithService();
-        myClass.DoSomethingWithService();
-
-
-        // Wait for user input
-        Console.Write("Press any key to exit...");
-        //Console.ReadKey();
+        Console.ReadLine();
     }
+
+
+
+    static string SayEnglish(int age)
+    {
+        return $"Hello {age}";
+    }
+    static string SayChinese(int age)
+    {
+        return $"你好 {age}";
+    }
+    delegate string MyDelegate(int n);
+
 }
