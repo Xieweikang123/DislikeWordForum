@@ -27,7 +27,7 @@ class Program
     }
     static string SayChinese(int age)
     {
-        return $"你好11 {age}";
+        return $"你好1122 {age}";
     }
     delegate string MyDelegate(int n);
 
