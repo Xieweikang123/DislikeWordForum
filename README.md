@@ -1,9 +1,16 @@
 # DislikeWordForum
 一个背单词的网站 还有笔记
 
+Github: https://github.com/Xieweikang123/DislikeWordForum
+
+Gitee:https://gitee.com/walkerXie/DislikeWordForum
 
 
-功能清单:
+### 项目结构
+  BackendAPI:后端项目
+  FrontEnd： 前端项目
+
+### 功能清单:
 记录笔记，删除笔记
 笔记回收站
 日历热点图
