@@ -9,6 +9,10 @@ Github: https://github.com/Xieweikang123/DislikeWordForum
 Gitee:https://gitee.com/walkerXie/DislikeWordForum
 
 
+预览:
+  http://43.138.32.181/
+  账号:test  密码:test
+
 ### 项目结构
   BackendAPI:后端项目
   FrontEnd： 前端项目
