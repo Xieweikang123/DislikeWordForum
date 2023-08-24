@@ -9,6 +9,10 @@
     </div>
 
     <div style=" margin: 0 0 7px;">
+      <el-button @click="$router.push('/note');" style="margin-right:15px">
+        返回笔记
+      </el-button>
+      标签:
       <el-tag :key="titem.id" v-for="titem in dynamicTags" closable :disable-transitions="false"
         @close="handleCloseTag(titem)">
         {{ titem.tagName }}
@@ -21,6 +25,7 @@
     </div>
     <div v-if="isDataLoad || isAdd" style="border: 1px solid #ccc;">
       <Toolbar style="border-bottom: 1px solid #ccc" :editor="editor" :defaultConfig="toolbarConfig" :mode="mode" />
+
       <div class="split-pane-wrapper" @mousemove="mouseMoveTrigger">
         <div class="leftMenu pane-left" :style="{ width: leftOffset + 'px' }">
           <ul id="header-container"></ul>
@@ -28,10 +33,20 @@
         </div>
         <div class="pane-trigger-con" @mousedown="mouseDownTrigger"></div>
         <div class="pane-right">
-          <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;     flex: 1;overflow-y: hidden;"
-            v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
-            @onCreated="onCreated" />
 
+          <!-- <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;     flex: 1;overflow-y: hidden;"
+            v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
+            @onCreated="onCreated" /> -->
+
+          <div style="    flex: 1;">
+            <Editor id="wangEditor" ref="wangEditor" class="editor" style="height: 500px;     flex: 1;overflow-y: hidden;"
+              v-model="curItem.sayContent" :defaultConfig="editorConfig" @onChange="onChange" :mode="mode"
+              @onCreated="onCreated" />
+            <!-- 内容状态 -->
+            <p style="background-color: #f1f1f1;">
+              Text length: <span id="total-length"></span>
+            </p>
+          </div>
           <!-- <div id="slider"></div> -->
         </div>
       </div>
@@ -60,98 +75,8 @@ var sliderEditorHeight = 0;
 // 标题 DOM 容器
 var headerContainer;
 
-////////////////////////////////////////
-function getDimensions() {
-  // var bodyWidth = body.clientWidth,
-  //   bodyRatio = body.clientHeight / bodyWidth,
-  var winRatio = win.innerHeight / win.innerWidth;
 
-  slider.style.width = '60px'
-  // slider.style.height = '500px'
-
-  // Calculate the actual scale in case a max-width/min-width is set.
-
-  controller.style.paddingTop = (winRatio * 100) + '%';
-
-  // sliderContentIframe.style.transform = 'scale(' + realScale + ')';
-  // sliderContentIframe.style.width = (100 / realScale) + '%';
-
-
-}
-win.addEventListener('resize', getDimensions);
-
-
-////////////////////////////////////////
-// Click & Drag Events
-
-
-function pointerLeave(e) {
-  curY = undefined; // Reset the initial Y position
-}
-
-
-document.addEventListener('mousemove', pointerMove);
-document.addEventListener('mouseup', pointerLeave);
-
-var curTransformY = 0
-
-//鼠标点击
-function pointerDown(e) {
-  curY = e.clientY; // Store the initial Y position of the mouse
-  curTransformY = e.offsetY - parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight) / 2
-  formatcurTransformY()
-
-  controller.style.transform = 'translate(' +
-    '0px, ' +
-    ((curTransformY)) + 'px)';
-
-  document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
-}
-
-//处理超框问题
-function formatcurTransformY() {
-  //超框问题
-  if (curTransformY < 0) {
-    curTransformY = 0
-  }
-  //底部超框
-  var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
-  //选框 高度
-  var sliderControllerHeight = parseFloat(document.getElementsByClassName('slider__controller')[0].offsetHeight)
-  var maxHeight = sliderEditorHeight * realScale - sliderControllerHeight / 2
-
-  if (curTransformY > maxHeight) {
-    curTransformY = maxHeight
-  }
-}
-
-//编辑器应该移动的距离
-function geteditorScrollYDis() {
-  //编辑器滚动距离=滚动条top/(滚动条高度/编辑器高度)
-  var editorScrollYDis = curTransformY / wheelSliderScale()
-  return editorScrollYDis
-}
-//slider和编辑器高度比例
-function wheelSliderScale() {
-  var wheel = document.getElementsByClassName('w-e-scroll')[0]
-  return (sliderEditorHeight * realScale) / wheel.scrollHeight
-}
-function pointerMove(e) {
-  if (curY == undefined) {
-    return
-  }
-  e.preventDefault();
-  var distanceY = e.clientY - curY; // Calculate the distance of downward mouse movement
-  curTransformY += distanceY
-  formatcurTransformY()
-  document.getElementsByClassName('w-e-scroll')[0].scrollTo(0, geteditorScrollYDis())
-  controller.style.transform = 'translate(' +
-    '0px, ' +
-    ((curTransformY)) + 'px)';
-  curY = e.clientY
-}
-
-
+// win.addEventListener('resize', getDimensions);
 
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 // import { IEditorConfig } from '@wangeditor/editor'
@@ -178,12 +103,43 @@ export default {
       inputValue: '',
       lastSliderValue: -1,
       sliderValue: 100,
+      sliderContent: '',
       initContent: '',
       isDataLoad: false,
       curItem: { id: '' },
       editor: null,
       // html: '<p>hello</p>',
-      toolbarConfig: {},
+      toolbarConfig: {
+        toolbarKeys: [
+          // 菜单 key
+          'headerSelect',
+          // 分割线
+          '|',
+          // 菜单 key
+          'bold', 'italic',
+          'color',
+          'bgColor',
+          'fontSize',
+          'fontFamily', '|',
+          'emotion',
+          'insertTable',
+          'lineHeight',
+          'undo',
+          'redo',
+          'codeBlock',
+          // 'codeSelectLang',
+          'divider',
+          'through', "code", "clearStyle",
+
+          // // 菜单组，包含多个菜单
+          // {
+          //   key: 'group-more-style', // 必填，要以 group 开头
+          //   title: '更多样式', // 必填
+          //   // iconSvg: '<svg>....</svg>', // 可选
+          //   menuKeys: ["through", "code", "clearStyle"] // 下级菜单 key ，必填
+          // },
+        ]
+      },
       editorConfig: {
         placeholder: '请输入内容...', MENU_CONF: {},
 
@@ -193,19 +149,26 @@ export default {
     };
   },
   computed: {
-    minimapStyle() {
-      return {
-        background: `url(${this.minimapImageUrl})`,
-        backgroundSize: 'cover'
+    // minimapStyle() {
+    //   return {
+    //     background: `url(${this.minimapImageUrl})`,
+    //     backgroundSize: 'cover'
+    //   }
+    // },
+    // minimapImageUrl() {
+    //   const editor = this.$refs.editor
+    //   const rect = editor.getBoundingClientRect()
+    //   const width = rect.width
+    //   const height = Math.floor(this.editorHeight / this.editorScrollHeight * this.minimapHeight)
+    //   const top = Math.floor(-editor.scrollTop / this.editorScrollHeight * this.minimapHeight)
+    //   return `element(#${editor.id}, rect(${rect.left}px, ${rect.top}px, ${rect.right}px, ${rect.bottom}px), ${width}px, ${height}px)`;
+    // },
+    //内容是否改变
+    isChange() {
+      if (this.initContent == this.curItem.sayContent) {
+        return false
       }
-    },
-    minimapImageUrl() {
-      const editor = this.$refs.editor
-      const rect = editor.getBoundingClientRect()
-      const width = rect.width
-      const height = Math.floor(this.editorHeight / this.editorScrollHeight * this.minimapHeight)
-      const top = Math.floor(-editor.scrollTop / this.editorScrollHeight * this.minimapHeight)
-      return `element(#${editor.id}, rect(${rect.left}px, ${rect.top}px, ${rect.right}px, ${rect.bottom}px), ${width}px, ${height}px)`;
+      return true
     },
     //是否新增
     isAdd() {
@@ -213,31 +176,20 @@ export default {
     },
   },
   watch: {
+
+    initContent() {
+      this.sliderContent = this.initContent
+    },
     'curItem.sayContent': {
       handler(nval) {
         var regex = /<h\d>.*?<\/h\d>/g
         this.hList = nval.match(regex)
-        // this.reloadIframe()
       },
       deep: true
     },
     isDataLoad(val) {
       if (val) {
         this.$nextTick(() => {
-          // slider = document.getElementById('slider')
-          // slider.addEventListener('mousedown', pointerDown);
-          // slider.addEventListener('mouseup', pointerLeave);
-
-          // slider.className = 'slider';
-          // sliderSize.className = 'slider__size';
-          // controller.className = 'slider__controller';
-
-          // sliderContentIframe.className += ' slider__content';
-          // sliderContentIframe.style.transformOrigin = '0 0';
-
-          // slider.appendChild(sliderSize);
-          // slider.appendChild(controller);
-          // slider.appendChild(sliderContentIframe);
           headerContainer = document.getElementById('header-container')
           headerContainer.addEventListener('mousedown', event => {
             if (event.target.tagName !== 'LI') return
@@ -245,24 +197,7 @@ export default {
             const id = event.target.id.slice(0, -1)
             this.editor.scrollToElem(id) // 滚动到标题
           })
-
-
-          // var wheel = document.getElementsByClassName('w-e-scroll')[0]
-          // this.reloadIframe()
-          // getDimensions()
-          // realScale = slider.clientWidth / wheel.clientWidth
-          // console.log('aaa realScale', realScale)
-          // console.dir(sliderContentIframe.contentDocument.body)
-          // sliderContentIframe.contentDocument.body.style.transform = 'scale(' + realScale + ')';
-          // sliderContentIframe.style.height = wheel.scrollHeight + 'px'
-
-          // sliderContentIframe.contentWindow.document.addEventListener('mouseup', pointerLeave);
-          // sliderContentIframe.contentWindow.document.addEventListener('mousedown', pointerDown);
-          // sliderContentIframe.contentWindow.document.addEventListener('mousemove', pointerMove);
-
-
         })
-
       }
     },
     noteHisList: {
@@ -290,7 +225,9 @@ export default {
       //获取笔记历史
       that.getCurNoteHis();
     } else {
+      //新增
       this.dynamicTags = []
+      this.isDataLoad = true
       //新增
       // dynamicTags: [{ tagName: '标签1' }],
       if (this.$route.query.tagName) {
@@ -299,12 +236,11 @@ export default {
     }
 
     window.onbeforeunload = function () {
-
       //缓存拖拽距离
       localStorage.setItem('leftOffset', that.leftOffset)
 
       //如果内容变了，询问是否关闭，如果内容没变，返回null
-      if (that.initContent == that.curItem.sayContent) {
+      if (!that.isChange) {
         return null
       }
       return '您有未保存的更改，确定要离开吗？';
@@ -319,6 +255,63 @@ export default {
     editor.destroy() // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    onCreated(editor) {
+      this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
+      var that = this
+      // this.editor.setHtml = function (html) {
+      //   console.log('sss')
+      //   // that.curItem.sayContent = html
+      // }
+    },
+    //历史版本滑动条文本格式化显示
+    formatTooltip(value) {
+      console.log('format tooltip', value)
+      var slideItem = this.noteHisList[value];
+      // 如果本次value和上次一样，不往下进行
+      if (value == null || value == this.lastSliderValue) {
+        return;
+      }
+      //滑动开始时，是否改动了内容
+      if (this.sliderContent != this.curItem.sayContent) {
+        console.log('gaibianle')
+        //改变内容，询问是否继续
+        // this.curItem.sayContent = this.sliderContent
+      }
+
+      this.lastSliderValue = value;
+      // this.curItem.sayContent = "";
+
+      if (value == this.noteHisList.length) {
+        //切换内容到当前内容
+        this.setTwoContent(this.initContent);
+        return "当前版本";
+      }
+
+      var time = slideItem.createTime.replace("T", " ");
+      this.setTwoContent(slideItem.sayContent);
+      return time;
+    },
+
+    //设置两个控件的值
+    setTwoContent(content) {
+
+      this.$nextTick(() => {
+
+
+        this.$set(this.curItem, 'sayContent', content)
+      })
+
+      // setTimeout(() => {
+      //   this.$set(this.curItem, 'sayContent', content)  
+      // });
+
+
+      // this.editor.setHtml(content)
+      this.sliderContent = content
+      // this.curItem.sayContent = content
+    },
+
+    //拖拽
     mouseMoveTrigger(event) {
       if (!event.which) {
         this.triggerDragging = false;
@@ -338,67 +331,32 @@ export default {
 
     },
     onChange(editor) {
-
-      var that = this
       const headers = editor.getElemsByTypePrefix('header')
+      const text = editor.getText().replace(/\n|\r/mg, '')
+      document.getElementById('total-length').innerHTML = text.length
 
+      if (!headerContainer) {
+        return
+      }
       headerContainer.innerHTML = headers.map(header => {
-        // const text = E.SlateNode.string(header)
-        // const text = that.editor.SlateNode.string(header)
         const text = header.children[0].text
         const { id, type } = header
         return `<li id="${id}x" type="${type}">${text}</li>`
       }).join('')
     },
-    getsliderEditorHeight() {
-      sliderEditorHeight = 0
-      if (!sliderContentIframe.contentDocument) {
-        return
-      }
-      var wangEditorElement = sliderContentIframe.contentDocument.querySelector('#wangEditor');
-      if (wangEditorElement) {
-        console.dir(wangEditorElement)
-        sliderEditorHeight = wangEditorElement.offsetHeight
-        console.log('sliderEditorHeight', sliderEditorHeight)
-      }
-    },
-    //重新渲染iframe内容
-    reloadIframe() {
-      // return
-      var wangEditor = document.getElementById('wangEditor')
-      this.getsliderEditorHeight()
-      if (!wangEditor) {
-        return
-      }
-      var html = wangEditor.outerHTML
-        .replace(/<script([\s\S]*?)>([\s\S]*?)<\/script>/gim, '');// Remove all scripts
-      var script = '<script>document.addEventListener("mouseup", function(event) { event.preventDefault(); });>' + '/script>';
-      html = html.replace('</body>', script + '</body>');
-      // html = html.replace('style="height: 500px; width: 100%; overflow-y: hidden;"', '')
-      html = html.replace(/(?<=data-w-e-textarea="true").*?(?=>)/g, '')
-      // Must be appended to body to work.
-      var iframeDoc = sliderContentIframe.contentWindow.document;
+    // getsliderEditorHeight() {
+    //   sliderEditorHeight = 0
+    //   if (!sliderContentIframe.contentDocument) {
+    //     return
+    //   }
+    //   var wangEditorElement = sliderContentIframe.contentDocument.querySelector('#wangEditor');
+    //   if (wangEditorElement) {
 
-      iframeDoc.open();
-      iframeDoc.write(html);
-      iframeDoc.close();
-    },
-    trackScroll(e) {
-      var wheel = document.getElementsByClassName('w-e-scroll')[0]
-      // var sliderHeight = parseFloat(document.getElementsByClassName('slider')[0].style.height)
-      //iframe 也跟着滚动
-      // console.log('sliderContentIframe', sliderContentIframe)
-      console.dir(sliderContentIframe)
-      sliderContentIframe.style.top = -wheel.scrollTop + 'px'
+    //     sliderEditorHeight = wangEditorElement.offsetHeight
 
+    //   }
+    // },
 
-      //编辑器滚动距离顶部的距离* 缩略图与编辑器的比例
-      controller.style.transform = 'translate(' + 0 + 'px, ' + ((wheel.scrollTop * realScale)) + 'px)';
-    },
-    onCreated(editor) {
-      this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
-      this.editor.on('scroll', this.trackScroll)
-    },
     // 保存
     onSubmit() {
       var that = this;
@@ -456,32 +414,7 @@ export default {
           that.noteHisList = res.data;
         });
     },
-    //历史版本滑动条文本格式化显示
-    formatTooltip(value) {
-      //value 没变的话，也不往下
 
-      // 如果本次value和上次一样，不往下进行
-      if (value == null || value == this.lastSliderValue) {
-        return;
-      }
-      this.lastSliderValue = value;
-      this.curItem.sayContent = "";
-
-      if (value == this.noteHisList.length) {
-        //切换内容到当前内容
-        this.setTwoContent(this.initContent);
-        return "当前版本";
-      }
-      var slideItem = this.noteHisList[value];
-      var time = slideItem.createTime.replace("T", " ");
-      this.setTwoContent(slideItem.sayContent);
-      return time;
-    },
-    //设置两个控件的值
-    setTwoContent(content) {
-      this.$set(this.curItem, 'sayContent', content)
-      // this.curItem.sayContent = content
-    },
     // 注册热键
     registerHotKey() {
       var that = this;
@@ -504,10 +437,10 @@ export default {
         .then((res) => {
           if (res.succeeded) {
             that.isDataLoad = true
-
             that.curItem = res.data
             that.initContent = that.curItem.sayContent
             this.dynamicTags = this.curItem.noteTags;
+
             document.title = that.curItem.sayContent.replace(/(<([^>]+)>)/gi, "").substr(0, 20)
           } else {
             that.$message.error("数据加载失败");

@@ -13,11 +13,11 @@
       </div>
     </div>
     <div class="margin60Auto memContainer">
-      <div style="    margin-top: -13px;    margin-bottom: 10px;">
+      <!-- <div style="    margin-top: -13px;    margin-bottom: 10px;">
         <span style="margin-left:15px" v-for="item in timesAndWords">
           <span class="timestyle">{{ item.key }}:</span><span class="timestyleR">{{ item.value.length }}</span>
         </span>
-      </div>
+      </div> -->
       单词记录数 ≥
       <el-input-number v-model="recordTimes" @change="handleChange" :min="1" label="描述文字"></el-input-number>
 
