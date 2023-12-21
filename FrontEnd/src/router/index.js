@@ -71,13 +71,21 @@ const routes = [
     component: () => import('@/views/databaseManager/index')
   },
   {
-    path: '/test',
+    path: '/minimap',
     meta: {
       // 页面标题title
-      title: '兔小巢消息通知'
+      title: 'minimap'
     },
-    component: () => import('@/views/test/index')
+    component: () => import('@/views/minimap/index')
   },
+  // {
+  //   path: '/test',
+  //   meta: {
+  //     // 页面标题title
+  //     title: '兔小巢消息通知'
+  //   },
+  //   component: () => import('@/views/test/index')
+  // },
   {
     path: '/selfInfo',
     name: 'selfInfo',
