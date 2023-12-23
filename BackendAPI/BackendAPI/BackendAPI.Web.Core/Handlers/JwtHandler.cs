@@ -92,8 +92,6 @@ namespace BackendAPI.Web.Core
             //var (isValid, tokenData, validationResult) = JWTEncryption.Validate(token);
 
 
-
-
             // 这里写您的授权判断逻辑，授权通过返回 true，否则返回 false
             // 储存用户
             Console.WriteLine("pipline:" + token);

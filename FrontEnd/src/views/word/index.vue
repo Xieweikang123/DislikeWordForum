@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px" style="position: absolute">
+    <el-aside width="min-content" style="position: absolute">
       <div class="btnContainer">
         <el-button
           v-for="item in menuBtnList"
@@ -10,6 +10,7 @@
           :plain="formType != item.type"
           >{{ item.txt }}</el-button
         >
+      
       </div>
     </el-aside>
     <el-main>

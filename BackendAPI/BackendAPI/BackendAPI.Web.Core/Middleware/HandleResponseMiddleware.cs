@@ -28,7 +28,7 @@ namespace BackendAPI.Web.Core.Middleware
             //如果是403，返回为什么是403
             if (context.Response.StatusCode == 403 && context.Items.ContainsKey("ErrorMessage"))
             {
-                //context.Response.ContentType= "application/json";
+                context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(context.Items["ErrorMessage"].ToString());
             }
         }

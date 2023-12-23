@@ -8,7 +8,7 @@
         </div>
       </el-col>
 
-      <el-col v-if="userInfo" :span="8">
+      <el-col v-if="userInfo && userInfo.id" :span="8">
         <el-dropdown>
           <span class="el-dropdown-link disFlexSingle">
             <div class="divFlexAlignCenter marginright15">

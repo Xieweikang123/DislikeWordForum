@@ -3,6 +3,20 @@
     <div style="margin-bottom: 13px">
       <el-button v-for="(item, index) in sbtnConfig" :key="index" @click="changeScore(item.scopeIndex)" type="primary"
         :plain="paging.searchScop != item.scopeIndex">{{ item.text }}</el-button>
+
+      <!-- <el-button @click="onImport" type="success" plain size="small">
+        导入
+      </el-button> -->
+
+      <el-upload action="http://localhost:5000/api/Word/GetMyWordList" :on-success="handleSuccess"
+        :on-error="handleError">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+      </el-upload>
+      <el-button @click="onExport" type="success" plain size="small">
+        导出
+      </el-button>
       <!-- {{ paging.totalCount }}个单词 -->
     </div>
     <el-input placeholder="搜索单词" @input="searchChange" @keyup.enter.native="wordKeyEnter" v-model="paging.searchContent"
@@ -52,6 +66,8 @@ export default {
   },
   data() {
     return {
+      excelData: null,
+      fileList: [],
       loading: false,
       sbtnConfig: [
         {
@@ -101,6 +117,27 @@ export default {
     this.GetMyWordList();
   },
   methods: {
+
+    //导出excel
+    onExport() {
+      //获取全部数据
+      var postData = {
+        pageNumber: 1,
+        pageSize: this.paging.totalCount
+      }
+      this.getPageListData(postData).then(res => {
+        console.log('alldata', res)
+      })
+    },
+    handleSuccess(response, file, fileList) {
+      console.log('文件上传成功');
+      // 你可以在这里添加你上传成功后的逻辑
+    },
+    handleError(err, file, fileList) {
+      console.log('文件上传失败');
+      // 你可以在这里添加你上传失败后的逻辑
+    },
+
     // 翻译
     onTranslate(row) {
       // http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i=revenue
@@ -118,12 +155,6 @@ export default {
           WordJS.SaveWord(that, row).then(res => {
             console.log("OnSaveWord", res);
             that.$message.success("翻译成功");
-            // // //关闭面板
-            // if (res.succeeded) {
-            //   that.isShowDrawer = false;
-            //   that.$message.success("保存成功");
-            //   that.$emit("RefreshData");
-            // }
           })
 
         });
@@ -169,19 +200,23 @@ export default {
       }
       return cellValue.replace("T", " ");
     },
+    //获取分页数据
+    getPageListData(postData) {
+      return new Promise(resolve => {
+        this.$http.post("/api/Word/GetMyWordList", postData).then((res) => {
+          resolve(res)
+        });
+      })
+    },
     // 获取分页数据
     GetMyWordList() {
-      console.log("parent RefreshData");
-      var that = this;
-      that.loading = true;
-      that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
-        // console.log('gggg',res)
-        // Your code here
-        that.tableData = res.data.pageList;
-        that.paging.totalCount = res.data.allCount;
-
-        that.loading = false;
-      });
+      this.loading = true;
+      this.getPageListData(this.paging).then(res => {
+        var resData = res.data
+        this.tableData = resData.pageList;
+        this.paging.totalCount = resData.allCount;
+        this.loading = false;
+      })
     },
     //页码改变时
     changePageNumber(curPage) {
