@@ -133,17 +133,26 @@ export default {
         pageSize: this.paging.totalCount
       }
 
-      this.data = [
-        { name: 'apple', price: 1.2, amount: 10 },
-        { name: 'banana', price: 0.9, amount: 5 },
-      ]
+      // this.data = [
+      //   { name: 'apple', price: 1.2, amount: 10 },
+      //   { name: 'banana', price: 0.9, amount: 5 },
+      // ]
 
-      this.headers = ["name", "price", "amount"]
+      // this.headers = ["name", "price", "amount"]
 
       this.getPageListData(postData).then(res => {
         console.log('alldata', res)
+        var dataList = res.data.pageList
+        if (dataList.length == 0) {
+          this.$message.error("没有要导出的数据");
+          return
+        }
+        //获取对象的属性名
+        var keys = Object.keys(dataList[0])
+        console.log('kkk', keys)
 
-        excelHelper.exportExcel(this.headers, this.data, 'ceshi')
+
+        excelHelper.exportExcel(keys, dataList, '单词')
       })
     },
     handleSuccess(response, file, fileList) {
