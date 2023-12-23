@@ -1,5 +1,6 @@
 ﻿using BackendAPI.Core;
 using BackendAPI.Web.Core.Helper;
+using BackendAPI.Web.Core.Middleware;
 using Furion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Net;
+using System.Text;
 
 namespace BackendAPI.Web.Core
 {
@@ -75,6 +77,7 @@ namespace BackendAPI.Web.Core
             //});
 
 
+            app.UseMiddleware<HandleResponseMiddleware>();
             // 默认静态资源调用，wwwroot
             app.UseStaticFiles();
 

@@ -46,6 +46,8 @@ namespace BackendAPI.Web.Core
             var data = JWTEncryption.ReadJwtToken(token);
             var userId = data.GetClaim("UserId").Value;
 
+            var user = context.User;
+
             //var cacheUserTokenKey = "UserToken_" + userId;
             //_cache
 
@@ -56,6 +58,8 @@ namespace BackendAPI.Web.Core
             if (curUser.Token != token)
             {
                 Console.WriteLine("token 不一致");
+
+                httpContext.Items["ErrorMessage"] = "账号已在其它地方登陆";
                 //token不一致
                 //用户在其它地方登录
                 //var result = new { code = 403, message = "您的账号已在其它地方登陆" };

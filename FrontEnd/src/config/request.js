@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
+import userJs from '../utils/user'
 
 // create an axios instance
 const http = axios.create({
@@ -46,19 +47,32 @@ http.interceptors.response.use(
     // console.log("error",JSON.stringify(error.response.status))
     if (error.response) {
       switch (error.response.status) {
+
+        case 403:
+          console.log('4403', error)
+          Message({
+            message: error.response.data,
+            type: 'error',
+            duration: 1000
+          })
+
+          console.log('userjs', userJs)
+          userJs.logout()
+          return Promise.resolve({ succeeded: false, errors: error.response.data })
         case 401:
-          //登录过期
-          window.localStorage.removeItem("token")
 
           Message({
             message: "请点击右上角登录",
             type: 'error',
             duration: 1000
           })
-          window.localStorage.setItem("userInfo", null);
-          setTimeout(() => {
-            window.location.href = '/'
-          }, 2000);
+          userJs.logout()
+          // //登录过期
+          // window.localStorage.removeItem("token")
+          // window.localStorage.setItem("userInfo", null);
+          // setTimeout(() => {
+          //   window.location.href = '/'
+          // }, 2000);
           return Promise.resolve({ succeeded: false, errors: "登录过期，请重新登录" })
         // auth.removeToken()
         // window.location.href = "/Login"
