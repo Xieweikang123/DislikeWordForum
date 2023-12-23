@@ -60,6 +60,13 @@
 import EditForm from "../word/editForm.vue";
 import WordJS from '@/utils/word'
 
+// import { saveAs } from 'file-saver'
+// // import XLSX from 'xlsx'
+// import XLSX from 'xlsx/dist/xlsx.full.min'
+
+import excelHelper from '@/utils/excelHelper'
+
+
 export default {
   components: {
     EditForm,
@@ -125,8 +132,18 @@ export default {
         pageNumber: 1,
         pageSize: this.paging.totalCount
       }
+
+      this.data = [
+        { name: 'apple', price: 1.2, amount: 10 },
+        { name: 'banana', price: 0.9, amount: 5 },
+      ]
+
+      this.headers = ["name", "price", "amount"]
+
       this.getPageListData(postData).then(res => {
         console.log('alldata', res)
+
+        excelHelper.exportExcel(this.headers, this.data, 'ceshi')
       })
     },
     handleSuccess(response, file, fileList) {
