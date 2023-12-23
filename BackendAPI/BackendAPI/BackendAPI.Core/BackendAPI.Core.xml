@@ -781,6 +781,44 @@
             Nullable:True
             </summary>           
         </member>
+        <member name="T:BackendAPI.Core.Entities.UserSessions">
+            <summary>
+            储存用户会话id
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserSessions.Id">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserSessions.UserId">
+            <summary>
+            Desc:
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserSessions.SessionID">
+            <summary>
+            Desc:会话id
+            Default:
+            Nullable:False
+            </summary>           
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserSessions.DeviceDetails">
+            <summary>
+            设备信息
+            </summary>
+        </member>
+        <member name="P:BackendAPI.Core.Entities.UserSessions.CreateTime">
+            <summary>
+            Desc:
+            Default:
+            Nullable:True
+            </summary>           
+        </member>
         <member name="T:BackendAPI.Core.Entities.VerifyInfo">
             <summary>
             

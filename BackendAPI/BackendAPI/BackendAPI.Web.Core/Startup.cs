@@ -2,11 +2,14 @@
 using BackendAPI.Web.Core.Helper;
 using Furion;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Net;
 
 namespace BackendAPI.Web.Core
 {
@@ -24,6 +27,13 @@ namespace BackendAPI.Web.Core
             services.AddRemoteRequest();
 
             services.AddCorsAccessor();
+
+            services.AddDistributedMemoryCache(); // 添加分布式内存缓存，或者你可以使用 Redis 等其他的分布式缓存
+            services.AddSession();
+
+            //注入 ，使用 session
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
             services.AddControllers()
                     .AddInjectWithUnifyResult();
@@ -43,9 +53,27 @@ namespace BackendAPI.Web.Core
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
-
             app.UseRouting();
+
+
+            //app.UseExceptionHandler(builder =>
+            //{
+            //    builder.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            //        var error = context.Features.Get<IExceptionHandlerFeature>();
+            //        if (error != null)
+            //        {
+            //            //if (error.Error is CustomException customException)
+            //            //{
+            //            //    context.Response.StatusCode = (int)customException.StatusCode;
+            //            //}
+            //            await context.Response.WriteAsync(error.Error.Message);
+            //        }
+            //    });
+            //});
+
 
             // 默认静态资源调用，wwwroot
             app.UseStaticFiles();
@@ -55,6 +83,8 @@ namespace BackendAPI.Web.Core
             //在添加授权服务之前，请先确保 Startup.cs 中 Configure 是否添加了以下两个中间件：
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseInject(string.Empty);
 

@@ -51,7 +51,7 @@ http.interceptors.response.use(
           window.localStorage.removeItem("token")
 
           Message({
-            message: "请重新登录",
+            message: "请点击右上角登录",
             type: 'error',
             duration: 1000
           })

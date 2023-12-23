@@ -17,8 +17,6 @@
       <MemorizingWords v-if="formType == 'MemorizingWord'"></MemorizingWords>
       <TrendChart v-if="formType == 'TrendChart'"></TrendChart>
     </el-main>
-    <!-- 
-    <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm> -->
   </el-container>
 </template>
 
@@ -52,19 +50,9 @@ export default {
     };
   },
   watch: {
-    // "paging.pageNumber": {
-    //   handler(nVal) {
-    //     this.GetMyWordList();
-    //   },
-    // },
-    // "paging.searchScop": {
-    //   handler(nVal) {
-    //     this.GetMyWordList();
-    //   },
-    // },
+  
   },
   mounted() {
-    // this.GetMyWordList();
   },
   methods: {},
 };

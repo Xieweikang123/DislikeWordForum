@@ -11,7 +11,12 @@ namespace BackendAPI.Application
     /// 
     public class UserAppService : IDynamicApiController
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public UserAppService(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         public async Task<RetObj> Test()
         {
@@ -71,7 +76,6 @@ namespace BackendAPI.Application
             if (queryUser == null)
             {
                 throw new Exception("用户不存在或者密码错误");
-
             }
             // 生成 token 7*24*60 分钟 
             queryUser.Token = JWTEncryption.Encrypt(new Dictionary<string, object>()
@@ -80,13 +84,16 @@ namespace BackendAPI.Application
                 { "Account",queryUser.UserName }, // 存储用户名
 
             }, 10080);
-            queryUser.LastLoginTime = DateTime.Now;
 
+            //// 注册新的session时一般会用到
+            //// 用SetString()方法传入一个键和一个值将数据保存到Session中
+            //_httpContextAccessor.
+            //_httpContextAccessor.HttpContext.Session.SetString("MyKey", "MyValue");
+
+            queryUser.LastLoginTime = DateTime.Now;
             await db.Updateable(queryUser).ExecuteCommandAsync();
 
-
             return RetUserInfo(queryUser);
-
             //return RetObj.Success(queryUser.Token, "登录成功");
         }
 

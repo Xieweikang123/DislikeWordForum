@@ -22,6 +22,8 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Furion.Authorization;
 
@@ -83,6 +85,11 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
         // 获取 HttpContext 上下文
         var httpContext = context.GetCurrentHttpContext();
 
+
+        //var result = new { code = 403, message = "您的账号已在其它地方登陆" };
+        //await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(result));
+        //return;
+
         // 调用子类管道
         var pipeline = await PipelineAsync(context, httpContext);
         if (pipeline)
@@ -96,6 +103,16 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
                 else context.Fail();
             }
         }
-        else context.Fail();
+        else
+        {
+            context.Fail();
+            //httpContext.Response.StatusCode = 401;
+            //context.Result = 
+            //return;
+
+            //await httpContext.Response.WriteAsync("您的账号已在其它地方登陆");
+        }
+        //var result = new { code = 403, message = "您的账号已在其它地方登陆" };
+        //await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(result));
     }
 }

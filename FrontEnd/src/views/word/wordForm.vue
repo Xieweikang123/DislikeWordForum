@@ -175,6 +175,7 @@ export default {
       var that = this;
       that.loading = true;
       that.$http.post("/api/Word/GetMyWordList", that.paging).then((res) => {
+        // console.log('gggg',res)
         // Your code here
         that.tableData = res.data.pageList;
         that.paging.totalCount = res.data.allCount;
