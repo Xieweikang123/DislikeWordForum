@@ -1,5 +1,5 @@
 <template>
-  <el-header>
+  <el-header class="headerStyle">
     <el-row :gutter="20">
       <el-col :span="16" class="disFlex">
         <div v-for="item in menuList" @click="jumpTo(item.url)" :key="item.name">
@@ -8,7 +8,7 @@
         </div>
       </el-col>
 
-      <el-col v-if="userInfo && userInfo.id" :span="8">
+      <el-col class="rightTop" v-if="userInfo && userInfo.id" :span="8">
         <el-dropdown>
           <span class="el-dropdown-link disFlexSingle">
             <div class="divFlexAlignCenter marginright15">
@@ -17,7 +17,8 @@
                 userInfo.userName
               }}</el-avatar>
             </div>
-            <div>
+            <!-- 非移动端，显示昵称 -->
+            <div v-if="!isMobile">
               {{ userInfo.nickName
               }}<i class="el-icon-arrow-down el-icon--right"></i>
             </div>
@@ -43,6 +44,7 @@
 <script>
 import Login from "@/views/user/login.vue";
 import Register from "@/views/user/register.vue";
+import commonJs from '@/utils/commonJs'
 
 export default {
   components: {
@@ -72,24 +74,15 @@ export default {
           name: "笔记",
           url: "/note",
         },
-        // {
-        //   name: "minimap",
-        //   url: "/minimap",
-        // },
-        // {
-        //   name: "图片管理",
-        //   url: "/pictureManager",
-        // },
-        //  {
-        //   name: "数据库",
-        //   url: "/databaseManager",
-        // },
       ],
       isLogin: false,
     };
   },
 
   computed: {
+    isMobile() {
+      return commonJs.checkMobile()
+    },
     AvatorUrl() {
       if (
         !this.userInfo ||
@@ -104,10 +97,13 @@ export default {
     },
   },
   mounted() {
-    var that = this;
     // 获取登录状态
     // this.updateLoginStatus();
     this.activeUrl = window.location.pathname;
+
+    // console.log('cheack mobile', commonJs.checkMobile())
+    // const userAgentInfo = navigator.userAgent;
+    // console.log('userAgentInfo', userAgentInfo)
 
     this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     console.log("header  this.userInfo", this.userInfo);
@@ -170,6 +166,31 @@ export default {
 </script>
   
 <style>
+@media (max-width: 768px) {
+  .rightTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: inherit;
+  }
+
+  .headerStyle .el-row {
+    height: 60px;
+  }
+
+  .el-dropdown-link {
+    /* height: 30px; */
+  }
+
+  .el-header {
+    padding: 0;
+  }
+
+  .headerStyle {
+    overflow: auto;
+  }
+}
+
 .menuActive {
   color: #409eff;
 }

@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <el-container>
+    <!-- <el-container> -->
+    <Header v-if="!$route.meta.hideHeader"></Header>
+    <!--       
       <el-header v-if="!$route.meta.hideHeader">
         <Header ></Header>
-      </el-header>
-      <el-main>
-        <!-- 组件占位符-->
-        <router-view /></el-main>
-    </el-container>
+      </el-header> -->
+    <el-main>
+      <!-- 组件占位符-->
+      <router-view /></el-main>
+    <!-- </el-container> -->
   </div>
 </template>
 
@@ -22,6 +24,15 @@ export default {
 </script>
 
 <style lang="less">
+@media (max-width: 768px) {
+  .margin60Auto {
+    width: auto !important;
+  }
+  .disFlex div {
+    margin-left: 11px;
+  }
+}
+
 .margin60Auto {
   width: 60%;
   margin: 0 auto;

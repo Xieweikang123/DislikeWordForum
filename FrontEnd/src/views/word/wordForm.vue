@@ -1,22 +1,26 @@
 <template>
   <div class="margin60Auto">
     <div style="margin-bottom: 13px">
-      <el-button v-for="(item, index) in sbtnConfig" :key="index" @click="changeScore(item.scopeIndex)" type="primary"
-        :plain="paging.searchScop != item.scopeIndex">{{ item.text }}</el-button>
 
+      <div>
+        <el-button v-for="(item, index) in sbtnConfig" :key="index" @click="changeScore(item.scopeIndex)" type="primary"
+          :plain="paging.searchScop != item.scopeIndex">{{ item.text }}</el-button>
+      </div>
       <!-- <el-button @click="onImport" type="success" plain size="small">
         导入
       </el-button> -->
 
-      <el-upload action="http://localhost:5000/api/Word/GetMyWordList" :on-success="handleSuccess"
-        :on-error="handleError">
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success">上传到服务器</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
-      </el-upload>
-      <el-button @click="onExport" type="success" plain size="small">
-        导出
-      </el-button>
+      <div style="display: flex;margin-top: 15px;">
+        <el-upload style="display: flex;" action="http://localhost:5000/api/Word/GetMyWordList"
+          :on-success="handleSuccess" :on-error="handleError">
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <!-- <el-button style="margin-left: 10px;" size="small" type="success">上传到服务器</el-button> -->
+          <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+        </el-upload>
+        <el-button @click="onExport" type="success" plain size="small">
+          导出
+        </el-button>
+      </div>
       <!-- {{ paging.totalCount }}个单词 -->
     </div>
     <el-input placeholder="搜索单词" @input="searchChange" @keyup.enter.native="wordKeyEnter" v-model="paging.searchContent"
@@ -253,6 +257,9 @@ export default {
 };
 </script>
 <style scoped>
+
+
+
 .handPointer {
   cursor: pointer;
 }

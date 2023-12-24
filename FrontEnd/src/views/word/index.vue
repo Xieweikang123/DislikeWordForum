@@ -1,16 +1,10 @@
 <template>
-  <el-container>
-    <el-aside width="min-content" style="position: absolute">
+  <el-container class="mianContainer">
+    <el-aside class="leftside">
       <div class="btnContainer">
-        <el-button
-          v-for="item in menuBtnList"
-          :key="item.type"
-          @click="formType = item.type"
-          type="primary"
-          :plain="formType != item.type"
-          >{{ item.txt }}</el-button
-        >
-      
+        <el-button v-for="item in menuBtnList" :key="item.type" @click="formType = item.type" type="primary"
+          :plain="formType != item.type">{{ item.txt }}</el-button>
+
       </div>
     </el-aside>
     <el-main>
@@ -21,7 +15,7 @@
   </el-container>
 </template>
 
-  <script>
+<script>
 import WordForm from "../word/wordForm.vue";
 import MemorizingWords from "../word/MemorizingWords.vue";
 import TrendChart from "../word/TrendChart.vue";
@@ -51,17 +45,71 @@ export default {
     };
   },
   watch: {
-  
+
   },
   mounted() {
   },
   methods: {},
 };
 </script>
-<style scoped>
+<style >
+@media (max-width: 768px) {
+  /* .el-header {
+    overflow: auto;
+  } */
+  .btnContainer{
+
+  }
+
+
+
+  .el-main {
+
+    padding: 0px 10px;
+  }
+
+  .mianContainer {
+    display: block;
+  }
+
+  /* .el-container{
+    display: block;
+  } */
+  .leftside {
+    position: relative !important;
+    border-bottom: 1px dashed #d5d5d5;;
+    padding-bottom: 1px;
+    margin-bottom: 7px;
+    width: inherit !important; 
+  }
+
+  /* .margin60Auto {
+    width: max-content;
+  } */
+
+  .el-button {
+    padding: 6px 5px;
+
+  }
+
+}
+
+@media (min-width: 768px) {
+  .leftside {
+    width: min-content !important;
+  }
+}
+
+
+.leftside {
+  position: absolute;
+}
+
+
 .btnContainer button {
   margin: 7px 9px;
 }
+
 /*   
 .handPointer {
   cursor: pointer;
