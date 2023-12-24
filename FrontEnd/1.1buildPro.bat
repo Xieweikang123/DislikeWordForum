@@ -1,5 +1,5 @@
 
-call  npm run build:prod
+npm run build:prod
 
 
 echo build success

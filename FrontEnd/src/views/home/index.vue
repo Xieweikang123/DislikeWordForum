@@ -2,7 +2,7 @@
   <div class="margin60Auto">
 
    
-    <el-input type="textarea" :rows="3" placeholder="请输入内容1" v-model="sendContent">
+    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="sendContent">
     </el-input>
     <div style="text-align: right">
       <el-button @click="sendFun" style="margin-top: 10px" type="primary">发表</el-button>
