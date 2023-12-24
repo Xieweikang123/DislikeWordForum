@@ -11,10 +11,9 @@
       </el-button> -->
 
       <div style="display: flex;margin-top: 15px;">
-        <el-upload style="display: flex;" action="http://localhost:5000/api/Word/GetMyWordList"
-          :on-success="handleSuccess" :on-error="handleError">
+        <el-upload :headers="$store.getters.getTokenHeaders" style="display: flex;" :action="uploadUrl"
+          :data="{ userChoice }" :on-success="handleSuccess" :on-error="handleError">
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <!-- <el-button style="margin-left: 10px;" size="small" type="success">上传到服务器</el-button> -->
           <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
         </el-upload>
         <el-button @click="onExport" type="success" plain size="small">
@@ -56,6 +55,25 @@
       </el-pagination>
     </div>
 
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
+      <div style="    height: 300px;    overflow: auto;">以下条目已存在(上传:{{ uploadDataList.length }} 重复:{{
+        repeatWordList.length }})：
+
+        <div v-for="(item, index) in repeatWordList" style="margin-top: 10px;">{{ index + 1 }}、{{ item }}</div>
+        <!-- {{ repeatWordList }} -->
+
+      </div>
+      <p>你希望如何处理这些重复的信息？</p>
+      <el-radio-group v-model="userChoice">
+        <el-radio label="0">跳过重复条目</el-radio>
+        <el-radio label="1">用新数据更新这些条目</el-radio>
+      </el-radio-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmChoice">确定</el-button>
+      </span>
+    </el-dialog>
+
     <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm>
   </div>
 </template>
@@ -77,6 +95,11 @@ export default {
   },
   data() {
     return {
+      uploadedFile: null,
+      dialogVisible: false,
+      repeatWordList: [],
+      uploadDataList: [],
+      userChoice: -1,//用户上传单词选择是否覆盖重复单词，-1未选择，0不覆盖重复单词，1覆盖重复单词
       excelData: null,
       fileList: [],
       loading: false,
@@ -112,6 +135,11 @@ export default {
       tableData: [],
     };
   },
+  computed: {
+    uploadUrl() {
+      return process.env.VUE_APP_BASE_API + 'api/Word/UploadExcel'
+    }
+  },
   watch: {
     "paging.pageNumber": {
       handler(nVal) {
@@ -126,9 +154,27 @@ export default {
   },
   mounted() {
     this.GetMyWordList();
+    // process.env.VUE_APP_BASE_API +
+
+    console.log('process', process.env.VUE_APP_BASE_API)
+    // console.log('process', process)
   },
   methods: {
 
+    confirmChoice() {
+      let formData = new FormData();
+      formData.append('file', this.uploadedFile.raw);
+      formData.append('userChoice', this.userChoice);
+
+      this.$axios.post('/your-api-url', formData)
+        .then(response => {
+          // 处理响应
+        })
+        .catch(error => {
+          // 处理错误
+        });
+      this.dialogVisible = false;
+    },
     //导出excel
     onExport() {
       //获取全部数据
@@ -160,11 +206,32 @@ export default {
       })
     },
     handleSuccess(response, file, fileList) {
-      console.log('文件上传成功');
+      console.log('文件上传成功', response);
+      //上传失败
+      if (!response.succeeded) {
+        this.$message.error("导入失败:" + response.errors);
+      }
+      this.uploadedFile = file;
+      let repeatWordList = response.data.repeatWordList
+      // 假设服务器返回一个包含'duplicates'属性的对象，其中包含了重复的条目的信息
+      if (repeatWordList && repeatWordList.length > 0) {
+        // 如果存在重复项，就显示提示框
+        this.dialogVisible = true;
+        this.repeatWordList = repeatWordList;
+        this.uploadDataList = response.data.englishWords
+      }
+      else {
+        // 否则，就提示用户上传成功
+        this.$message({
+          type: 'success',
+          message: '上传成功!'
+        });
+      }
+
       // 你可以在这里添加你上传成功后的逻辑
     },
     handleError(err, file, fileList) {
-      console.log('文件上传失败');
+      console.log('文件上传失败', err);
       // 你可以在这里添加你上传失败后的逻辑
     },
 
@@ -257,9 +324,6 @@ export default {
 };
 </script>
 <style scoped>
-
-
-
 .handPointer {
   cursor: pointer;
 }

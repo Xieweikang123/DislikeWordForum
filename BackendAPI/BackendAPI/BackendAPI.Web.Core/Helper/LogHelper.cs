@@ -3,12 +3,13 @@ using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Threading.Tasks;
 
 namespace BackendAPI.Web.Core.Helper
 {
 
     /// <summary>
-    /// 缓存
+    /// 日志记录
     /// </summary>
     public class LogHelper
     {
@@ -16,7 +17,7 @@ namespace BackendAPI.Web.Core.Helper
         /// 写入日志
         /// </summary>
         /// <param name="text"></param>
-        public static void WriteLog(string text)
+        public static async Task WriteLogAsync(string text)
         {
             var db = DbContextStatic.Instance;
             var logItem = new SysLog()
@@ -26,7 +27,7 @@ namespace BackendAPI.Web.Core.Helper
                 Createdate = DateTime.Now
             };
 
-            db.Insertable(logItem).ExecuteCommandAsync();
+            await db.Insertable(logItem).ExecuteCommandAsync();
         }
     }
 }

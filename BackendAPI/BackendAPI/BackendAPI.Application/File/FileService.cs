@@ -24,18 +24,6 @@ namespace BackendAPI.Application.File
         [HttpGet]
         public object GetwwwrootFiles()
         {
-            //var fileDir = App.WebHostEnvironment.WebRootPath + "/Files";
-            //// Get all files in the folder
-            //var files = Directory.GetFiles(fileDir);
-            //// Loop through each file and do something with it
-            //var relativePaths=new List<string>();
-            //foreach (string file in files)
-            //{
-            //    Console.WriteLine(file);
-            //    string relativePath = Path.GetRelativePath(App.WebHostEnvironment.WebRootPath, file);
-            //    relativePaths.Add(relativePath);
-            //}c
-
             var fileDir = Path.Combine(App.WebHostEnvironment.WebRootPath, "Files");
             var relativePaths = Directory.GetFiles(fileDir)
                 .Select(file => Path.GetRelativePath(App.WebHostEnvironment.WebRootPath, file))
@@ -43,8 +31,6 @@ namespace BackendAPI.Application.File
 
             return relativePaths;
         }
-
-
         /// <summary>
         /// 获取文件名
         /// </summary>

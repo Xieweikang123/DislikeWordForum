@@ -28,4 +28,8 @@
 		<Folder Include="Walker\Dtos\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="NPOI" Version="2.6.2" />
+	</ItemGroup>
+
 </Project>

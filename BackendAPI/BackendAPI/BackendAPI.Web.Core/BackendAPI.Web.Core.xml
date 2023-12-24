@@ -11,10 +11,10 @@
         </member>
         <member name="T:BackendAPI.Web.Core.Helper.LogHelper">
             <summary>
-            缓存
+            日志记录
             </summary>
         </member>
-        <member name="M:BackendAPI.Web.Core.Helper.LogHelper.WriteLog(System.String)">
+        <member name="M:BackendAPI.Web.Core.Helper.LogHelper.WriteLogAsync(System.String)">
             <summary>
             写入日志
             </summary>

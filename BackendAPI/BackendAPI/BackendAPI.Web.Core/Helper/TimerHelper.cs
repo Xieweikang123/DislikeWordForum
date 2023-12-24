@@ -85,7 +85,7 @@ namespace BackendAPI.Web.Core.Helper
 
             catch (Exception ex)
             {
-                LogHelper.WriteLog($"兔小巢出错 , {ex.Message}");
+                LogHelper.WriteLogAsync($"兔小巢出错 , {ex.Message}");
                 NoticeHelper.ShowNotification("兔小巢出错:", ex.Message);
 
             }

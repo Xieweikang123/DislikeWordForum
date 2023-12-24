@@ -9,6 +9,13 @@ export default new Vuex.Store({
         // your state here
     },
     getters: {
+
+        getTokenHeaders() {
+            var token = localStorage.getItem("token");
+            return {
+                Authorization: `Bearer ${token}`,
+            };
+        },
         isMobile() {
             const userAgentInfo = navigator.userAgent;
             const mobileAgents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];

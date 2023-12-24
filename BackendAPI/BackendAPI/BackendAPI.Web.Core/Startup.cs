@@ -1,4 +1,5 @@
 ﻿using BackendAPI.Core;
+using BackendAPI.Web.Core.Filter;
 using BackendAPI.Web.Core.Helper;
 using BackendAPI.Web.Core.Middleware;
 using Furion;
@@ -37,8 +38,10 @@ namespace BackendAPI.Web.Core
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
-            services.AddControllers()
-                    .AddInjectWithUnifyResult();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpGlobalExceptionFilter());
+            }).AddInjectWithUnifyResult();
 
 
             //Startup.cs文件添加下面代码
