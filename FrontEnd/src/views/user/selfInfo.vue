@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="20">
-    <el-col :span="12" :offset="6">
+    <el-col :span="24" :offset="0">
       <el-form ref="form" :model="form"  @submit.native.prevent label-width="80px">
         <el-form-item label="头像:">
           <el-upload
@@ -131,6 +131,9 @@ export default {
   --widthPx: 78px;
 }
 
+.el-input{
+  width: 72%;
+}
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

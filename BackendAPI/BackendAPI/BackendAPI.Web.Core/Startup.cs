@@ -44,7 +44,7 @@ namespace BackendAPI.Web.Core
             //Startup.cs文件添加下面代码
             services.AddSqlsugarSetup();
 
-            LogHelper.WriteLog("startup ConfigureServices");
+            //LogHelper.WriteLog("startup ConfigureServices");
             //TimerHelper.Start();
         }
 

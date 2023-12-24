@@ -94,7 +94,7 @@ export default {
 <style >
 .drawerStyle {
   /* padding:0 1px; */
-
+  width: min-content !important;
   padding: 14px 27px;
 }
 </style>
