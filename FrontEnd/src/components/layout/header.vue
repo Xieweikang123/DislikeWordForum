@@ -18,7 +18,7 @@
               }}</el-avatar>
             </div>
             <!-- 非移动端，显示昵称 -->
-            <div v-if="!isMobile">
+            <div v-if="!$store.getters.isMobile">
               {{ userInfo.nickName
               }}<i class="el-icon-arrow-down el-icon--right"></i>
             </div>
@@ -80,9 +80,9 @@ export default {
   },
 
   computed: {
-    isMobile() {
-      return commonJs.checkMobile()
-    },
+    // isMobile() {
+    //   return commonJs.checkMobile()
+    // },
     AvatorUrl() {
       if (
         !this.userInfo ||
@@ -101,7 +101,7 @@ export default {
     // this.updateLoginStatus();
     this.activeUrl = window.location.pathname;
 
-    // console.log('cheack mobile', commonJs.checkMobile())
+    // console.log('cheack mobile', this.$store)
     // const userAgentInfo = navigator.userAgent;
     // console.log('userAgentInfo', userAgentInfo)
 

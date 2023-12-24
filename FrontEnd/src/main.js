@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// import Vuex from 'vuex'
 import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui'
@@ -18,6 +19,9 @@ import moment from 'moment'
 //请求配置
 import request from '@/config/request';
 Vue.use(request);
+
+// Vue.use(Vuex)
+
 
 
 // // 配置模板编译器
@@ -54,10 +58,15 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
+
+import store from './store'  // 引入刚才创建的 store
+
+
 new Vue({
   // 挂载路由对象(相当于 router:router)
   router,
   render: h => h(App),
+  store, // 将 store 选项注入到 Vue 实例中
   mounted() {
   }
 }).$mount('#app')

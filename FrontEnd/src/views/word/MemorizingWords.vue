@@ -3,7 +3,9 @@
     <div class="rightStyle">
       <el-switch v-model="configEntity.isOpenVoice" active-text="开启朗读声音">
       </el-switch>
-      <div style="margin-top:20px">
+
+      <!-- 记录数统计 -->
+      <div v-if="!$store.getters.isMobile" style="margin-top:20px">
         <div style="margin-top:5px;    display: flex;    justify-content: space-between;"
           v-for="(item, index) in allData.slice(0, 20)">
           <!-- <span>{{index+1+'.'+ item.word }}</span> -->
@@ -99,7 +101,7 @@ export default {
   },
   mounted() {
     var that = this;
-
+    // console.log('sss',this.isMobile)
     //  localStorage.setItem("configEntity", JSON.stringify(nVal));
     //储存配置
     var configEntityStorage = localStorage.getItem("configEntity");
@@ -206,14 +208,25 @@ export default {
 };
 </script>
 <style scoped>
-.timestyleR{
-  color: #7c3540;
-    font-size: 22px;
-    font-weight: bold;
+@media (max-width: 768px) {
+  .rightStyle {
+    position: inherit !important;
+    display: flex;
+    justify-content: end;
+    margin-bottom: 11px;
+  }
 }
+
+
+.timestyleR {
+  color: #7c3540;
+  font-size: 22px;
+  font-weight: bold;
+}
+
 .timestyle {
   color: #4c6a78;
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .rightStyle {

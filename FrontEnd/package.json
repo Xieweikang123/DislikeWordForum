@@ -28,6 +28,7 @@
     "vue": "^2.6.14",
     "vue-calendar-heatmap": "^0.8.4",
     "vue-router": "^3.5.1",
+    "vuex": "^3.6.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

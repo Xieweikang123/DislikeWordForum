@@ -54,33 +54,22 @@ export default {
 </script>
 <style >
 @media (max-width: 768px) {
-  /* .el-header {
-    overflow: auto;
-  } */
-  .btnContainer{
-
+  .paginationStyle {
+    margin-bottom: 3%;
   }
-
-
-
   .el-main {
-
     padding: 0px 10px;
   }
-
   .mianContainer {
     display: block;
   }
-
-  /* .el-container{
-    display: block;
-  } */
   .leftside {
     position: relative !important;
-    border-bottom: 1px dashed #d5d5d5;;
+    border-bottom: 1px dashed #d5d5d5;
+    ;
     padding-bottom: 1px;
     margin-bottom: 7px;
-    width: inherit !important; 
+    width: inherit !important;
   }
 
   /* .margin60Auto {
