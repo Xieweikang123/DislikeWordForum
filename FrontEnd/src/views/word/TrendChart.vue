@@ -1,13 +1,13 @@
 <template>
   <div class="margin60Auto memContainer">
-    <div id="rec7Days" style="width: 500px; height: 300px"></div>
-    <div id="rec30Days" style="width: 800px; height: 300px"></div>
-    <div id="rec180Days" style="width: 900px; height: 300px"></div>
-    <div id="rec360Days" style="width: 1000px; height: 300px"></div>
+    <div id="rec7Days"></div>
+    <div id="rec30Days"></div>
+    <div id="rec180Days"></div>
+    <div id="rec360Days"></div>
   </div>
 </template>
 
-  <script>
+<script>
 import * as echarts from "echarts";
 
 export default {
@@ -38,35 +38,6 @@ export default {
     // option && myChart.setOption(option);
   },
   methods: {
-    // //最近30天
-    // getrec30Days() {
-    //   var that = this;
-    //   that.$http.get("/api/Word/GetRecentWordChartData/30").then((res) => {
-    //     console.log("GetRecentWordChartData", res);
-    //     // that.allData = res.data;
-    //     // 基于准备好的dom，初始化echarts实例
-    //     var myChart = echarts.init(document.getElementById("rec30Days"));
-    //     console.log("mounted", myChart);
-    //     // 绘制图表
-    //     myChart.setOption({
-    //       title: {
-    //         text: "最近30天背单词趋势图",
-    //       },
-    //       tooltip: {},
-    //       xAxis: {
-    //         data: res.data.recDays,
-    //       },
-    //       yAxis: {},
-    //       series: [
-    //         {
-    //           name: "单词数",
-    //           type: "line",
-    //           data: res.data.wordCounts,
-    //         },
-    //       ],
-    //     });
-    //   });
-    // },
     drawLineChart(howManayDays, chartId, charTitle) {
       var that = this;
       that.$http
@@ -141,11 +112,22 @@ export default {
 };
 </script>
 <style scoped>
+.memContainer div {
+  width: 100%;
+  height: 300px
+}
+
+/* .chartsize {
+  width: 100%;
+  height: 300px
+} */
+
 .memContainer {
   position: relative;
   /* left: -12%; */
   text-align: center;
 }
+
 .wordBall {
   margin: 22px auto;
   width: 200px;

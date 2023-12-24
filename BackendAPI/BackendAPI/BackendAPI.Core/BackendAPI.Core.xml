@@ -157,6 +157,11 @@
             个性签名
             </summary>
         </member>
+        <member name="P:BackendAPI.Core.Entities.CoreUser.IsSingleDevice">
+            <summary>
+            是否是单设备登录：0 多设备 1 单设备
+            </summary>
+        </member>
         <member name="P:BackendAPI.Core.Entities.DBConfig.DbType">
              <summary>
              数据库类型 mssql、mysql 

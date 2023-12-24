@@ -69,5 +69,10 @@ namespace BackendAPI.Core.Entities
         /// 个性签名
         /// </summary>
         public string PersonalSignature { get; set; }
+
+        /// <summary>
+        /// 是否是单设备登录：0 多设备 1 单设备
+        /// </summary>
+        public bool IsSingleDevice { get; set; }
     }
 }

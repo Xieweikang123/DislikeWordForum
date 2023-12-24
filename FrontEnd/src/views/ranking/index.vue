@@ -8,27 +8,20 @@
     <div class="rowmargin">
       <el-skeleton :loading="isLoading" animated>
         <template slot="template">
-          <el-skeleton-item
-            v-for="item in [0, 1, 2, 3]"
-            :key="item"
-            variant="text"
-            style="margin-top: 20px"
-          />
+          <el-skeleton-item v-for="item in [0, 1, 2, 3]" :key="item" variant="text" style="margin-top: 20px" />
         </template>
       </el-skeleton>
 
-      <el-row
-        class="disAlignCenter"
-        style="    margin-top: 12px;"
-        v-for="(item, index) in todayData"
-        :key="item.belongUserId"
-      >
-        <el-col class="disAlignCenter" :span="8" :offset="4">
+      <el-row class="disAlignCenter" style="    margin-top: 12px;" v-for="(item, index) in todayData"
+        :key="item.belongUserId">
+        <el-col class="disAlignCenter" :span="12" :offset="1">
           <div style="position: relative; margin-right: 16px">
             <el-avatar :src="getAvatorUrl(item.avatar)"> </el-avatar>
             <span class="notxt">{{ index + 1 }}</span>
           </div>
-          {{ item.nickName }}
+          <span class="nickNames">
+            {{ item.nickName }}
+          </span>
         </el-col>
         <el-col :span="12"> {{ item.sum }} </el-col>
       </el-row>
@@ -74,6 +67,7 @@ export default {
   color: #82b1d3;
   font-weight: 600;
 }
+
 .notxt {
   font-size: 12px;
   position: absolute;
@@ -86,15 +80,30 @@ export default {
   right: -11px;
   color: #914b4b;
 }
+
 .rowmargin {
   margin-top: 10px;
   /* width: 41%; */
   margin: 13px auto;
   justify-content: space-between;
 }
+
 .container {
   text-align: center;
   width: 60%;
   margin: 0 auto;
+}
+.nickNames{
+  white-space: nowrap;
+    width: 100%;
+    overflow: auto;
+}
+
+@media (max-width: 768px) {
+
+  .container {
+    width: inherit;
+  }
+
 }
 </style>

@@ -25,9 +25,14 @@ export default {
 
 <style lang="less">
 @media (max-width: 768px) {
+  .el-dialog {
+    width: fit-content !important;
+  }
+
   .margin60Auto {
     width: auto !important;
   }
+
   .disFlex div {
     margin-left: 11px;
   }

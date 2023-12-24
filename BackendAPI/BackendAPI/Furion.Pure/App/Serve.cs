@@ -307,7 +307,7 @@ public static class Serve
         }
 
         // 解决部分主机不能正确读取 urls 参数命令问题
-        var startUrls = !string.IsNullOrWhiteSpace(urls) ? urls : builder.Configuration[nameof(urls)];
+        var startUrls = !string.IsNullOrWhiteSpace(urls) ? urls : builder.Configuration["urls"];
 
         // 自定义启动端口
         if (!string.IsNullOrWhiteSpace(startUrls))
