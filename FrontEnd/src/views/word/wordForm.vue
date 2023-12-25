@@ -13,8 +13,8 @@
       <div style="display: flex;margin-top: 15px;">
         <el-upload :headers="$store.getters.getTokenHeaders" style="display: flex;" :action="uploadUrl"
           :data="{ userChoice }" :on-success="handleSuccess" :on-error="handleError">
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+          <el-button :loading="isImportLoading" slot="trigger" size="small" type="primary">导入单词</el-button>
+          <div style="margin: auto 6px;" slot="tip" class="el-upload__tip">只能上传excel文件</div>
         </el-upload>
         <el-button @click="onExport" type="success" plain size="small">
           导出
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column prop="translate" :show-overflow-tooltip="true" label="翻译">
         <template slot-scope="scope">
-          <el-button v-if="!scope.row.translate" @click="onTranslate(scope.row)" size="small"
+          <el-button v-if="false && !scope.row.translate" @click="onTranslate(scope.row)" size="small"
             type="primary">翻译</el-button>
           <span v-else>
             {{ scope.row.translate }}
@@ -74,6 +74,9 @@
       </span>
     </el-dialog>
 
+    <el-dialog :visible.sync="translateDialogVisible" width="500px">
+      <iframe id="translateIframe" :src="translateUrl" style="width: 100%; height: 90vh;"></iframe>
+    </el-dialog>
     <EditForm @RefreshData="GetMyWordList" ref="editForm"></EditForm>
   </div>
 </template>
@@ -95,6 +98,10 @@ export default {
   },
   data() {
     return {
+      wordToTranslate: '',
+      translateDialogVisible: false,
+      //导入按钮，是否正在加载
+      isImportLoading: false,
       uploadedFile: null,
       dialogVisible: false,
       repeatWordList: [],
@@ -136,6 +143,9 @@ export default {
     };
   },
   computed: {
+    translateUrl() {
+      return `https://dict.youdao.com/w/eng/${this.wordToTranslate}`;
+    },
     uploadUrl() {
       return process.env.VUE_APP_BASE_API + 'api/Word/UploadExcel'
     }
@@ -165,13 +175,37 @@ export default {
       let formData = new FormData();
       formData.append('file', this.uploadedFile.raw);
       formData.append('userChoice', this.userChoice);
+      //用户是否选择
+      if (this.userChoice === -1) {
+        this.$message.warning('请先选择如何处理重复的信息');
+        return;
+      }
 
-      this.$axios.post('/your-api-url', formData)
+      //如果原有数据，和重复数据一样多，并且选择跳过重复，则视为无效操作
+      if (this.userChoice == 0 && this.uploadDataList.length == this.repeatWordList.length) {
+        this.$message.warning('这么选的话，没有要上传的数据');
+        return;
+      }
+
+      //设置为-1，防止再次上传，被误认为二次确认
+      this.userChoice = -1
+
+      this.isImportLoading = true
+      this.loading = true
+      this.$http.post('/api/Word/UploadExcel', formData)
         .then(response => {
           // 处理响应
+          console.log('ok', response)
+          this.$message.success("导入成功")
+          //更新列表
+          this.GetMyWordList()
         })
         .catch(error => {
           // 处理错误
+          console.log('error', error)
+        }).finally(() => {
+          this.isImportLoading = false
+          this.loading = false
         });
       this.dialogVisible = false;
     },
@@ -182,14 +216,6 @@ export default {
         pageNumber: 1,
         pageSize: this.paging.totalCount
       }
-
-      // this.data = [
-      //   { name: 'apple', price: 1.2, amount: 10 },
-      //   { name: 'banana', price: 0.9, amount: 5 },
-      // ]
-
-      // this.headers = ["name", "price", "amount"]
-
       this.getPageListData(postData).then(res => {
         console.log('alldata', res)
         var dataList = res.data.pageList
@@ -238,23 +264,40 @@ export default {
     // 翻译
     onTranslate(row) {
       // http://fanyi.youdao.com/translate?&doctype=json&type=AUTO&i=revenue
-
+      this.wordToTranslate = row.word
+      this.translateDialogVisible = true
       console.log('onTranslate', row)
 
-      var that = this;
-      that.$http
-        .get(`/api/Word/Translate/${row.word}`, { crossOrigin: true })
-        .then((res) => {
-          console.log('rrr', res)
-          var obj = JSON.parse(res.data)
-          row.translate = obj.translateResult[0][0].tgt
-          console.log('translate', row.translate)
-          WordJS.SaveWord(that, row).then(res => {
-            console.log("OnSaveWord", res);
-            that.$message.success("翻译成功");
-          })
+      window.onresize = function () {
+        console.log('onresize')
+        var iframe = document.getElementById('translateIframe');
+        iframe.style.height = window.innerHeight + 'px';
+      }
 
-        });
+
+      //  // 放大页面  
+      //  window.innerWidth += 100; // 增加100像素的宽度  
+      // window.innerHeight += 100; // 增加100像素的高度 
+
+
+      // var iframe = document.getElementById('translateIframe');
+      // iframe.style.height = window.innerHeight + 'px';
+
+
+      // var that = this;
+      // that.$http
+      //   .get(`/api/Word/Translate/${row.word}`, { crossOrigin: true })
+      //   .then((res) => {
+      //     console.log('rrr', res)
+      //     var obj = JSON.parse(res.data)
+      //     row.translate = obj.translateResult[0][0].tgt
+      //     console.log('translate', row.translate)
+      //     WordJS.SaveWord(that, row).then(res => {
+      //       console.log("OnSaveWord", res);
+      //       that.$message.success("翻译成功");
+      //     })
+
+      //   });
 
     },
     // 单击单词标签

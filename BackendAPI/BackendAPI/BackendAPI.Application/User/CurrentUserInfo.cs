@@ -9,7 +9,7 @@ namespace BackendAPI.Application.User
     /// <summary>
     /// 当前用户信息读取
     /// </summary>
-    public static class CurrentUserInfo
+    public  class CurrentUserInfo
     {
         /// <summary>
         /// 用户id

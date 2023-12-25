@@ -23,7 +23,7 @@ namespace BackendAPI.Application
         [HttpGet]
         public async Task TestMultipleActiveResultSets()
         {
-            var wordAppService = new WordAppService(null);
+            //var wordAppService = new WordAppService(null);
 
             var db = DbContextStatic.Instance;
             //db.Queryable<EnglishWord>().i

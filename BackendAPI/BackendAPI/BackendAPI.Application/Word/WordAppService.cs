@@ -1,5 +1,6 @@
 ﻿using BackendAPI.Application.User;
 using BackendAPI.Core;
+using BackendAPI.Core.Entities;
 using Furion.DistributedIDGenerator;
 using Furion.LinqBuilder;
 using Furion.RemoteRequest.Extensions;
@@ -7,7 +8,9 @@ using Microsoft.Extensions.Caching.Memory;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Org.BouncyCastle.Asn1.Cmp;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace BackendAPI.Application
@@ -23,11 +26,36 @@ namespace BackendAPI.Application
         /// </summary>
         private const string wordCacheKey = "word_Cache";
         private readonly IMemoryCache _memoryCache;
-        public WordAppService(IMemoryCache memoryCache)
+        private readonly ISqlSugarClient _dbContext;
+
+        public WordAppService(IMemoryCache memoryCache, ISqlSugarClient dbContext)
         {
             _memoryCache = memoryCache;
+            _dbContext = dbContext;
         }
 
+
+        /// <summary>
+        /// 将cellvalue转为指定类型
+        /// </summary>
+        /// <param name="cellValue"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        private object ConvertToTargetTypeValue(string cellValue, Type targetType)
+        {
+            if (targetType == typeof(DateTime) && DateTime.TryParseExact(cellValue, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+            else if (targetType == typeof(int) && int.TryParse(cellValue, out int intValue))
+            {
+                return intValue;
+            }
+            else
+            {
+                return Convert.ChangeType(cellValue, targetType);
+            }
+        }
 
         /// <summary>
         /// 上传单词excel
@@ -52,8 +80,10 @@ namespace BackendAPI.Application
 
             var englishWords = new List<EnglishWord>(); // 用于存放EnglishWord的列表
             //用户已有单词
-            var userOriginalWords = GetCacheEnglishWords();
+            var userOriginalWords = GetCacheEnglishWords().Where(x => !string.IsNullOrWhiteSpace(x.Word)).ToList();
             var repeatWordList = new List<EnglishWord>();
+            var userId = CurrentUserInfo.UserId;
+            var nowTime = DateTime.Now;
 
             using (var memoryStream = new MemoryStream())
             {
@@ -84,6 +114,7 @@ namespace BackendAPI.Application
 
                     var englishWord = new EnglishWord();
 
+                    //遍历对象的所有属性
                     for (int j = 0; j < properties.Length; j++)
                     {
                         var cellValue = row.GetCell(j)?.ToString();
@@ -91,44 +122,36 @@ namespace BackendAPI.Application
                         {
                             continue;
                         }
-
                         try
                         {
                             var targetType = Nullable.GetUnderlyingType(properties[j].PropertyType) ?? properties[j].PropertyType;
 
-                            if (targetType == typeof(DateTime))
-                            {
-                                if (DateTime.TryParseExact(cellValue, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTimeValue))
-                                {
-                                    properties[j].SetValue(englishWord, dateTimeValue);
-                                }
-                            }
-                            else if (targetType == typeof(int))
-                            {
-                                if (int.TryParse(cellValue, out int intValue))
-                                {
-                                    properties[j].SetValue(englishWord, intValue);
-                                }
-                            }
-                            else
-                            {
-                                properties[j].SetValue(englishWord, Convert.ChangeType(cellValue, targetType), null);
-                            }
-
-
+                            var value = ConvertToTargetTypeValue(cellValue, targetType);
+                            properties[j].SetValue(englishWord, value);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"无法将值 {cellValue} 转换为 {properties[j].PropertyType.Name} 类型。错误信息: {ex.Message}");
                         }
-
-                        //"x000d"是在数据处理过程中，一个常见的字符编码问题。值"x000d"实际上是Unicode编码的形式，该Unicode字符对应的是CR(回车)，也就是 "\r"。该问题通常出现在从某个编码导入到另一个编码时，或者进行处理时未成功解析原始编码。
-                        if (!string.IsNullOrEmpty(englishWord.Translate))
-                        {
-                            englishWord.Translate = englishWord.Translate.Replace("_x000d_", string.Empty);
-                        }
-
                     }
+                    //word空，不添加
+                    if (string.IsNullOrWhiteSpace(englishWord.Word))
+                    {
+                        continue;
+                    }
+                    //"x000d"是在数据处理过程中，一个常见的字符编码问题。值"x000d"实际上是Unicode编码的形式，该Unicode字符对应的是CR(回车)，也就是 "\r"。该问题通常出现在从某个编码导入到另一个编码时，或者进行处理时未成功解析原始编码。
+                    if (!string.IsNullOrEmpty(englishWord.Translate))
+                    {
+                        englishWord.Translate = englishWord.Translate.Replace("_x000d_", string.Empty);
+                    }
+
+
+                    //复制时，重置BelongUserId
+
+                    englishWord.id = IDGen.GetStrId();
+                    englishWord.BelongUserId = userId;
+                    englishWord.Createdate = nowTime;
+                    englishWord.Modifydate = null;
 
                     // 将对象添加到列表中
                     englishWords.Add(englishWord);
@@ -141,6 +164,65 @@ namespace BackendAPI.Application
                 }
             }
 
+            //var db = DbContextStatic.Instance;
+            //如果userChoice!=-1 ，表示有重复条目，进行了第二次选择
+            if (userChoice != -1)
+            {
+                //，0 跳过重复  1 覆盖重复单词
+                //不重复的单词
+                var noRepeats = englishWords.Except(repeatWordList, new EnglishWordComparer()).ToList();
+
+                #region //开启事务
+                try
+                {
+                    await _dbContext.Ado.BeginTranAsync();
+                    //插入不重复的单词
+                    await _dbContext.Insertable(noRepeats).ExecuteCommandAsync();
+
+                    switch (userChoice)
+                    {
+                        //跳过重复--不执行
+                        case 0:
+                            break;
+                        //覆盖
+                        case 1:
+                            //更新重复单词
+                            //从原来单词列表找到 word一样的，加入更新列表，否则没法用update语句
+                            var updateList = new List<EnglishWord>();
+
+                            //遍历重复项，然后从原列表查出id，赋值给重复项，这样可以批量根据id更新
+                            repeatWordList.ForEach(item =>
+                            {
+                                //除了id其它都更新
+                                //重复单词项
+                                var oriItem = userOriginalWords.FirstOrDefault(w => w.Word == item.Word);
+                                item.id = oriItem.id;
+                                updateList.Add(item);
+                            });
+
+                            await _dbContext.Updateable(updateList).ExecuteCommandAsync();
+                            break;
+                    }
+
+                    await _dbContext.Ado.CommitTranAsync();
+                }
+                catch (Exception ex)
+                {
+                    await _dbContext.Ado.RollbackTranAsync();
+                    throw new Exception(ex.Message);
+                }
+
+                #endregion
+            }
+            //没选择，视为首次提交
+            else if (!repeatWordList.Any())
+            {
+                await _dbContext.Insertable(englishWords).ExecuteCommandAsync();
+            }
+
+            //刷新单词缓存
+            GetCacheEnglishWords(true);
+
             //返回要导入单词，和重复单词
             return new
             {
@@ -148,6 +230,23 @@ namespace BackendAPI.Application
                 repeatWordList
             };
         }
+
+
+        // 自定义相等比较器
+        public class EnglishWordComparer : IEqualityComparer<EnglishWord>
+        {
+            public bool Equals(EnglishWord x, EnglishWord y)
+            {
+                return x.Word == y.Word;
+            }
+
+            public int GetHashCode(EnglishWord obj)
+            {
+                if (obj.Word == null) return 0;
+                return obj.Word.GetHashCode();
+            }
+        }
+
         /// <summary>
         /// 获取最近7天单词数
         /// </summary>
