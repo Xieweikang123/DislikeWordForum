@@ -9,7 +9,7 @@
       </el-col>
 
       <el-col class="rightTop" v-if="userInfo && userInfo.id" :span="8">
-        <el-dropdown>
+        <el-dropdown ref="dropdown" trigger="click">
           <span class="el-dropdown-link disFlexSingle">
             <div class="divFlexAlignCenter marginright15">
               <el-avatar v-if="AvatorUrl.length > 0" :key="AvatorUrl" shape="square" :src="AvatorUrl"></el-avatar>
@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      dropdownVisible: false,// 控制dropdown的显示状态
       userInfo: {
         avatar: ''
       },
@@ -67,7 +68,7 @@ export default {
           url: "/word",
         },
         {
-          name: "排行",
+          name: "统计",
           url: "/ranking",
         },
         {
@@ -127,13 +128,21 @@ export default {
     },
     //跳转
     jumpTo(url) {
-      console.log("jump url", url);
       //链接一样，不跳转
       if (this.activeUrl == url) {
         return
       }
       this.activeUrl = url;
+
       this.$router.push(url);
+      // this.$nextTick(() => {
+      //   setTimeout(() => {
+      //     this.$router.push(url);
+      //     // this.$router.push(path);
+      //   }, 1000);
+
+      // });
+
     },
 
     // // 更新登录状态

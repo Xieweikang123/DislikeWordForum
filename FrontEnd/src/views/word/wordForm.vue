@@ -25,14 +25,11 @@
     <div style="display: flex;">
       <el-input placeholder="输入单词" @input="searchChange" @keyup.enter.native="wordKeyEnter" v-model="paging.searchContent"
         class="input-with-select">
-        <!-- <el-button :loading="isImportLoading" slot="trigger" size="small" type="primary">导入单词</el-button> -->
-        <!-- <el-button :type="paging.searchContent.length > 0 ? 'primary' : 'primary'" slot="append"
-        icon="el-icon-circle-plus-outline">录入</el-button> -->
       </el-input>
       <el-button @click="wordKeyEnter" :type="paging.searchContent.length > 0 ? 'primary' : ''">➕</el-button>
       <!-- <span style="font-size:13px">点击左侧按钮录入</span> -->
     </div>
-    <el-alert title="提示" type="success" description="输入单词，然后点击右侧➕录入">
+    <el-alert style=" margin-top: 4px;" title="提示" type="success" description="输入单词，然后点击右侧➕录入">
     </el-alert>
     <el-table v-loading="loading" @sort-change="sortChange" :data="tableData" style="width: 100%" stripe>
       <el-table-column prop="word" sortable="custom" label="单词" width="180">
@@ -42,7 +39,7 @@
       </el-table-column>
       <el-table-column prop="translate" :show-overflow-tooltip="true" label="翻译">
         <template slot-scope="scope">
-          <el-button v-if="!scope.row.translate" @click="onTranslate(scope.row)" size="small"
+          <el-button v-if="null && !scope.row.translate" @click="onTranslate(scope.row)" size="small"
             type="primary">翻译</el-button>
           <span v-else>
             {{ scope.row.translate }}
@@ -63,7 +60,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
+    <el-dialog  title="提示" :visible.sync="dialogVisible" width="50%">
       <div style="    height: 300px;    overflow: auto;">以下条目已存在(上传:{{ uploadDataList.length }} 重复:{{
         repeatWordList.length }})：
 
