@@ -14,7 +14,7 @@
         <el-upload :headers="$store.getters.getTokenHeaders" style="display: flex;" :action="uploadUrl"
           :data="{ userChoice }" :on-success="handleSuccess" :on-error="handleError">
           <el-button :loading="isImportLoading" slot="trigger" size="small" type="primary">导入单词</el-button>
-          <div style="margin: auto 6px;" slot="tip" class="el-upload__tip">只能上传excel文件</div>
+          <div style="margin: auto 6px;" slot="tip" class="el-upload__tip">只能导入excel文件</div>
         </el-upload>
         <el-button @click="onExport" type="success" plain size="small">
           导出
@@ -22,10 +22,18 @@
       </div>
       <!-- {{ paging.totalCount }}个单词 -->
     </div>
-    <el-input placeholder="搜索单词" @input="searchChange" @keyup.enter.native="wordKeyEnter" v-model="paging.searchContent"
-      class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
-    </el-input>
+    <div style="display: flex;">
+      <el-input placeholder="输入单词" @input="searchChange" @keyup.enter.native="wordKeyEnter" v-model="paging.searchContent"
+        class="input-with-select">
+        <!-- <el-button :loading="isImportLoading" slot="trigger" size="small" type="primary">导入单词</el-button> -->
+        <!-- <el-button :type="paging.searchContent.length > 0 ? 'primary' : 'primary'" slot="append"
+        icon="el-icon-circle-plus-outline">录入</el-button> -->
+      </el-input>
+      <el-button @click="wordKeyEnter" :type="paging.searchContent.length > 0 ? 'primary' : ''">➕</el-button>
+      <!-- <span style="font-size:13px">点击左侧按钮录入</span> -->
+    </div>
+    <el-alert title="提示" type="success" description="输入单词，然后点击右侧➕录入">
+    </el-alert>
     <el-table v-loading="loading" @sort-change="sortChange" :data="tableData" style="width: 100%" stripe>
       <el-table-column prop="word" sortable="custom" label="单词" width="180">
         <template slot-scope="scope">
@@ -34,7 +42,7 @@
       </el-table-column>
       <el-table-column prop="translate" :show-overflow-tooltip="true" label="翻译">
         <template slot-scope="scope">
-          <el-button v-if="false && !scope.row.translate" @click="onTranslate(scope.row)" size="small"
+          <el-button v-if="!scope.row.translate" @click="onTranslate(scope.row)" size="small"
             type="primary">翻译</el-button>
           <span v-else>
             {{ scope.row.translate }}
@@ -145,6 +153,7 @@ export default {
   computed: {
     translateUrl() {
       return `https://dict.youdao.com/w/eng/${this.wordToTranslate}`;
+      // return `https://fanyi.baidu.com/?aldtype=38319&tpltype=sigma#zh/en/${this.wordToTranslate}`;
     },
     uploadUrl() {
       return process.env.VUE_APP_BASE_API + 'api/Word/UploadExcel'
@@ -268,11 +277,11 @@ export default {
       this.translateDialogVisible = true
       console.log('onTranslate', row)
 
-      window.onresize = function () {
-        console.log('onresize')
-        var iframe = document.getElementById('translateIframe');
-        iframe.style.height = window.innerHeight + 'px';
-      }
+      // window.onresize = function () {
+      //   console.log('onresize')
+      //   var iframe = document.getElementById('translateIframe');
+      //   iframe.style.height = window.innerHeight + 'px';
+      // }
 
 
       //  // 放大页面  
@@ -310,13 +319,23 @@ export default {
     },
     //搜索单词按下回车
     wordKeyEnter() {
+      // that.paging.searchContent 
+      if (this.paging.searchContent.length == 0) {
+        this.$message.warning("内容为空");
+        return
+      }
       console.log("wordKeyEnter");
-      var that = this;
-      that.$http
-        .post("/api/Word/RecordWord", { Word: that.paging.searchContent })
+      // var that = this;
+      this.$http
+        .post("/api/Word/RecordWord", { Word: this.paging.searchContent })
         .then((res) => {
-          that.$message.success("记录成功");
-          that.GetMyWordList();
+          if (res.succeeded) {
+            this.$message.success("记录成功");
+            this.GetMyWordList();
+          }
+          else {
+            this.$message.error(res.errors);
+          }
         });
     },
     //列双击

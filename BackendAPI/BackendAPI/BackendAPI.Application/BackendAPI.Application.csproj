@@ -30,6 +30,8 @@
 
 	<ItemGroup>
 	  <PackageReference Include="NPOI" Version="2.6.2" />
+	  <PackageReference Include="TencentCloudSDK.Common" Version="3.0.922" />
+	  <PackageReference Include="TencentCloudSDK.Tmt" Version="3.0.922" />
 	</ItemGroup>
 
 </Project>

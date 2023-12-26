@@ -44,10 +44,9 @@ http.interceptors.response.use(
     return res.data;
   },
   error => {
-    // console.log("error",JSON.stringify(error.response.status))
+    console.log("error", error)
     if (error.response) {
       switch (error.response.status) {
-
         case 403:
           console.log('4403', error)
           Message({
@@ -79,20 +78,20 @@ http.interceptors.response.use(
       }
       //return Promise.reject(error.response.data);
     }
+    if (error.code == "ERR_NETWORK") {
+      Message({
+        message: "网络错误",
+        type: 'error',
+        duration: 1000
+      })
+
+    }
     console.log("-----系统错误-----");
     console.log(error);
     if (error) {
       // return Promise.reject(error);
       return Promise.resolve({ succeeded: false, errors: error.message })
     }
-
-    // let errorMsg = ''
-    // if (error.message.includes('timeout')) {
-    //     errorMsg = '请求超时!'
-    // } else {
-    //     errorMsg = '请求异常!'
-    // }
-    // return Promise.resolve({ Success: false, Msg: errorMsg })
   }
 )
 export default {
