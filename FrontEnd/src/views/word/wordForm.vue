@@ -16,9 +16,12 @@
           <el-button :loading="isImportLoading" slot="trigger" size="small" type="primary">导入单词</el-button>
           <div style="margin: auto 6px;" slot="tip" class="el-upload__tip">只能导入excel文件</div>
         </el-upload>
-        <el-button @click="onExport" type="success" plain size="small">
-          导出
-        </el-button>
+        <el-popconfirm title="确定导出吗?" @confirm="onExport">
+          <el-button slot="reference" type="success" plain size="small">
+            导出
+          </el-button>
+        </el-popconfirm>
+        <!-- {{ logInfo }} -->
       </div>
       <!-- {{ paging.totalCount }}个单词 -->
     </div>
@@ -60,7 +63,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog  title="提示" :visible.sync="dialogVisible" width="50%">
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
       <div style="    height: 300px;    overflow: auto;">以下条目已存在(上传:{{ uploadDataList.length }} 重复:{{
         repeatWordList.length }})：
 
@@ -103,6 +106,7 @@ export default {
   },
   data() {
     return {
+      logInfo:'log',
       wordToTranslate: '',
       translateDialogVisible: false,
       //导入按钮，是否正在加载
@@ -217,6 +221,7 @@ export default {
     },
     //导出excel
     onExport() {
+
       //获取全部数据
       var postData = {
         pageNumber: 1,
@@ -224,17 +229,28 @@ export default {
       }
       this.getPageListData(postData).then(res => {
         console.log('alldata', res)
-        var dataList = res.data.pageList
-        if (dataList.length == 0) {
-          this.$message.error("没有要导出的数据");
-          return
+        try {
+
+          var dataList = res.data.pageList
+          if (dataList.length == 0) {
+            this.$message.error("没有要导出的数据");
+            return
+          }
+          //获取对象的属性名
+          var keys = Object.keys(dataList[0])
+          console.log('kkk', keys)
+
+          this.logInfo+=';start export'
+          // this.$commonJs.writeLog(thi/s,'try kkk')
+          excelHelper.exportExcel(this,keys, dataList, '单词')
         }
-        //获取对象的属性名
-        var keys = Object.keys(dataList[0])
-        console.log('kkk', keys)
-
-
-        excelHelper.exportExcel(keys, dataList, '单词')
+        catch (err) {
+          console.log('err',err)
+          this.logInfo+=';err'
+          //记录日志 到后端
+          // this.$commonJs.writeLog(this,'error')
+          // this.$commonJs.writeLog(this, JSON.stringify(err))
+        }
       })
     },
     handleSuccess(response, file, fileList) {

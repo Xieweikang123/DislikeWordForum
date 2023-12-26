@@ -6,6 +6,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import Global from '@/utils/global'
+// import commonJs from '@/utils/commonJs'
+
 import moment from 'moment'
 
 // 全局引入vue-codemirror
@@ -37,6 +39,9 @@ Vue.config.productionTip = false
 
 // Vue.component('vue-ace', VueAce)
 
+import commonJs from './utils/commonJs'
+
+Vue.prototype.$commonJs = commonJs
 Vue.prototype.$Global = Global
 Vue.prototype.$moment = moment
 

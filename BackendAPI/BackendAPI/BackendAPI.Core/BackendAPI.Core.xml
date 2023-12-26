@@ -928,6 +928,17 @@
             <param name="imagePath"></param>
             <returns></returns>
         </member>
+        <member name="T:BackendAPI.Core.LogHelper">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="M:BackendAPI.Core.LogHelper.WriteLogAsync(System.String)">
+            <summary>
+            写入日志
+            </summary>
+            <param name="text"></param>
+        </member>
         <member name="P:BackendAPI.Core.PageInfo.searchKeyWord">
             <summary>
             搜索关键字

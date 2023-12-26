@@ -9,17 +9,6 @@
             缓存回复id key
             </summary>
         </member>
-        <member name="T:BackendAPI.Web.Core.Helper.LogHelper">
-            <summary>
-            日志记录
-            </summary>
-        </member>
-        <member name="M:BackendAPI.Web.Core.Helper.LogHelper.WriteLogAsync(System.String)">
-            <summary>
-            写入日志
-            </summary>
-            <param name="text"></param>
-        </member>
         <member name="T:BackendAPI.Web.Core.Helper.MyCache">
             <summary>
             缓存

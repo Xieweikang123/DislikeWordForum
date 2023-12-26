@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Threading.Tasks;
 
-namespace BackendAPI.Web.Core.Helper
+namespace BackendAPI.Core
 {
 
     /// <summary>
