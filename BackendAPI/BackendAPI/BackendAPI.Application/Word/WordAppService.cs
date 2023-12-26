@@ -113,7 +113,7 @@ namespace BackendAPI.Application
 
 
                 // 遍历所有行（注意这里我们从第一行，即索引 0 开始，如果你的表格有头部数据，你可能需要从索引 1 开始）
-                for (int i = 1; i < sheet.LastRowNum; i++)
+                for (int i = 1; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
                     if (row == null) continue;
