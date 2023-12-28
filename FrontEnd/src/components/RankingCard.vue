@@ -19,7 +19,9 @@
                         :key="item.belongUserId">
                         <span class="disAlignCenter">
                             <div style="position: relative; margin-right: 16px">
-                                <el-avatar :src="getAvatorUrl(item.avatar)"> </el-avatar>
+                                <el-avatar :src="getAvatorUrl(item.avatar)">
+                                    <img src="http://43.138.32.181:5000/imgs/AnonymousAvatar.jpg" />
+                                </el-avatar>
                                 <span class="notxt">{{ index + 1 }}</span>
                             </div>
                             <span class="nickNames">
@@ -54,6 +56,9 @@ export default {
 </script>
 
 <style>
+.cardContainer:hover{
+    box-shadow:2px 3px 7px 1px #cface9c6
+}
 .titlediv {
     font-size: 1.1em;
     font-weight: bold;
@@ -75,8 +80,9 @@ export default {
 }
 
 .rankingBar {
-    box-shadow: 2px 8px 11px 3px #f1fcff;
-    padding: 13px 0;
+    /* box-shadow: 2px 8px 11px 3px #f1fcff;
+    padding: 13px 0; */
+    padding: 3px 0;
     color: #82b1d3;
     font-weight: 600;
     display: flex;
@@ -107,7 +113,7 @@ export default {
 @media (max-width: 768px) {
 
     .cardContainer {
-        margin-bottom: 23px;
+        margin-top: 23px;
         width: inherit;
     }
 
