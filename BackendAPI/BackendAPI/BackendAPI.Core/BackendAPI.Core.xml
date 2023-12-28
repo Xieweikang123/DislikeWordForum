@@ -261,6 +261,11 @@
             Nullable:True
             </summary>           
         </member>
+        <member name="P:BackendAPI.Core.Entities.EnglishWord.IsDel">
+            <summary>
+            是否删除，0否，1是
+            </summary>
+        </member>
         <member name="T:BackendAPI.Core.Entities.Essay">
             <summary>
             

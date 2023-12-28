@@ -30,6 +30,29 @@ namespace BackendAPI.Application
         //    return list;
         //}
 
+
+        /// <summary>
+        /// 获取所有用户单词浏览记录
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<object> GetAllUserWordViews()
+        {
+            var today = DateTime.Now.Date;
+            var list = await DbContextStatic.Instance.Queryable<EnglishWord, CoreUser>((e, c) => e.BelongUserId == c.Id)
+               .Where(e => !e.IsDel)
+               .GroupBy((e, c) => new { e.BelongUserId, c.NickName, c.Avatar })
+               .Select((e, c) => new { Sum = SqlFunc.AggregateSum(e.Views), c.NickName, e.BelongUserId, c.Avatar })
+               .MergeTable()
+               .OrderByDescending(e => e.Sum)
+               .ToPageListAsync(1, 50);
+
+            return list;
+        }
+
+
         /// <summary>
         /// 今日背单词排行  
         /// 头像 人 昵称---单词数

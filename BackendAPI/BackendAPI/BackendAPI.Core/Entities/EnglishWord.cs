@@ -72,7 +72,10 @@ namespace BackendAPI.Core.Entities
         /// </summary>           
         public string BelongUserId { get; set; }
 
-
+        /// <summary>
+        /// 是否删除，0否，1是
+        /// </summary>
+        public bool IsDel { get; set; }
 
     }
 }

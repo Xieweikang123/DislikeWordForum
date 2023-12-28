@@ -12,22 +12,23 @@
                 </template>
             </el-skeleton>
 
-
-            <span v-if="rdata.length == 0">今日暂无人背单词</span>
-            <span v-else>
-                <el-row class="disAlignCenter" style="    margin-top: 12px;" v-for="(item, index) in rdata"
-                    :key="item.belongUserId">
-                    <el-col class="disAlignCenter" :span="12" :offset="1">
-                        <div style="position: relative; margin-right: 16px">
-                            <el-avatar :src="getAvatorUrl(item.avatar)"> </el-avatar>
-                            <span class="notxt">{{ index + 1 }}</span>
-                        </div>
-                        <span class="nickNames">
-                            {{ item.nickName }}
+            <span v-if="!isLoading">
+                <span v-if="rdata.length == 0">今日暂无人背单词</span>
+                <span v-else>
+                    <div class="disAlignCenter rankingBar" style="    margin-top: 12px;" v-for="(item, index) in rdata"
+                        :key="item.belongUserId">
+                        <span class="disAlignCenter">
+                            <div style="position: relative; margin-right: 16px">
+                                <el-avatar :src="getAvatorUrl(item.avatar)"> </el-avatar>
+                                <span class="notxt">{{ index + 1 }}</span>
+                            </div>
+                            <span class="nickNames">
+                                {{ item.nickName }}
+                            </span>
                         </span>
-                    </el-col>
-                    <el-col :span="12"> {{ item.sum }} </el-col>
-                </el-row>
+                        <span v-for="propertyItem in dataPropertys"> {{ item[propertyItem] }} </span>
+                    </div>
+                </span>
             </span>
         </div>
     </el-card>
@@ -35,11 +36,11 @@
 
 <script>
 export default {
-    props: ['title', 'cols', 'rdata'],
+    props: ['isLoading', 'title', 'cols', 'rdata', 'dataPropertys'],
     data() {
         return {
-            isLoading: false, // 示例，根据实际情况替换
-            todayData: [], // 示例，根据实际情况替换
+            // isLoading: false, // 示例，根据实际情况替换
+            // todayData: [], // 示例，根据实际情况替换
         };
     },
     methods: {
@@ -57,7 +58,7 @@ export default {
     font-size: 1.1em;
     font-weight: bold;
     color: #3f51b5c4;
-    text-shadow: 2px 0px 4px #66d24a;
+    text-shadow: 2px 0px 4px #d7cbd5
 }
 
 .notxt {
@@ -79,7 +80,7 @@ export default {
     color: #82b1d3;
     font-weight: 600;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 

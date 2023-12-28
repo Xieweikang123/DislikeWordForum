@@ -309,6 +309,13 @@
             </summary>
             
         </member>
+        <member name="M:BackendAPI.Application.RankingService.GetAllUserWordViews">
+            <summary>
+            获取所有用户单词浏览记录
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:BackendAPI.Application.RankingService.GetTodayRanking(BackendAPI.Application.PageInfoRanking)">
             <summary>
             今日背单词排行  

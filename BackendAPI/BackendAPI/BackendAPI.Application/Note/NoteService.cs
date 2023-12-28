@@ -455,7 +455,7 @@ namespace BackendAPI.Application
             var db = DbContextStatic.Instance;
             var today = DateTime.Now.Date;
             var list = await db.Queryable<EnglishWord, CoreUser>((e, c) => e.BelongUserId == c.Id)
-               .Where(e => e.Createdate >= today || e.Modifydate >= today)
+               .Where(e => !e.IsDel&&( e.Createdate >= today || e.Modifydate >= today))
 
                .GroupBy((e, c) => new { e.BelongUserId, c.NickName, c.Avatar })
                .Select((e, c) => new { Sum = SqlFunc.AggregateCount(e.BelongUserId), c.NickName, e.BelongUserId, c.Avatar })
